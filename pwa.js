@@ -1,5 +1,21 @@
 // 명인방투어 — PWA 등록 + "홈 화면에 추가" 프롬프트
 (function(){
+  // ⭐ PWA 첫 실행 시 항상 홈으로
+  // 이미 설치하신 분의 옛 start_url(tour.html 등)을 덮어쓰기 위함
+  try {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                        || window.navigator.standalone === true;
+    if (isStandalone && !sessionStorage.getItem('mb-pwa-launched')) {
+      sessionStorage.setItem('mb-pwa-launched', '1');
+      const path = location.pathname;
+      const onHome = path === '/' || path.endsWith('/index.html');
+      if (!onHome) {
+        location.replace('/');
+        return;  // 리다이렉트 직후 나머지 스크립트 실행 안함
+      }
+    }
+  } catch(e) {}
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').then(reg => {
