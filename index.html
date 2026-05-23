@@ -400,7 +400,7 @@
 
   <h4>🚆 여행</h4>
   <ul>
-    <li>다가오는 일정 / 정기 / 원데이 / 해외 / 클래스 / 후기</li>
+    <li>다가오는 / 박물관 / 후기 — 3 서브탭</li>
     <li>← 여행 가는날, 해외문화탐방, 일본 여행, 집밥 아카데미, 여행후기</li>
   </ul>
 
@@ -443,7 +443,7 @@
   <!-- 상단 띠 -->
   <div class="topbar">
     <span>🚉</span>
-    <span><b>가을 정기</b> · 10/30~31 정선 운탄고도 단풍 곤도라 · 9/27~10/6 베네룩스 10일</span>
+    <span><b>다음 여행</b> · 6/15~18 제주 수국 · 6/23~25 7번 국도 · 9/27~ 베네룩스</span>
   </div>
 
   <!-- 헤더 -->
@@ -479,7 +479,7 @@
 
   <!-- 히어로 (AUTO_HERO=true 시 JS가 자동으로 가장 가까운 미래 여행 데이터로 교체) -->
   <div class="hero">
-    <span class="hero-tag">6월 정기 여행 · 3박 4일</span>
+    <span class="hero-tag">6월 여행 · 3박 4일</span>
     <div class="hero-body">
       <div class="hero-eyebrow">JUNE · JEJU</div>
       <h1 class="hero-title">제주 수국 ·<br/>우도 훈데르트 바서</h1>
@@ -490,15 +490,6 @@
     </div>
   </div>
 
-  <!-- 카테고리 원형 -->
-  <section style="padding-top:22px">
-    <div class="cats">
-      <a class="cat"><div class="cat-ico">🚆</div><div class="cat-name">정기 여행</div></a>
-      <a class="cat"><div class="cat-ico">🌿</div><div class="cat-name">원데이</div></a>
-      <a class="cat"><div class="cat-ico">📖</div><div class="cat-name">인문학</div></a>
-      <a class="cat"><div class="cat-ico">🎼</div><div class="cat-name">음악회</div></a>
-    </div>
-  </section>
 
   <!-- 다음 여행 일정 -->
   <section>
@@ -513,7 +504,7 @@
     <div class="h-scroll">
       <a class="tour-card" href="./tour-detail.html?id=jeju-2026-06">
         <div class="img" style="background-image:url('./assets/tour-01.jpg')">
-          <span class="badge">정기 여행</span>
+          <span class="badge">국내 여행</span>
         </div>
         <div class="body">
           <div class="date">6.15(월)~18(목) · 3박 4일</div>
@@ -526,7 +517,7 @@
 
       <a class="tour-card" href="./tour-detail.html?id=coastal7-2026-06">
         <div class="img" style="background-image:url('./assets/tour-02.jpg')">
-          <span class="badge">정기 여행</span>
+          <span class="badge">국내 여행</span>
         </div>
         <div class="body">
           <div class="date">6.23(화)~25(목) · 2박 3일</div>
@@ -744,8 +735,8 @@
 
   // 다가오는 여행 — data/tours.json 인라인 사본 (실서버에서 fetch 가능)
   const TOURS = [
-    {id:"jeju-2026-06",     title:"제주 수국 · 우도 훈데르트 바서",   subtitle:"섬의 수국이 깊어진 6월",             category:"정기", domestic:true,  duration:"3박 4일", startDate:"2026-06-15", endDate:"2026-06-18", host:"능파 동행", board:"여행 가는날", image:"./assets/tour-01.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/4b2T/1624"},
-    {id:"coastal7-2026-06", title:"바라던 바다 — 7번 국도 바닷길",    subtitle:"sea of hope · 당신의 바다를 꿈꾸는", category:"정기", domestic:true,  duration:"2박 3일", startDate:"2026-06-23", endDate:"2026-06-25", host:"능파 동행", board:"여행 가는날", image:"./assets/tour-02.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1057"},
+    {id:"jeju-2026-06",     title:"제주 수국 · 우도 훈데르트 바서",   subtitle:"섬의 수국이 깊어진 6월",             category:"국내", domestic:true,  duration:"3박 4일", startDate:"2026-06-15", endDate:"2026-06-18", host:"능파 동행", board:"여행 가는날", image:"./assets/tour-01.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/4b2T/1624"},
+    {id:"coastal7-2026-06", title:"바라던 바다 — 7번 국도 바닷길",    subtitle:"sea of hope · 당신의 바다를 꿈꾸는", category:"국내", domestic:true,  duration:"2박 3일", startDate:"2026-06-23", endDate:"2026-06-25", host:"능파 동행", board:"여행 가는날", image:"./assets/tour-02.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1057"},
     {id:"benelux-2026-09",  title:"베네룩스 3국 10일",               subtitle:"벨기에 · 네덜란드 · 룩셈부르크",      category:"해외", domestic:false, duration:"10일",    startDate:"2026-09-27", endDate:"2026-10-06", host:"능파 동행", board:"해외문화탐방", image:"./assets/tour-03.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/RfFv/96"}
   ];
 
@@ -769,7 +760,7 @@
     hero.style.backgroundImage =
       "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%), url('"+t.image+"')";
     hero.querySelector('.hero-tag').textContent =
-      `${t.startDate.slice(5,7)}월 ${t.category} 여행 · ${t.duration}`;
+      `${t.startDate.slice(5,7)}월 ${t.domestic ? '국내' : '해외'} 여행 · ${t.duration}`;
     hero.querySelector('.hero-eyebrow').textContent =
       `D-${Math.max(0, Math.ceil((new Date(t.startDate)-new Date())/86400000))} · ${t.board||t.category}`;
     hero.querySelector('.hero-title').innerHTML =
