@@ -746,6 +746,52 @@
                 .sort((a,b) => a.startDate.localeCompare(b.startDate))[0];
   }
 
+  // 박물관 데이터에서 미래 여행도 후보에 포함 — 사용자가 카페에 새 일정을
+  // 올리면 별도 설정 없이 자동으로 히어로 후보가 됨.
+  function extractTravelDate(p){
+    const t = p.title || '';
+    let m = t.match(/(20\d{2})[\s\S]{0,3}?(\d{1,2})\s*월\s*(\d{1,2})/);
+    if (m) return {y:+m[1], mo:+m[2], d:+m[3]};
+    m = t.match(/(\d{1,2})\s*월\s*(\d{1,2})/);
+    if (m) return {y:p.year, mo:+m[1], d:+m[2]};
+    m = t.match(/(\d{1,2})\s*월/);
+    if (m) return {y:p.year, mo:+m[1], d:1};
+    return {y:p.year, mo:1, d:1};
+  }
+  async function pickNearestTourMerged(){
+    const today = new Date().toISOString().slice(0,10);
+    const candidates = TOURS.filter(t => t.startDate >= today).slice();
+    try {
+      const res = await fetch('./data/past-travels.json');
+      const json = await res.json();
+      const tourDates = new Set(candidates.map(t => t.startDate));
+      json.posts.forEach(p => {
+        const td = extractTravelDate(p);
+        const sd = `${td.y}-${String(td.mo).padStart(2,'0')}-${String(td.d).padStart(2,'0')}`;
+        if (sd >= today && !tourDates.has(sd)) {
+          candidates.push({
+            id: `${p.bid}-${p.pid}`,
+            title: p.title,
+            subtitle: p.country || '',
+            category: p.region === '해외' ? '해외' : '국내',
+            domestic: p.region !== '해외',
+            duration: '',
+            startDate: sd,
+            endDate: sd,
+            host: '능파 동행',
+            board: p.region === '해외' ? (p.bid === 'S2Ss' ? '일본 여행' : '해외문화탐방') : '여행 가는날',
+            image: null,
+            cafeUrl: `https://cafe.daum.net/redtraintour/${p.bid}/${p.pid}`,
+            region: p.region,
+            season: p.season,
+            _fromPast: true
+          });
+        }
+      });
+    } catch(e) {}
+    return candidates.sort((a,b) => a.startDate.localeCompare(b.startDate))[0];
+  }
+
   function formatRange(start, end){
     const s = new Date(start), e = new Date(end);
     const m = (d) => `${d.getMonth()+1}.${d.getDate()}`;
@@ -757,25 +803,52 @@
   function renderHero(t){
     const hero = document.querySelector('.hero');
     if (!hero || !t) return;
-    hero.style.backgroundImage =
-      "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%), url('"+t.image+"')";
-    hero.querySelector('.hero-tag').textContent =
-      `${t.startDate.slice(5,7)}월 ${t.domestic ? '국내' : '해외'} 여행 · ${t.duration}`;
+    if (t.image) {
+      hero.style.backgroundImage =
+        "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%), url('"+t.image+"')";
+    } else {
+      // 이미지 없으면 계절 그라데이션
+      const seasonGrad = ({
+        '봄':'linear-gradient(135deg,#f3a4b5,#f6c576)',
+        '여름':'linear-gradient(135deg,#7fc885,#5b6b3a)',
+        '가을':'linear-gradient(135deg,#d97b3a,#7a1b25)',
+        '겨울':'linear-gradient(135deg,#a8c4d6,#3f6b86)'
+      })[t.season] || 'linear-gradient(135deg,#5a121a,#7a1b25)';
+      hero.style.backgroundImage =
+        "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%), "+seasonGrad;
+    }
+    const tagBits = [`${t.startDate.slice(5,7)}월 ${t.domestic ? '국내' : '해외'} 여행`];
+    if (t.duration) tagBits.push(t.duration);
+    hero.querySelector('.hero-tag').textContent = tagBits.join(' · ');
     hero.querySelector('.hero-eyebrow').textContent =
       `D-${Math.max(0, Math.ceil((new Date(t.startDate)-new Date())/86400000))} · ${t.board||t.category}`;
     hero.querySelector('.hero-title').innerHTML =
       t.title.replace(/, /,',<br/>').replace(/ — /,'<br/>');
-    hero.querySelector('.hero-meta').innerHTML =
-      `<span>${formatRange(t.startDate, t.endDate)}</span><span>${t.duration}</span><span>${t.host}</span>`;
-    hero.querySelector('.hero-cta').href = `./tour-detail.html?id=${t.id}`;
+    const metaBits = [
+      `<span>${formatRange(t.startDate, t.endDate)}</span>`,
+      t.duration ? `<span>${t.duration}</span>` : '',
+      `<span>${t.host}</span>`
+    ].filter(Boolean).join('');
+    hero.querySelector('.hero-meta').innerHTML = metaBits;
+    hero.querySelector('.hero-cta').href = t._fromPast ? t.cafeUrl : `./tour-detail.html?id=${t.id}`;
+    if (t._fromPast) {
+      hero.querySelector('.hero-cta').setAttribute('target','_blank');
+      hero.querySelector('.hero-cta').setAttribute('rel','noopener');
+    }
   }
 
   if (AUTO_HERO) {
-    const next = pickNearestTour();
-    if (next) renderHero(next);
+    // 1) TOURS 만으로 즉시 1차 렌더 (즉각 반응)
+    const initial = pickNearestTour();
+    if (initial) renderHero(initial);
+    // 2) 박물관 데이터 fetch 후 더 가까운 항목이 있으면 교체
+    pickNearestTourMerged().then(merged => {
+      if (merged && (!initial || merged.startDate < initial.startDate)) {
+        renderHero(merged);
+      }
+    });
   }
-  // 콘솔에서 확인용 — F12 열고 "현재 가장 가까운 일정"이 어느 투어인지 즉시 알 수 있음
-  console.log('[명인방투어] 다음 가까운 일정:', pickNearestTour());
+  console.log('[명인방투어] 1차 후보:', pickNearestTour());
 </script>
 
 <a class="fab" href="#" aria-label="카카오 채널">TALK</a>

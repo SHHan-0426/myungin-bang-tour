@@ -1,5 +1,34 @@
-// 명인방투어 — PWA 등록 + "홈 화면에 추가" 프롬프트
+// 명인방투어 — PWA 등록 + 새로고침 버튼 자동 주입 + "홈 화면에 추가"
 (function(){
+  // ↻ 새로고침 버튼 자동 주입 — 모든 페이지의 헤더에 동일하게
+  function injectRefreshButton(){
+    const target =
+      document.querySelector('.nav-icons') ||
+      document.querySelector('.top-bar-detail .right');
+    if (!target || target.dataset.refreshAdded === '1') return;
+    const btn = document.createElement('button');
+    btn.setAttribute('aria-label', '새로고침');
+    btn.title = '새로고침';
+    btn.style.cssText = 'background:none;border:0;padding:0;color:inherit;cursor:pointer';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;display:block"><path d="M21 12a9 9 0 1 1-2.64-6.36L21 8"/><path d="M21 3v5h-5"/></svg>';
+    btn.onclick = () => {
+      // 서비스 워커 캐시 무효화 + 강제 리로드
+      if ('caches' in window) {
+        caches.keys().then(keys => keys.forEach(k => caches.delete(k)))
+          .finally(() => location.reload());
+      } else {
+        location.reload();
+      }
+    };
+    target.insertBefore(btn, target.firstChild);
+    target.dataset.refreshAdded = '1';
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectRefreshButton);
+  } else {
+    injectRefreshButton();
+  }
+
   // ⭐ PWA 첫 실행 시 항상 홈으로
   // 이미 설치하신 분의 옛 start_url(tour.html 등)을 덮어쓰기 위함
   try {
