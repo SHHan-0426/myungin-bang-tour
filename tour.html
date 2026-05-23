@@ -611,12 +611,14 @@
       const reviewBadge = matchedReviews.length > 0
         ? `<a class="review-link" href="javascript:void(0)" onclick="event.preventDefault(); event.stopPropagation(); jumpToReviews('${p.pid}', ${JSON.stringify(matchedReviews.map(r=>r.pid)).replace(/"/g,'&quot;')})">💌 후기 ${matchedReviews.length}편 보기</a>`
         : '';
+      const bid = p.bid || '1fXs';  // 기본 여행 가는날
+      const regionLabel = p.region === '해외' && p.country ? `해외·${p.country}` : p.region;
       return `
-        <a class="museum-card s-${p.season}" href="https://cafe.daum.net/redtraintour/1fXs/${p.pid}" target="_blank" rel="noopener">
+        <a class="museum-card s-${p.season}" href="https://cafe.daum.net/redtraintour/${bid}/${p.pid}" target="_blank" rel="noopener">
           <div class="body">
             <div class="meta-top">
               <span class="year">${p.year}</span>
-              <span class="reg">${p.region}</span>
+              <span class="reg">${regionLabel}</span>
               <span class="season-tag">${p.season}</span>
             </div>
             <h4>${p.title}</h4>
