@@ -21,3 +21,6 @@ dist/
 # 환경 설정 (앞으로 비밀키 들어갈 자리)
 .env
 .env.local
+
+# Local Netlify folder
+.netlify
