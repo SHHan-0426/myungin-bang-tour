@@ -205,9 +205,10 @@
     flex:0 0 16px;
   }
   .daum-login-hint{
-    margin:0 18px 14px;font-size:11px;color:var(--ink-3);
-    text-align:center;line-height:1.5;
+    margin:0 18px 10px;font-size:11px;color:var(--ink-3);
+    text-align:center;line-height:1.7;
   }
+  .daum-login-hint b{color:var(--wine);font-weight:800}
 
   /* 운영진 */
   .team-card{
@@ -305,19 +306,25 @@
   </div>
 
   <!-- 다음 카페 로그인 (강조 카드) -->
-  <a class="daum-login-card" href="https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fcafe.daum.net%2Fredtraintour" target="_blank" rel="noopener">
+  <a class="daum-login-card" href="https://m.daum.net/" target="_blank" rel="noopener">
     <div class="d-ico">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
     </div>
     <div class="d-body">
-      <b>다음 카페 로그인</b>
-      <span>한 번 로그인하면 우수회원 전용 글까지 모두 읽기 가능</span>
+      <b>다음(Daum) 로그인 하러 가기</b>
+      <span>로그인하면 우수회원 전용 글까지 모두 읽기 가능</span>
     </div>
     <div class="d-chev">›</div>
   </a>
   <div class="daum-login-hint">
-    💡 새 탭에서 Daum 로그인 화면이 열립니다 · 로그인 후 탭을 닫고 돌아오시면 됩니다
+    1️⃣ 새 탭에서 Daum 메인 열림 → 2️⃣ 우상단 <b>로그인</b> 탭 → 3️⃣ ID·비번 입력 → 4️⃣ 탭 닫고 돌아오기
   </div>
+  <!-- 명인방투어 카페 바로가기 (로그인된 후 카페로 직접) -->
+  <a class="menu-row" style="margin:0 18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px" href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener">
+    <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M3 12h5"/></svg></div>
+    <div class="m-body"><b>명인방투어 카페 바로가기</b><span>로그인 후 카페로 직접 — m.cafe.daum.net/redtraintour</span></div>
+    <div class="chev">›</div>
+  </a>
 
   <!-- 메뉴: 명인방투어 -->
   <div class="menu-section">
