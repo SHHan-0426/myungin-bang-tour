@@ -146,53 +146,115 @@
   }
   .filter-chips .fc.is-on .ct{background:rgba(255,248,236,.25)}
 
-  /* 박물관 카드 그리드 (2열) */
-  .museum-grid{
-    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  /* 박물관 / 후기 — 리스트 (1열, 가로형 카드) */
+  .museum-list{
+    display:flex;flex-direction:column;gap:8px;
     padding:14px 18px 0;
   }
   .museum-card{
     background:#fff;border:1px solid var(--line);border-radius:12px;
-    padding:12px 12px 14px;
+    padding:14px 14px 14px 18px;
     text-decoration:none;color:inherit;
-    display:flex;flex-direction:column;gap:6px;
+    display:flex;align-items:center;gap:14px;
     position:relative;
-    min-height:120px;
   }
-  .museum-card .swatch{
-    position:absolute;top:0;left:0;right:0;height:6px;
-    background:var(--moss);
-    border-radius:12px 12px 0 0;
+  /* 왼쪽 컬러 띠 (계절 표시) */
+  .museum-card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:var(--moss);border-radius:12px 0 0 12px;
   }
-  .museum-card.s-봄 .swatch{background:linear-gradient(90deg,#f3a4b5,#f6c576)}
-  .museum-card.s-여름 .swatch{background:linear-gradient(90deg,#7fc885,#5b6b3a)}
-  .museum-card.s-가을 .swatch{background:linear-gradient(90deg,#d97b3a,#7a1b25)}
-  .museum-card.s-겨울 .swatch{background:linear-gradient(90deg,#a8c4d6,#3f6b86)}
+  .museum-card.s-봄::before{background:linear-gradient(180deg,#f3a4b5,#f6c576)}
+  .museum-card.s-여름::before{background:linear-gradient(180deg,#7fc885,#5b6b3a)}
+  .museum-card.s-가을::before{background:linear-gradient(180deg,#d97b3a,#7a1b25)}
+  .museum-card.s-겨울::before{background:linear-gradient(180deg,#a8c4d6,#3f6b86)}
+
+  .museum-card .body{flex:1;min-width:0}
   .museum-card .meta-top{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-top:8px;font-size:10.5px;color:var(--ink-3);font-weight:700;
+    display:flex;align-items:center;gap:6px;
+    font-size:10.5px;font-weight:700;
+    margin-bottom:4px;
   }
   .museum-card .year{
     background:var(--ink);color:#fff8ec;
-    padding:2px 8px;border-radius:999px;font-size:10px;
+    padding:2px 8px;border-radius:999px;
   }
   .museum-card .reg{
     background:var(--tag-bg);color:var(--tag-ink);
-    padding:2px 8px;border-radius:999px;font-size:10px;
+    padding:2px 8px;border-radius:999px;
+  }
+  .museum-card .season-tag{
+    color:var(--ink-3);font-size:10.5px;font-weight:600;
   }
   .museum-card h4{
-    font-size:13px;margin:2px 0 0;font-weight:700;line-height:1.4;
+    font-size:14px;margin:0;font-weight:700;line-height:1.4;
     color:var(--ink);
-    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
   }
   .museum-card .stats{
-    margin-top:auto;padding-top:6px;
-    font-size:10.5px;color:var(--ink-3);
-    display:flex;gap:6px;
+    margin-top:5px;font-size:10.5px;color:var(--ink-3);
+    display:flex;gap:8px;
+  }
+  .museum-card .arrow{
+    color:var(--ink-3);font-size:18px;flex:0 0 16px;text-align:right;
   }
 
+  /* 후기 링크 뱃지 */
+  .museum-card .review-link{
+    display:inline-flex;align-items:center;gap:4px;
+    margin-top:6px;
+    background:#fff3d6;color:var(--wine);
+    font-size:11px;font-weight:700;
+    padding:4px 10px;border-radius:999px;
+    text-decoration:none;
+    border:1px solid var(--gold);
+  }
+  .museum-card .review-link:hover{background:var(--wine);color:#fff8ec}
+
   .museum-empty{
-    grid-column:1/-1;padding:30px 18px;text-align:center;color:var(--ink-3);font-size:13px;
+    padding:30px 18px;text-align:center;color:var(--ink-3);font-size:13px;
+  }
+
+  /* 후기 카드 (박물관 카드와 유사하나 출발 색 다름) */
+  .review-card{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:13px 14px;
+    text-decoration:none;color:inherit;
+    display:flex;align-items:center;gap:12px;
+    position:relative;
+    margin-bottom:6px;
+  }
+  .review-card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--gold);border-radius:12px 0 0 12px;
+  }
+  .review-card .body{flex:1;min-width:0}
+  .review-card h4{
+    font-size:13.5px;margin:0;font-weight:600;line-height:1.4;color:var(--ink);
+  }
+  .review-card .meta{
+    font-size:10.5px;color:var(--ink-3);margin-top:3px;
+  }
+  .review-card .badge{
+    background:var(--tag-bg);color:var(--tag-ink);
+    font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;
+    margin-right:6px;
+  }
+  .review-card .arrow{color:var(--ink-3);font-size:16px}
+
+  /* 후기 그룹 헤더 (여행별 묶기) */
+  .review-group{
+    margin:14px 18px 0;
+  }
+  .review-group-h{
+    font-family:"Noto Serif KR",serif;
+    font-size:14px;font-weight:700;
+    color:var(--wine);
+    margin:0 0 8px;padding-left:4px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .review-group-h .ct{
+    background:var(--wine);color:#fff8ec;
+    font-size:10px;font-weight:800;
+    padding:1px 7px;border-radius:999px;
   }
 
   /* 통계 카드 */
@@ -244,8 +306,9 @@
 
   <!-- 메인 서브탭 -->
   <div class="seg">
-    <button id="seg-up" class="is-on">📅 다가오는 여행 <span class="pill" id="seg-up-count">3</span></button>
-    <button id="seg-mu">🏛 지난 여행 박물관 <span class="pill" id="seg-mu-count">100</span></button>
+    <button id="seg-up" class="is-on">📅 다가오는 <span class="pill" id="seg-up-count">3</span></button>
+    <button id="seg-mu">🏛 박물관 <span class="pill" id="seg-mu-count">100</span></button>
+    <button id="seg-rv">💌 후기 <span class="pill" id="seg-rv-count">40</span></button>
   </div>
 
   <!-- ====================================== -->
@@ -302,16 +365,36 @@
     <!-- 필터 칩 -->
     <div class="filter-chips" id="filter-chips"></div>
 
-    <!-- 박물관 그리드 -->
+    <!-- 박물관 리스트 -->
     <div class="section-bar">
       <h2 id="mu-section-title">전체</h2>
       <small id="mu-section-count">— 건</small>
     </div>
-    <div class="museum-grid" id="museum-grid"></div>
+    <div class="museum-list" id="museum-grid"></div>
 
     <div style="padding:24px 18px;text-align:center">
       <a href="https://cafe.daum.net/redtraintour/1fXs" target="_blank" rel="noopener" style="display:inline-block;background:var(--wine);color:#fff8ec;padding:11px 20px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700">
         다음 카페에서 전체 보기 (725건) →
+      </a>
+    </div>
+  </div>
+
+  <!-- ====================================== -->
+  <!--   여행후기 (다음 카페 4b2T 게시판)         -->
+  <!-- ====================================== -->
+  <div id="view-reviews" class="hide">
+    <div class="museum-intro">
+      <div class="kicker">TRAVEL REVIEWS</div>
+      <h2>여행후기</h2>
+      <p>능파와 다녀온 분들이 보내온 글과 사진. 다음 카페 「여행후기」 게시판에서 자동 수집.</p>
+      <div class="count">현재 <b id="rv-total">40</b>건 · <small>여행별로 묶어서 표시</small></div>
+    </div>
+
+    <div id="review-groups"></div>
+
+    <div style="padding:24px 18px;text-align:center">
+      <a href="https://cafe.daum.net/redtraintour/4b2T" target="_blank" rel="noopener" style="display:inline-block;background:var(--wine);color:#fff8ec;padding:11px 20px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700">
+        다음 카페에서 전체 후기 보기 →
       </a>
     </div>
   </div>
@@ -344,6 +427,8 @@
 
   // 지난 여행 박물관 — data/past-travels.json에서 fetch
   let PAST = [];
+  // 여행후기 — data/reviews.json에서 fetch
+  let REVIEWS = [];
 
   // ============= 유틸 =============
   function fmtRange(s, e){
@@ -407,20 +492,29 @@
   });
   renderUpcoming('domestic');
 
-  // ============= 메인 서브탭 (다가오는 / 박물관) =============
-  document.getElementById('seg-up').addEventListener('click', () => {
-    document.getElementById('seg-up').classList.add('is-on');
-    document.getElementById('seg-mu').classList.remove('is-on');
-    document.getElementById('view-upcoming').classList.remove('hide');
-    document.getElementById('view-museum').classList.add('hide');
-  });
-  document.getElementById('seg-mu').addEventListener('click', () => {
-    document.getElementById('seg-mu').classList.add('is-on');
-    document.getElementById('seg-up').classList.remove('is-on');
-    document.getElementById('view-museum').classList.remove('hide');
-    document.getElementById('view-upcoming').classList.add('hide');
-    if (PAST.length === 0) loadMuseum();
-  });
+  // ============= 메인 서브탭 (다가오는 / 박물관 / 후기) =============
+  const VIEWS = ['up','mu','rv'];
+  function showView(v) {
+    VIEWS.forEach(x => {
+      document.getElementById('seg-'+x).classList.toggle('is-on', x===v);
+      document.getElementById({up:'view-upcoming', mu:'view-museum', rv:'view-reviews'}[x])
+        .classList.toggle('hide', x!==v);
+    });
+    if (v === 'mu' && PAST.length === 0) loadMuseum();
+    if (v === 'rv' && REVIEWS.length === 0) loadReviews();
+    // URL hash 갱신
+    if (v !== 'up') location.hash = v==='mu'?'museum':'reviews';
+    else if (location.hash) history.replaceState(null,'',location.pathname);
+  }
+  document.getElementById('seg-up').addEventListener('click', () => showView('up'));
+  document.getElementById('seg-mu').addEventListener('click', () => showView('mu'));
+  document.getElementById('seg-rv').addEventListener('click', () => showView('rv'));
+  // URL hash로 초기 뷰 선택 (예: tour.html#museum, #reviews)
+  if (location.hash === '#museum') showView('mu');
+  else if (location.hash === '#reviews') showView('rv');
+
+  // 후기 데이터는 백그라운드 미리 로드 — 박물관 카드의 cross-link 뱃지 자동 표시
+  if (REVIEWS.length === 0) loadReviews();
 
   // ============= 지난 여행 박물관 =============
   async function loadMuseum() {
@@ -479,6 +573,24 @@
     renderMuseum();
   }
 
+  // ===== 박물관 ↔ 후기 매칭 (제목 키워드 substring) =====
+  const STOPWORDS = new Set(['여행','일정','특집','특집~','월','일','목','수','화','금','토','일요일','월요일','특집','및','과','와','으로','에서','를','을','이','그','그리고','다음','전체','보기','단풍','벚꽃','꽃','체험']);
+  function tokenize(title){
+    return title
+      .replace(/[\d~.\-(),월일'"!?:&\/]/g, ' ')
+      .split(/\s+/)
+      .filter(t => t.length >= 2 && !STOPWORDS.has(t));
+  }
+  function findReviews(museumPost) {
+    if (REVIEWS.length === 0) return [];
+    const tokens = tokenize(museumPost.title);
+    if (tokens.length === 0) return [];
+    return REVIEWS.filter(r => {
+      const hay = (r.title + ' ' + (r.keywords||'')).toLowerCase();
+      return tokens.some(t => hay.includes(t.toLowerCase()));
+    });
+  }
+
   function renderMuseum() {
     let posts = PAST;
     if (currentFilter !== 'all') {
@@ -486,31 +598,60 @@
       else if (currentMode === 'region') posts = PAST.filter(p => p.region === currentFilter);
       else if (currentMode === 'season') posts = PAST.filter(p => p.season === currentFilter);
     }
-    const titleMap = {year:'연도', region:'지역', season:'계절'};
     document.getElementById('mu-section-title').textContent = currentFilter === 'all' ? '전체' : currentFilter + (currentMode==='year'?'년':'');
     document.getElementById('mu-section-count').textContent = posts.length + '건';
 
-    const grid = document.getElementById('museum-grid');
+    const list = document.getElementById('museum-grid');
     if (posts.length === 0) {
-      grid.innerHTML = `<div class="museum-empty">해당 조건의 여행이 없습니다</div>`;
+      list.innerHTML = `<div class="museum-empty">해당 조건의 여행이 없습니다</div>`;
       return;
     }
-    grid.innerHTML = posts.map(p => `
-      <a class="museum-card s-${p.season}" href="https://cafe.daum.net/redtraintour/1fXs/${p.pid}" target="_blank" rel="noopener">
-        <div class="swatch"></div>
-        <div class="meta-top">
-          <span class="year">${p.year}</span>
-          <span class="reg">${p.region}</span>
-        </div>
-        <h4>${p.title}</h4>
-        <div class="stats">
-          <span>${p.season}</span>
-          ${p.views ? `<span>조회 ${p.views}</span>` : ''}
-          ${p.comments ? `<span>💬 ${p.comments}</span>` : ''}
-        </div>
-      </a>
-    `).join('');
+    list.innerHTML = posts.map(p => {
+      const matchedReviews = findReviews(p);
+      const reviewBadge = matchedReviews.length > 0
+        ? `<a class="review-link" href="javascript:void(0)" onclick="event.preventDefault(); event.stopPropagation(); jumpToReviews('${p.pid}', ${JSON.stringify(matchedReviews.map(r=>r.pid)).replace(/"/g,'&quot;')})">💌 후기 ${matchedReviews.length}편 보기</a>`
+        : '';
+      return `
+        <a class="museum-card s-${p.season}" href="https://cafe.daum.net/redtraintour/1fXs/${p.pid}" target="_blank" rel="noopener">
+          <div class="body">
+            <div class="meta-top">
+              <span class="year">${p.year}</span>
+              <span class="reg">${p.region}</span>
+              <span class="season-tag">${p.season}</span>
+            </div>
+            <h4>${p.title}</h4>
+            <div class="stats">
+              ${p.views ? `<span>조회 ${p.views}</span>` : ''}
+              ${p.comments ? `<span>💬 ${p.comments}</span>` : ''}
+              ${p.posted ? `<span>게시 ${p.posted}</span>` : ''}
+            </div>
+            ${reviewBadge}
+          </div>
+          <span class="arrow">›</span>
+        </a>
+      `;
+    }).join('');
   }
+
+  // ===== 후기 페이지로 이동하면서 해당 그룹 강조 =====
+  window.jumpToReviews = function(museumPid, reviewPids){
+    showView('rv');
+    setTimeout(()=>{
+      // 일치하는 review를 가진 group을 스크롤하고 강조
+      if (reviewPids && reviewPids.length){
+        const first = document.querySelector(`[data-review-pid="${reviewPids[0]}"]`);
+        if (first) {
+          first.scrollIntoView({behavior:'smooth', block:'center'});
+          const group = first.closest('.review-group');
+          if (group) {
+            group.style.background = 'rgba(199,162,90,.18)';
+            group.style.transition = 'background .8s';
+            setTimeout(()=>{ group.style.background = ''; }, 2500);
+          }
+        }
+      }
+    }, 100);
+  };
 
   // 필터 모드 탭 전환
   document.querySelectorAll('.filter-tabs button').forEach(b => {
@@ -520,6 +661,66 @@
       renderFilterChips(b.dataset.mode);
     });
   });
+
+  // ============= 여행후기 =============
+  async function loadReviews(){
+    try {
+      const res = await fetch('./data/reviews.json');
+      const json = await res.json();
+      REVIEWS = json.posts;
+      document.getElementById('seg-rv-count').textContent = REVIEWS.length;
+      document.getElementById('rv-total').textContent = REVIEWS.length;
+      renderReviews();
+      // 박물관이 이미 렌더된 상태면 cross-link 갱신
+      if (PAST.length > 0) renderMuseum();
+    } catch(e) {
+      document.getElementById('review-groups').innerHTML =
+        `<div class="museum-empty" style="margin:20px 18px">후기 데이터 로딩 실패 (file://에서는 fetch 차단)</div>`;
+    }
+  }
+
+  function renderReviews(){
+    // trip별로 그룹핑
+    const groups = {};
+    REVIEWS.forEach(r => {
+      const k = r.trip || '기타';
+      if (!groups[k]) groups[k] = [];
+      groups[k].push(r);
+    });
+    // 그룹 순서: 글 수 많은 순 (트립당), 기타는 맨 마지막
+    const sortedKeys = Object.keys(groups).sort((a,b) => {
+      if (a==='기타') return 1; if (b==='기타') return -1;
+      return groups[b].length - groups[a].length;
+    });
+    const groupTitles = {
+      '조지아-2026':'2026 코카서스·조지아·아르메니아 (10일)',
+      '나오시마-2026':'2026 4월 나오시마 (일본 예술섬)',
+      '경주벚꽃-2026':'2026 4월 경주 벚꽃',
+      '황매산-2026-05':'2026 5월 합천 해인사·황매산',
+      '남해하동-2026':'2026 4월 남해·하동 벚꽃',
+      '섬진강매화-2026':'2026 3월 섬진강 매화',
+      '포르투갈-2026':'2026 5월 포르투갈',
+      '군산벚꽃-2026':'2026 군산 벚꽃·공감선유',
+      '군산서천-2026':'2026 군산·서천 비 오는 날',
+      '나주죽설헌-2026':'2026 나주 죽설헌',
+      '영월태백정선-2026':'2026 영월·태백·정선 (서울대 교수팀)',
+      '기타':'기타 글'
+    };
+    const html = sortedKeys.map(k => `
+      <div class="review-group" data-group="${k}">
+        <h3 class="review-group-h">${groupTitles[k] || k} <span class="ct">${groups[k].length}편</span></h3>
+        ${groups[k].map(r => `
+          <a class="review-card" href="https://cafe.daum.net/redtraintour/4b2T/${r.pid}" target="_blank" rel="noopener" data-review-pid="${r.pid}">
+            <div class="body">
+              <h4><span class="badge">${r.year}</span>${r.title}</h4>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+        `).join('')}
+      </div>
+    `).join('');
+    document.getElementById('review-groups').innerHTML = html;
+  }
 </script>
 
 <script src="./pwa.js"></script>
