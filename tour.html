@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>명인방투어 · 여행 일정</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="./shared.css" />
+<style>
+  /* ===== 투어 페이지 전용 ===== */
+  .page-head{padding:20px 18px 6px}
+  .page-head h1{font-family:"Noto Serif KR",serif;font-size:24px;margin:0 0 4px}
+  .page-head p{margin:0;color:var(--ink-3);font-size:13px}
+
+  /* 풀-리스트 카드 (다가오는 일정 — 모두 같은 크기) */
+  .list-card{
+    margin:10px 18px;background:#fff;border:1px solid var(--line);
+    border-radius:16px;overflow:hidden;display:flex;
+    text-decoration:none;color:inherit;
+    box-shadow:0 4px 12px rgba(43,31,26,.04);
+  }
+  .list-card .img{
+    flex:0 0 130px;background:#ccc center/cover no-repeat;
+    position:relative;align-self:stretch;
+  }
+  .list-card .img .badge{
+    position:absolute;top:8px;left:8px;
+    background:#fff8ec;color:var(--wine);
+    font-size:10.5px;font-weight:700;
+    padding:3px 8px;border-radius:999px;
+  }
+  .list-card .img .dday{
+    position:absolute;top:8px;right:8px;
+    background:var(--wine);color:#fff8ec;
+    font-size:10.5px;font-weight:800;
+    padding:3px 8px;border-radius:999px;
+  }
+  .list-card .body{padding:12px 14px;flex:1;min-width:0;display:flex;flex-direction:column}
+  .list-card .date{font-size:11.5px;color:var(--wine);font-weight:700}
+  .list-card h3{font-size:14.5px;margin:4px 0 4px;font-weight:700;line-height:1.32}
+  .list-card .sub{font-size:11.5px;color:var(--ink-3);margin-bottom:auto;line-height:1.4}
+  .list-card .meta{font-size:11px;color:var(--ink-2);margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
+  .list-card .meta span{background:#fff8ec;padding:2px 7px;border-radius:999px;border:1px solid var(--line-2)}
+  .list-card .seats{margin-top:6px;height:5px;border-radius:999px;background:var(--line);overflow:hidden}
+  .list-card .seats i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--wine));border-radius:999px}
+  .list-card.is-near{
+    border-color:var(--wine);
+    box-shadow:0 8px 20px rgba(122,27,37,.12);
+  }
+  .list-card.is-near .body::before{
+    content:"가장 가까운 일정";
+    display:inline-block;
+    background:var(--wine);color:#fff8ec;
+    font-size:10px;font-weight:700;
+    padding:2px 7px;border-radius:999px;
+    margin-bottom:4px;align-self:flex-start;
+  }
+  .list-card.is-past{opacity:.72}
+  .list-card.is-past .date{color:var(--ink-3)}
+
+  .section-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:24px 18px 8px;
+  }
+  .section-bar h2{font-family:"Noto Serif KR",serif;font-size:17px;margin:0}
+  .section-bar small{color:var(--ink-3);font-size:11.5px}
+
+  .calendar-toggle{
+    margin:14px 18px;
+    display:flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px;
+  }
+  .calendar-toggle button{
+    flex:1;background:none;border:0;padding:9px;
+    font-size:13px;color:var(--ink-3);font-weight:600;
+    border-radius:8px;cursor:pointer;
+    font-family:inherit;
+  }
+  .calendar-toggle button.is-on{background:var(--ink);color:#fff8ec}
+</style>
+</head>
+<body>
+
+<main class="stage">
+
+  <!-- 상단 띠 -->
+  <div class="topbar">
+    <span>🚆</span>
+    <span><b>2026년 여행</b> · 다음 가까운 일정 자동 안내</span>
+  </div>
+
+  <!-- 헤더 -->
+  <header class="header">
+    <a class="brand" href="./index.html">
+      <div class="brand-mark">明</div>
+      <div>
+        <div class="brand-name">명인방투어</div>
+        <div class="brand-sub">여행 일정</div>
+      </div>
+    </a>
+    <div class="nav-icons">
+      <button aria-label="검색"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <button aria-label="알림"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></button>
+      <button aria-label="메뉴"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+    </div>
+  </header>
+
+  <!-- 페이지 헤더 -->
+  <div class="page-head">
+    <h1>여행</h1>
+    <p>능파와 함께 걷는 모든 길의 일정</p>
+  </div>
+
+  <!-- 필터 칩 -->
+  <div class="chips">
+    <span class="chip is-on">전체</span>
+    <span class="chip">다가오는</span>
+    <span class="chip">정기</span>
+    <span class="chip">원데이</span>
+    <span class="chip">해외문화탐방</span>
+    <span class="chip">집밥 아카데미</span>
+    <span class="chip">지난 여행</span>
+  </div>
+
+  <!-- 리스트/캘린더 토글 -->
+  <div class="calendar-toggle">
+    <button class="is-on">리스트</button>
+    <button>캘린더</button>
+  </div>
+
+  <!-- 다가오는 일정 (전체) -->
+  <div class="section-bar" id="upcoming">
+    <h2>다가오는 일정</h2>
+    <small id="up-count">—</small>
+  </div>
+  <div id="upcoming-list"><!-- JS가 모든 다가오는 일정을 렌더 --></div>
+
+  <!-- 지난 여행 -->
+  <div class="section-bar">
+    <h2>지난 여행 후기</h2>
+    <small>카페에서 보기</small>
+  </div>
+  <a class="list-card is-past" href="https://cafe.daum.net/redtraintour/1fXs/1063" target="_blank" rel="noopener">
+    <div class="img" style="background-image:url('./assets/avatar-01.jpg')">
+      <span class="badge">여행후기</span>
+    </div>
+    <div class="body">
+      <div class="date">코카서스 · 완료</div>
+      <h3>조지아 여행후기</h3>
+      <div class="meta">여행후기 게시판 · 능파의 기록</div>
+    </div>
+  </a>
+  <a class="list-card is-past" href="https://cafe.daum.net/redtraintour/1fY7/1483" target="_blank" rel="noopener">
+    <div class="img" style="background-image:url('./assets/avatar-02.jpg')">
+      <span class="badge">여행 편지</span>
+    </div>
+    <div class="body">
+      <div class="date">남양주 · 완료</div>
+      <h3>물머리와 정약용 유적 탐방기</h3>
+      <div class="meta">여행! 편지!! · 멤버 답사</div>
+    </div>
+  </a>
+
+  <!-- 카톡 CTA -->
+  <a class="kakao-cta" href="#">
+    <div class="k-ico">k</div>
+    <div>
+      <b>여행 신청·문의는 카톡 채널로</b>
+      <span>평일 10시~18시 · 즉시 답변</span>
+    </div>
+    <div style="margin-left:auto;font-size:18px">›</div>
+  </a>
+
+  <footer>
+    <div class="brand-name">명인방투어 · 능파</div>
+    <div>더 많은 여행은 다음 카페에서 → <a href="https://cafe.daum.net/redtraintour" target="_blank">cafe.daum.net/redtraintour</a></div>
+    <div style="margin-top:14px;color:var(--ink-3)">© 2026 명인방투어 v0.2</div>
+  </footer>
+
+  <!-- 하단 탭바 (투어 활성) -->
+  <nav class="tabbar">
+    <a href="./index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+    <a class="is-on" href="./tour.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V6h16v11"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 11h16"/></svg>여행</a>
+    <a href="./story.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 13h7"/></svg>이야기</a>
+    <a href="./place.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>명인소</a>
+    <a href="./my.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>마이</a>
+  </nav>
+</main>
+
+<a class="fab" href="#" aria-label="카카오 채널">TALK</a>
+
+<script>
+  // ===== 공유: 투어 데이터 (data/tours.json과 동일 구조) =====
+  const TOURS = [
+    {id:"jeju-2026-06",      title:"제주 수국 · 우도 훈데르트 바서",          subtitle:"섬의 수국이 깊어진 6월",                  category:"정기", duration:"3박 4일", startDate:"2026-06-15", endDate:"2026-06-18", host:"능파 동행", image:"./assets/tour-01.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/4b2T/1624"},
+    {id:"coastal7-2026-06",  title:"바라던 바다 — 7번 국도 바닷길",            subtitle:"sea of hope · 당신의 바다를 꿈꾸는",      category:"정기", duration:"2박 3일", startDate:"2026-06-23", endDate:"2026-06-25", host:"능파 동행", image:"./assets/tour-02.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1057"},
+    {id:"benelux-2026-09",   title:"베네룩스 3국 10일",                       subtitle:"벨기에 · 네덜란드 · 룩셈부르크",          category:"해외", duration:"10일",    startDate:"2026-09-27", endDate:"2026-10-06", host:"능파 동행", image:"./assets/tour-03.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/RfFv/96"},
+    {id:"jeongseon-2026-10", title:"정선 & 로미지안, 백두대간 운탄고도 단풍 곤도라", subtitle:"운탄고도에서 보는 백두대간 단풍",        category:"정기", duration:"1박 2일", startDate:"2026-10-30", endDate:"2026-10-31", host:"능파 동행", image:"./assets/hero.jpg",    cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1040"}
+  ];
+
+  function fmtDate(s){
+    const d = new Date(s);
+    const dow = ['일','월','화','수','목','금','토'];
+    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}(${dow[d.getDay()]})`;
+  }
+  function fmtRange(s, e){
+    const ds = new Date(s), de = new Date(e);
+    const dow = ['일','월','화','수','목','금','토'];
+    if (s === e) return `${ds.getMonth()+1}.${ds.getDate()}(${dow[ds.getDay()]})`;
+    return `${ds.getMonth()+1}.${ds.getDate()}(${dow[ds.getDay()]})~${de.getMonth()+1}.${de.getDate()}(${dow[de.getDay()]})`;
+  }
+  function dDay(s){
+    const today = new Date(); today.setHours(0,0,0,0);
+    const t = new Date(s); t.setHours(0,0,0,0);
+    return Math.round((t-today)/86400000);
+  }
+
+  // 다가오는 일정 정렬 — 전체 (가장 가까운 것부터)
+  const today = new Date().toISOString().slice(0,10);
+  const upcoming = TOURS.filter(t => t.startDate >= today)
+                        .sort((a,b)=>a.startDate.localeCompare(b.startDate));
+
+  // 모든 다가오는 일정을 같은 크기 카드로 렌더 (첫 카드는 '가장 가까운' 강조)
+  const upList = document.getElementById('upcoming-list');
+  document.getElementById('up-count').textContent = upcoming.length + "건 전체";
+  upList.innerHTML = upcoming.map((t, idx) => `
+    <a class="list-card ${idx===0?'is-near':''}" href="./tour-detail.html?id=${t.id}">
+      <div class="img" style="background-image:url('${t.image}')">
+        <span class="badge">${t.category}</span>
+        <span class="dday">D-${dDay(t.startDate)}</span>
+      </div>
+      <div class="body">
+        <div class="date">${fmtRange(t.startDate,t.endDate)}</div>
+        <h3>${t.title}</h3>
+        <div class="sub">${t.subtitle}</div>
+        <div class="meta">
+          <span>⏱ ${t.duration}</span>
+          <span>👤 ${t.host}</span>
+        </div>
+        <div class="seats"><i style="width:${[62,42,78,30][idx]||50}%"></i></div>
+      </div>
+    </a>
+  `).join('');
+</script>
+</body>
+</html>

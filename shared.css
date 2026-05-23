@@ -1,0 +1,150 @@
+/* ============================================================
+   명인방투어 — 공통 스타일 (모든 페이지 공유)
+   브랜드 팔레트: 한지 크림 + 능파 와인 + 황톳빛 골드
+   ============================================================ */
+
+:root{
+  --ink:#2b1f1a;
+  --ink-2:#5a4b44;
+  --ink-3:#8a7c75;
+  --line:#ece3da;
+  --line-2:#e2d6c8;
+  --bg:#fbf6ef;
+  --paper:#ffffff;
+  --wine:#7a1b25;
+  --wine-deep:#5a121a;
+  --gold:#c7a25a;
+  --moss:#5b6b3a;
+  --sky:#3f6b86;
+  --tag-bg:#fff3d6;
+  --tag-ink:#7a5a14;
+  --shadow:0 10px 30px rgba(43,31,26,.08);
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--ink)}
+body{
+  font-family:"Pretendard Variable","Pretendard","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  letter-spacing:-0.01em;
+  background:
+    radial-gradient(1200px 600px at 50% -100px, rgba(199,162,90,.18), transparent 60%),
+    linear-gradient(180deg,#1a120e 0%, #0e0907 100%);
+  min-height:100vh;
+}
+
+/* ===== 모바일 프레임 ===== */
+.stage{
+  max-width:480px;
+  margin:0 auto;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 30px 60px rgba(0,0,0,.45);
+}
+@media (min-width:520px){
+  .stage{margin:24px auto;border-radius:28px;min-height:calc(100vh - 48px)}
+}
+
+/* ===== 상단 알림 띠 ===== */
+.topbar{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 16px;
+  border-bottom:1px solid var(--line);
+  background:#fff8ec;
+  font-size:13px;color:var(--ink-2);
+  position:sticky;top:0;z-index:30;
+}
+.topbar b{color:var(--wine)}
+
+/* ===== 헤더 ===== */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 10px;
+  border-bottom:1px solid var(--line);
+  background:var(--bg);
+  position:sticky;top:42px;z-index:25;
+}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand-mark{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--wine);color:#fff8ec;
+  display:grid;place-items:center;font-weight:700;font-size:14px;
+  box-shadow:inset 0 0 0 2px #fff8ec, 0 0 0 1px var(--wine);
+}
+.brand-name{font-family:"Noto Serif KR","Noto Serif",serif;font-weight:700;font-size:18px;letter-spacing:.02em}
+.brand-sub{font-size:11px;color:var(--ink-3);margin-top:2px}
+.nav-icons{display:flex;gap:14px;color:var(--ink-2)}
+.nav-icons button{background:none;border:0;padding:0;color:inherit;cursor:pointer}
+.nav-icons svg{width:22px;height:22px;display:block}
+
+/* ===== 칩 ===== */
+.chips{
+  display:flex;gap:8px;overflow-x:auto;
+  padding:12px 18px 6px;
+  scrollbar-width:none;
+}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;
+  padding:8px 14px;border-radius:999px;
+  background:#fff;border:1px solid var(--line-2);
+  font-size:13px;color:var(--ink-2);font-weight:500;
+  white-space:nowrap;cursor:pointer;
+}
+.chip.is-on{background:var(--ink);color:#fff8ec;border-color:var(--ink)}
+
+/* ===== 카톡 CTA ===== */
+.kakao-cta{
+  margin:24px 18px 0;
+  background:#fee500;
+  border-radius:var(--radius);
+  padding:16px 18px;
+  display:flex;align-items:center;gap:12px;
+  text-decoration:none;color:#2b1f1a;
+}
+.kakao-cta .k-ico{
+  width:40px;height:40px;border-radius:12px;background:#2b1f1a;color:#fee500;
+  display:grid;place-items:center;font-weight:800;
+}
+.kakao-cta b{display:block;font-size:14px}
+.kakao-cta span{font-size:11.5px;color:#5a4b44}
+
+/* ===== 푸터 ===== */
+footer{
+  margin-top:28px;padding:24px 18px 110px;color:var(--ink-3);font-size:12px;line-height:1.7;
+  border-top:1px solid var(--line);
+}
+footer .brand-name{font-size:14px;color:var(--ink-2)}
+footer a{color:var(--ink-2);text-decoration:none}
+
+/* ===== 하단 탭바 ===== */
+.tabbar{
+  position:sticky;bottom:0;left:0;right:0;
+  background:rgba(255,248,236,.96);
+  backdrop-filter:saturate(140%) blur(10px);
+  border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  z-index:40;
+}
+.tabbar a{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  text-decoration:none;color:var(--ink-3);font-size:10.5px;font-weight:600;
+}
+.tabbar a.is-on{color:var(--wine)}
+.tabbar svg{width:22px;height:22px}
+
+/* ===== 플로팅 카톡 ===== */
+.fab{
+  position:fixed;right:max(18px, calc(50% - 222px));bottom:84px;z-index:50;
+  width:54px;height:54px;border-radius:50%;
+  background:#fee500;color:#2b1f1a;
+  display:grid;place-items:center;
+  box-shadow:0 14px 28px rgba(0,0,0,.25);
+  font-weight:800;font-size:12px;text-decoration:none;
+  border:0;cursor:pointer;
+}

@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+._*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 사진/문서 원본 폴더 (Korean folder names — 작업용)
+사진/
+
+# 빌드/임시
+node_modules/
+dist/
+.cache/
+.tmp.jpg
+*.bak
+
+# 환경 설정 (앞으로 비밀키 들어갈 자리)
+.env
+.env.local

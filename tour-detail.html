@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>명인방투어 · 여행 상세</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="./shared.css" />
+<style>
+  /* 헤더 위에 뒤로가기 + 공유/찜 */
+  .top-bar-detail{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:30;
+  }
+  .top-bar-detail button{background:none;border:0;color:var(--ink);cursor:pointer;padding:0}
+  .top-bar-detail svg{width:24px;height:24px;display:block}
+  .top-bar-detail .right{display:flex;gap:14px;color:var(--ink-2)}
+
+  /* 히어로 */
+  .detail-hero{
+    aspect-ratio:4/3;
+    background:#bbb center/cover no-repeat;
+    position:relative;
+  }
+  .detail-hero .ink{
+    position:absolute;inset:auto 0 0 0;padding:20px;color:#fff8ec;
+    background:linear-gradient(180deg,transparent,rgba(0,0,0,.6));
+  }
+  .detail-hero .kicker{font-size:11px;letter-spacing:.16em;opacity:.85}
+  .detail-hero h1{font-family:"Noto Serif KR",serif;margin:6px 0 0;font-size:24px;font-weight:700;line-height:1.25}
+  .detail-hero .ribbon{
+    position:absolute;top:14px;left:14px;
+    background:rgba(255,248,236,.95);color:var(--wine);
+    font-size:11px;font-weight:800;padding:6px 11px;border-radius:999px;
+  }
+  .detail-hero .dday{
+    position:absolute;top:14px;right:14px;
+    background:var(--wine);color:#fff8ec;
+    font-size:12px;font-weight:800;padding:6px 11px;border-radius:999px;
+  }
+
+  /* 정보 바 */
+  .info-bar{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    background:#fff;border-bottom:1px solid var(--line);
+    padding:14px 4px;
+  }
+  .info-bar div{text-align:center;font-size:11.5px;color:var(--ink-3);padding:0 4px}
+  .info-bar div b{display:block;color:var(--ink);font-size:13px;font-weight:700;margin-bottom:2px}
+
+  /* 탭 네비 */
+  .tab-nav{
+    display:flex;background:#fff;border-bottom:1px solid var(--line);
+    position:sticky;top:54px;z-index:25;
+  }
+  .tab-nav a{
+    flex:1;text-align:center;padding:14px 0;
+    font-size:13.5px;font-weight:600;color:var(--ink-3);
+    text-decoration:none;
+    border-bottom:2px solid transparent;
+  }
+  .tab-nav a.is-on{color:var(--wine);border-bottom-color:var(--wine)}
+
+  /* 섹션 공통 */
+  .det-sec{padding:22px 18px}
+  .det-sec h2{font-family:"Noto Serif KR",serif;font-size:18px;margin:0 0 10px}
+  .det-sec p{color:var(--ink-2);font-size:13.5px;line-height:1.65;margin:0 0 10px}
+  .det-sec .sub{color:var(--ink-3);font-size:12px;margin:-6px 0 12px}
+
+  /* 일정 타임라인 */
+  .timeline{position:relative;padding-left:24px;margin-top:6px}
+  .timeline::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line-2)}
+  .day{position:relative;margin-bottom:18px}
+  .day::before{
+    content:"";position:absolute;left:-22px;top:6px;
+    width:14px;height:14px;border-radius:50%;
+    background:var(--wine);box-shadow:0 0 0 4px var(--bg);
+  }
+  .day .day-h{font-family:"Noto Serif KR",serif;font-weight:700;font-size:14px;color:var(--wine);margin-bottom:4px}
+  .day .day-t{font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+
+  /* 포함사항 */
+  .include-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .include-row{
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:10px 12px;display:flex;align-items:center;gap:8px;
+    font-size:12.5px;
+  }
+  .include-row.in{color:var(--ink-2)}
+  .include-row.out{color:var(--ink-3);background:#faf3e6}
+  .include-row .ck{
+    width:18px;height:18px;border-radius:50%;display:grid;place-items:center;
+    color:#fff;font-size:11px;font-weight:800;flex:0 0 18px;
+  }
+  .include-row.in .ck{background:var(--moss)}
+  .include-row.out .ck{background:var(--ink-3)}
+
+  /* 후기 */
+  .review-mini{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;margin-bottom:10px;
+  }
+  .review-mini .who{font-size:12.5px;color:var(--ink-2);margin-bottom:6px;font-weight:600}
+  .review-mini .who span{color:var(--ink-3);font-weight:400;margin-left:6px;font-size:11.5px}
+  .review-mini p{margin:0;font-size:13px;line-height:1.6;color:var(--ink-2)}
+
+  /* 예약 폼 */
+  .form-grid{display:grid;gap:12px;margin-top:8px}
+  .form-row label{display:block;font-size:12.5px;color:var(--ink-2);margin-bottom:4px;font-weight:600}
+  .form-row input, .form-row select, .form-row textarea{
+    width:100%;border:1px solid var(--line);border-radius:10px;
+    padding:11px 13px;font-size:14px;font-family:inherit;
+    background:#fff;color:var(--ink);outline:none;
+  }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus{border-color:var(--wine)}
+  .form-row textarea{resize:vertical;min-height:70px}
+
+  /* 약관 동의 */
+  .agree{margin:10px 0 0;font-size:12px;color:var(--ink-3);display:flex;align-items:flex-start;gap:8px}
+  .agree input{margin-top:3px}
+
+  /* 카페 원문 */
+  .cafe-link{
+    display:flex;align-items:center;gap:10px;
+    margin:14px 18px 0;
+    background:#fff8ec;border:1px solid var(--line-2);border-radius:14px;
+    padding:14px 16px;
+    text-decoration:none;color:var(--ink);
+  }
+  .cafe-link .ico{
+    width:38px;height:38px;border-radius:10px;background:var(--wine);color:#fff8ec;
+    display:grid;place-items:center;font-weight:800;font-size:13px;
+  }
+  .cafe-link b{display:block;font-size:13px}
+  .cafe-link span{font-size:11.5px;color:var(--ink-3)}
+
+  /* 하단 고정 CTA — 탭바 위에 */
+  .book-cta{
+    position:fixed;left:0;right:0;
+    bottom:calc(56px + env(safe-area-inset-bottom));
+    z-index:35;
+    max-width:480px;margin:0 auto;
+    padding:10px 18px 10px;
+    background:rgba(251,246,239,.96);
+    border-top:1px solid var(--line);
+    display:flex;align-items:center;gap:12px;
+    backdrop-filter:saturate(140%) blur(10px);
+  }
+  @media (min-width:520px){
+    .book-cta{
+      left:50%;transform:translateX(-50%);
+      border-radius:0 0 28px 28px;
+    }
+  }
+  .book-cta .price{flex:1}
+  .book-cta .price b{display:block;font-family:"Noto Serif KR",serif;font-size:18px;color:var(--wine)}
+  .book-cta .price span{font-size:11px;color:var(--ink-3)}
+  .book-cta button{
+    background:var(--wine);color:#fff8ec;border:0;border-radius:12px;
+    padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;
+    font-family:inherit;
+  }
+  .stage{padding-bottom:140px}
+</style>
+</head>
+<body>
+
+<main class="stage">
+
+  <!-- 상단 뒤로 -->
+  <div class="top-bar-detail">
+    <button onclick="history.length>1?history.back():location.href='./tour.html'" aria-label="뒤로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+    <div class="right">
+      <button aria-label="공유"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></button>
+      <button aria-label="찜"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></button>
+    </div>
+  </div>
+
+  <!-- 히어로 -->
+  <div class="detail-hero" id="hero">
+    <span class="ribbon" id="r-ribbon">정기</span>
+    <span class="dday" id="r-dday">D-?</span>
+    <div class="ink">
+      <div class="kicker" id="r-kicker">—</div>
+      <h1 id="r-title">로딩 중</h1>
+    </div>
+  </div>
+
+  <!-- 정보 바 -->
+  <div class="info-bar">
+    <div><b id="r-date">—</b>출발</div>
+    <div><b id="r-duration">—</b>기간</div>
+    <div><b id="r-host">—</b>호스트</div>
+    <div><b id="r-cat">—</b>유형</div>
+  </div>
+
+  <!-- 탭 네비 (스크롤 앵커) -->
+  <nav class="tab-nav">
+    <a href="#schedule" class="is-on">일정</a>
+    <a href="#course">코스</a>
+    <a href="#review">후기</a>
+    <a href="#book">예약</a>
+  </nav>
+
+  <!-- 인사 -->
+  <div class="det-sec">
+    <h2>능파의 인사</h2>
+    <p id="r-greet">—</p>
+  </div>
+
+  <!-- 일정 -->
+  <div class="det-sec" id="schedule">
+    <h2>일정</h2>
+    <div class="sub">날씨와 현지 사정에 따라 일부 조정될 수 있습니다</div>
+    <div class="timeline" id="r-timeline"><!-- JS 렌더 --></div>
+  </div>
+
+  <!-- 코스 (지도 자리) -->
+  <div class="det-sec" id="course">
+    <h2>코스</h2>
+    <div class="sub">전체 동선 — 카카오맵 연동 예정</div>
+    <div id="r-course-map" style="width:100%;height:240px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(135deg,#eee5d6,#dccdb6);position:relative;overflow:hidden">
+      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--wine);color:#fff8ec;padding:8px 14px;border-radius:999px;font-size:12px;font-weight:700">코스 지도 (카카오맵 자리)</div>
+    </div>
+  </div>
+
+  <!-- 포함/불포함 -->
+  <div class="det-sec">
+    <h2>포함 사항</h2>
+    <div class="include-grid">
+      <div class="include-row in"><span class="ck">✓</span>차량 (전용 미니버스)</div>
+      <div class="include-row in"><span class="ck">✓</span>능파 인문학 강연</div>
+      <div class="include-row in"><span class="ck">✓</span>입장료 · 식사 3끼</div>
+      <div class="include-row in"><span class="ck">✓</span>여행자 보험</div>
+      <div class="include-row out"><span class="ck">−</span>개인 음료·간식</div>
+      <div class="include-row out"><span class="ck">−</span>출발지까지의 교통</div>
+    </div>
+  </div>
+
+  <!-- 후기 -->
+  <div class="det-sec" id="review">
+    <h2>다녀온 분들의 한마디</h2>
+    <div class="review-mini">
+      <div class="who">김O정 멤버<span>전회차 참가</span></div>
+      <p>"능파 선생님 동행은 길을 다르게 보게 만듭니다. 같은 길도 함께 걸으면 새 길."</p>
+    </div>
+    <div class="review-mini">
+      <div class="who">박O석 멤버<span>3회차 참가</span></div>
+      <p>"음식이 그저 한 끼가 아니라, 만든 사람의 시간을 같이 먹는 느낌이었습니다."</p>
+    </div>
+  </div>
+
+  <!-- 카페 원문 -->
+  <a class="cafe-link" id="r-cafe" href="#" target="_blank" rel="noopener">
+    <div class="ico">明</div>
+    <div style="flex:1">
+      <b>다음 카페 원문에서 더 보기</b>
+      <span>참가자 사연 · 사진 모음 · 전체 후기</span>
+    </div>
+    <div style="color:var(--ink-3)">›</div>
+  </a>
+
+  <!-- 예약 폼 -->
+  <div class="det-sec" id="book">
+    <h2>참가 신청</h2>
+    <div class="sub">아래 작성 후 신청하면 능파님이 직접 확인 후 안내드립니다</div>
+    <form class="form-grid" onsubmit="event.preventDefault(); alert('신청서가 능파에게 전달되었습니다.\\n카카오톡으로 확정 안내드립니다.')">
+      <div class="form-row">
+        <label>참가 인원</label>
+        <select>
+          <option>1명</option>
+          <option>2명</option>
+          <option>3명</option>
+          <option>4명 이상 (문의)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>이름 (대표자)</label>
+        <input type="text" placeholder="홍길동" required />
+      </div>
+      <div class="form-row">
+        <label>연락처</label>
+        <input type="tel" placeholder="010-0000-0000" required />
+      </div>
+      <div class="form-row">
+        <label>식사 알레르기·이동 보조 필요 등</label>
+        <textarea placeholder="없으면 비워두세요"></textarea>
+      </div>
+      <div class="form-row">
+        <label>결제 수단</label>
+        <select>
+          <option>현장 결제 (계좌이체)</option>
+          <option>카카오페이</option>
+          <option>신용카드 (확정 후 결제 링크 발송)</option>
+        </select>
+      </div>
+      <label class="agree">
+        <input type="checkbox" required />
+        <span>참가 약관과 환불 규정에 동의합니다. 능파님이 직접 운영하므로 출발 7일 전 취소 시 전액 환불, 이후 50% 환불됩니다.</span>
+      </label>
+    </form>
+  </div>
+
+  <footer>
+    <div class="brand-name">명인방투어 · 능파</div>
+    <div>since 2009 · 회원 1,927명과 걷는 길</div>
+    <div style="margin-top:14px;color:var(--ink-3)">© 2026 명인방투어 v0.2</div>
+  </footer>
+
+  <!-- 하단 고정 CTA -->
+  <div class="book-cta">
+    <div class="price">
+      <b id="r-price">문의</b>
+      <span>1인 기준 · 능파 동행</span>
+    </div>
+    <button onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">신청하기 →</button>
+  </div>
+
+  <!-- 하단 탭바 (여행 활성) -->
+  <nav class="tabbar">
+    <a href="./index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+    <a class="is-on" href="./tour.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V6h16v11"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 11h16"/></svg>여행</a>
+    <a href="./story.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 13h7"/></svg>이야기</a>
+    <a href="./place.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>명인소</a>
+    <a href="./my.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>마이</a>
+  </nav>
+</main>
+
+<script>
+  // ===== 투어 데이터 (각 투어별 상세 정보) =====
+  const TOURS = {
+    "jeju-2026-06": {
+      title:"제주 수국 · 우도 훈데르트 바서",
+      kicker:"JUNE · JEJU",
+      subtitle:"섬의 수국이 깊어진 6월",
+      category:"정기",
+      duration:"3박 4일",
+      startDate:"2026-06-15", endDate:"2026-06-18",
+      host:"능파 임상수",
+      image:"./assets/tour-01.jpg",
+      cafeUrl:"https://cafe.daum.net/redtraintour/4b2T/1624",
+      price:"58만원",
+      greet:"우도의 수국은 사람보다 먼저 6월을 알립니다. 이번엔 훈데르트 바서까지 함께 걷고, 능파의 한밤 강연으로 섬을 한 번 더 살아냅니다.",
+      itinerary:[
+        {d:"Day 1 · 6.15(월)",  t:"김포 → 제주 입도 / 서귀포 도착 후 수국 둘레길 산책 / 명인소 만찬"},
+        {d:"Day 2 · 6.16(화)",  t:"우도 입도 / 훈데르트 바서 관람 / 우도봉 산책 / 자유 시간"},
+        {d:"Day 3 · 6.17(수)",  t:"오레브 리조트 카페 / 박물관 / 능파의 한밤 강연 「섬과 시간」"},
+        {d:"Day 4 · 6.18(목)",  t:"새벽 오름 산책 / 점심 / 제주공항 → 김포 도착 해산"}
+      ]
+    },
+    "coastal7-2026-06": {
+      title:"바라던 바다 — 7번 국도 바닷길",
+      kicker:"JUNE · EAST COAST",
+      subtitle:"sea of hope · 당신의 바다를 꿈꾸는",
+      category:"정기",
+      duration:"2박 3일",
+      startDate:"2026-06-23", endDate:"2026-06-25",
+      host:"능파 임상수",
+      image:"./assets/tour-02.jpg",
+      cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1057",
+      price:"42만원",
+      greet:"7번 국도는 길이 아니라 시간입니다. 동해의 차창과 바람, 그리고 능파가 골라둔 시 한 편이 함께 갑니다.",
+      itinerary:[
+        {d:"Day 1 · 6.23(화)",  t:"서울 출발 / 강릉 점심 / 동해 바닷가 카페 / 정동진 일몰 / 숙소"},
+        {d:"Day 2 · 6.24(수)",  t:"새벽 일출 / 추암 촛대바위 / 묵호 등대 / 능파 인문학 강연"},
+        {d:"Day 3 · 6.25(목)",  t:"삼척 해안 산책 / 점심 / 서울 복귀 해산"}
+      ]
+    },
+    "benelux-2026-09": {
+      title:"베네룩스 3국 10일",
+      kicker:"SEP-OCT · EUROPE",
+      subtitle:"벨기에 · 네덜란드 · 룩셈부르크",
+      category:"해외",
+      duration:"10일",
+      startDate:"2026-09-27", endDate:"2026-10-06",
+      host:"능파 임상수",
+      image:"./assets/tour-03.jpg",
+      cafeUrl:"https://cafe.daum.net/redtraintour/RfFv/96",
+      price:"598만원",
+      greet:"운하의 도시들 사이를 한 호흡으로 잇는 열흘. 능파가 미리 다녀온 골목과 명인소까지 함께 갑니다.",
+      itinerary:[
+        {d:"Day 1 · 9.27(일)",  t:"인천 → 암스테르담"},
+        {d:"Day 2-3 · 9.28~29", t:"암스테르담 / 운하 보트 / 반 고흐 미술관 / 헤이그"},
+        {d:"Day 4-5 · 9.30~10.1", t:"브뤼셀 / 그랑플라스 / 오베라뉴 / 브뤼헤"},
+        {d:"Day 6-7 · 10.2~3",  t:"룩셈부르크 / 비안덴 성 / 모젤 와인 산책"},
+        {d:"Day 8-9 · 10.4~5",  t:"안트베르펜 / 디자인 거리 / 한밤 강연"},
+        {d:"Day 10 · 10.6(화)", t:"암스테르담 → 인천 도착"}
+      ]
+    },
+    "jeongseon-2026-10": {
+      title:"정선 & 로미지안, 백두대간 운탄고도 단풍 곤도라",
+      kicker:"OCTOBER · GANGWON",
+      subtitle:"운탄고도에서 보는 백두대간 단풍",
+      category:"정기",
+      duration:"1박 2일",
+      startDate:"2026-10-30", endDate:"2026-10-31",
+      host:"능파 임상수",
+      image:"./assets/hero.jpg",
+      cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1040",
+      price:"38만원",
+      greet:"운탄고도의 곤도라가 단풍을 향해 솟아오릅니다. 정선의 아우라지에서 인문학 한 시간, 로미지안에서 한밤의 차 한 잔.",
+      itinerary:[
+        {d:"Day 1 · 10.30(목)", t:"서울 출발 / 정선 도착 / 운탄고도 곤도라 / 로미지안 / 한밤 강연"},
+        {d:"Day 2 · 10.31(금)", t:"아우라지 새벽 산책 / 화암약수 점심 / 서울 복귀"}
+      ]
+    }
+  };
+
+  // URL ?id= 파싱 → 기본은 가장 가까운 미래 일정
+  function pickNearest(){
+    const today = new Date().toISOString().slice(0,10);
+    const ids = Object.keys(TOURS);
+    return ids
+      .filter(id => TOURS[id].startDate >= today)
+      .sort((a,b) => TOURS[a].startDate.localeCompare(TOURS[b].startDate))[0]
+      || ids[0];
+  }
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id') && TOURS[params.get('id')] ? params.get('id') : pickNearest();
+  const T = TOURS[id];
+
+  function fmtRange(s, e){
+    const ds = new Date(s), de = new Date(e);
+    const dow = ['일','월','화','수','목','금','토'];
+    if (s === e) return `${ds.getMonth()+1}.${ds.getDate()}(${dow[ds.getDay()]})`;
+    return `${ds.getMonth()+1}.${ds.getDate()}~${de.getMonth()+1}.${de.getDate()}`;
+  }
+  function dDay(s){
+    const today = new Date(); today.setHours(0,0,0,0);
+    const t = new Date(s); t.setHours(0,0,0,0);
+    return Math.round((t-today)/86400000);
+  }
+
+  // 렌더링
+  document.title = `명인방투어 · ${T.title}`;
+  document.getElementById('hero').style.backgroundImage =
+    `linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.55) 100%), url('${T.image}')`;
+  document.getElementById('r-ribbon').textContent = T.category + " 여행";
+  const d = dDay(T.startDate);
+  document.getElementById('r-dday').textContent = d > 0 ? `D-${d}` : (d===0 ? "오늘" : "지남");
+  document.getElementById('r-kicker').textContent = T.kicker;
+  document.getElementById('r-title').textContent = T.title;
+  document.getElementById('r-date').textContent = fmtRange(T.startDate, T.endDate);
+  document.getElementById('r-duration').textContent = T.duration;
+  document.getElementById('r-host').textContent = "능파";
+  document.getElementById('r-cat').textContent = T.category;
+  document.getElementById('r-greet').textContent = T.greet;
+  document.getElementById('r-cafe').href = T.cafeUrl;
+  document.getElementById('r-price').textContent = T.price;
+  document.getElementById('r-timeline').innerHTML = T.itinerary.map(it =>
+    `<div class="day"><div class="day-h">${it.d}</div><div class="day-t">${it.t}</div></div>`
+  ).join('');
+
+  // 탭 네비 클릭 시 active 표시
+  document.querySelectorAll('.tab-nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      document.querySelectorAll('.tab-nav a').forEach(x => x.classList.remove('is-on'));
+      a.classList.add('is-on');
+    });
+  });
+</script>
+
+</body>
+</html>

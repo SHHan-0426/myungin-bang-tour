@@ -1,0 +1,48 @@
+# Netlify 배포 설정 — 명인방투어
+
+[build]
+  # 정적 파일이라 빌드 단계 없음
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+# 클린 URL — .html 확장자 자동 제거
+[[redirects]]
+  from = "/tour"
+  to = "/tour.html"
+  status = 200
+
+[[redirects]]
+  from = "/story"
+  to = "/story.html"
+  status = 200
+
+[[redirects]]
+  from = "/place"
+  to = "/place.html"
+  status = 200
+
+[[redirects]]
+  from = "/my"
+  to = "/my.html"
+  status = 200
+
+[[redirects]]
+  from = "/tour/:id"
+  to = "/tour-detail.html?id=:id"
+  status = 200

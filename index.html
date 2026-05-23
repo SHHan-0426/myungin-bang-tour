@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>명인방투어 — 길 위의 인문학</title>
+<meta name="description" content="능파의 명인방투어. 인문학·여행·음악·맛이 흐르는 어른의 큐레이션 커뮤니티." />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root{
+    /* 명인방 브랜드 팔레트 — 능파/redtraintour 감성: 진한 와인 + 따뜻한 크림 + 한지 톤 */
+    --ink:#2b1f1a;
+    --ink-2:#5a4b44;
+    --ink-3:#8a7c75;
+    --line:#ece3da;
+    --line-2:#e2d6c8;
+    --bg:#fbf6ef;            /* 본문 — 한지 크림 */
+    --paper:#ffffff;
+    --wine:#7a1b25;          /* 와인 — 명인방 능파 */
+    --wine-deep:#5a121a;
+    --gold:#c7a25a;          /* 황톳빛 포인트 */
+    --moss:#5b6b3a;          /* 길/숲 톤 */
+    --sky:#3f6b86;           /* 차창 톤 */
+    --tag-bg:#fff3d6;
+    --tag-ink:#7a5a14;
+    --shadow:0 10px 30px rgba(43,31,26,.08);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--ink)}
+  body{
+    font-family:"Pretendard Variable","Pretendard","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    letter-spacing:-0.01em;
+    /* 데스크탑에서는 모바일 프레임을 가운데에 표시 */
+    background:
+      radial-gradient(1200px 600px at 50% -100px, rgba(199,162,90,.18), transparent 60%),
+      linear-gradient(180deg,#1a120e 0%, #0e0907 100%);
+    min-height:100vh;
+  }
+  /* ===== 모바일 프레임 ===== */
+  .stage{
+    max-width:480px;
+    margin:0 auto;
+    background:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 30px 60px rgba(0,0,0,.45);
+  }
+  @media (min-width:520px){
+    .stage{margin:24px auto;border-radius:28px;min-height:calc(100vh - 48px)}
+  }
+
+  /* ===== 상단 알림 띠 ===== */
+  .topbar{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px 16px;
+    border-bottom:1px solid var(--line);
+    background:#fff8ec;
+    font-size:13px;color:var(--ink-2);
+    position:sticky;top:0;z-index:30;
+  }
+  .topbar b{color:var(--wine)}
+
+  /* ===== 헤더 — 로고 + 메뉴 ===== */
+  .header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px 10px;
+    border-bottom:1px solid var(--line);
+    background:var(--bg);
+    position:sticky;top:42px;z-index:25;
+  }
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+  .brand-mark{
+    width:34px;height:34px;border-radius:50%;
+    background:var(--wine);color:#fff8ec;
+    display:grid;place-items:center;font-weight:700;font-size:14px;
+    box-shadow:inset 0 0 0 2px #fff8ec, 0 0 0 1px var(--wine);
+  }
+  .brand-name{font-family:"Noto Serif KR","Noto Serif", serif;font-weight:700;font-size:18px;letter-spacing:.02em}
+  .brand-sub{font-size:11px;color:var(--ink-3);margin-top:2px}
+  .nav-icons{display:flex;gap:14px;color:var(--ink-2)}
+  .nav-icons button{background:none;border:0;padding:0;color:inherit;cursor:pointer}
+  .nav-icons svg{width:22px;height:22px;display:block}
+
+  /* ===== 카테고리 칩 (스크롤) ===== */
+  .chips{
+    display:flex;gap:8px;overflow-x:auto;
+    padding:12px 18px 6px;
+    scrollbar-width:none;
+  }
+  .chips::-webkit-scrollbar{display:none}
+  .chip{
+    flex:0 0 auto;
+    padding:8px 14px;border-radius:999px;
+    background:#fff;border:1px solid var(--line-2);
+    font-size:13px;color:var(--ink-2);font-weight:500;
+    white-space:nowrap;
+    text-decoration:none;
+  }
+  .chip.is-on{background:var(--ink);color:#fff8ec;border-color:var(--ink)}
+
+  /* ===== 히어로 ===== */
+  .hero{
+    position:relative;
+    margin:14px 18px 0;
+    border-radius:var(--radius);
+    overflow:hidden;
+    aspect-ratio: 4/5;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%),
+      url('./assets/hero.jpg') center/cover;
+    color:#fff8ec;
+    box-shadow:var(--shadow);
+  }
+  .hero-tag{
+    position:absolute;top:16px;left:16px;
+    background:rgba(255,248,236,.92);color:var(--wine);
+    font-size:11px;font-weight:700;letter-spacing:.04em;
+    padding:6px 10px;border-radius:999px;
+  }
+  .hero-body{position:absolute;left:0;right:0;bottom:0;padding:20px 22px}
+  .hero-eyebrow{font-size:12px;letter-spacing:.16em;opacity:.85;margin-bottom:6px}
+  .hero-title{
+    font-family:"Noto Serif KR",serif;
+    font-weight:700;
+    font-size:28px;line-height:1.25;
+    margin:0 0 10px;
+  }
+  .hero-meta{display:flex;gap:8px;font-size:12px;opacity:.9}
+  .hero-meta span::after{content:"·";margin-left:8px;opacity:.5}
+  .hero-meta span:last-child::after{content:""}
+  .hero-cta{
+    margin-top:14px;display:inline-flex;align-items:center;gap:6px;
+    background:#fff8ec;color:var(--wine);
+    padding:10px 14px;border-radius:999px;
+    font-size:13px;font-weight:700;text-decoration:none;
+  }
+
+  /* ===== 섹션 공통 ===== */
+  section{padding:28px 18px 6px}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
+  .sec-title{
+    font-family:"Noto Serif KR",serif;
+    font-weight:700;font-size:20px;margin:0;
+  }
+  .sec-title .arrow{margin-left:6px;color:var(--ink-3);font-weight:400}
+  .sec-sub{font-size:13px;color:var(--ink-3);margin-top:4px}
+  .sec-link{font-size:12px;color:var(--ink-3);text-decoration:none}
+
+  /* ===== 카테고리 원형 4종 ===== */
+  .cats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+    padding:6px 14px 4px;
+  }
+  .cat{
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    text-decoration:none;color:var(--ink);
+  }
+  .cat-ico{
+    width:62px;height:62px;border-radius:50%;
+    background:#fff;border:1px solid var(--line);
+    display:grid;place-items:center;
+    box-shadow:0 6px 16px rgba(43,31,26,.06);
+    font-size:26px;
+  }
+  .cat-name{font-size:12.5px;font-weight:600}
+
+  /* ===== 가로 슬라이드 카드 (투어 일정) ===== */
+  .h-scroll{
+    display:flex;gap:12px;overflow-x:auto;
+    padding:2px 18px 14px;
+    margin:0 -18px;
+    scrollbar-width:none;
+    scroll-snap-type:x mandatory;
+  }
+  .h-scroll::-webkit-scrollbar{display:none}
+  .tour-card{
+    flex:0 0 calc(50% - 6px);  /* 한 화면에 2장 보이도록 */
+    scroll-snap-align:start;
+    background:#fff;border-radius:var(--radius);
+    overflow:hidden;border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    text-decoration:none;color:inherit;
+  }
+  .tour-card .body{padding:12px 12px 14px}
+  .tour-card h3{font-size:14px;margin:5px 0 6px;line-height:1.32}
+  .tour-card .date{font-size:11px}
+  .tour-card .meta{font-size:11px}
+  .tour-card .badge{font-size:10px;padding:4px 7px}
+  .tour-card .seats-txt{font-size:10.5px}
+  .tour-card .img{
+    aspect-ratio:4/3;
+    background:#ddd center/cover no-repeat;
+    position:relative;
+  }
+  .tour-card .badge{
+    position:absolute;top:10px;left:10px;
+    background:var(--wine);color:#fff8ec;
+    font-size:11px;font-weight:700;
+    padding:5px 9px;border-radius:999px;
+  }
+  .tour-card .body{padding:14px 14px 16px}
+  .tour-card .date{font-size:12px;color:var(--wine);font-weight:700;letter-spacing:.02em}
+  .tour-card h3{margin:6px 0 8px;font-size:16px;font-weight:700;line-height:1.35}
+  .tour-card .meta{font-size:12px;color:var(--ink-3);display:flex;gap:8px;align-items:center}
+  .tour-card .meta b{color:var(--ink-2);font-weight:600}
+  .tour-card .seats{
+    margin-top:10px;height:6px;border-radius:999px;background:var(--line);overflow:hidden;
+  }
+  .tour-card .seats i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--wine));border-radius:999px}
+  .tour-card .seats-txt{margin-top:6px;font-size:11.5px;color:var(--ink-3)}
+
+  /* ===== 큰 와이드 카드 (이야기) ===== */
+  .story{
+    margin-top:8px;
+    border-radius:var(--radius);overflow:hidden;
+    background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
+    text-decoration:none;color:inherit;display:block;
+  }
+  .story .cover{
+    aspect-ratio:16/10;
+    background:#bbb center/cover no-repeat;
+    position:relative;
+  }
+  .story .cover .ink{
+    position:absolute;inset:auto 0 0 0;padding:14px 16px;color:#fff8ec;
+    background:linear-gradient(180deg,transparent, rgba(0,0,0,.55));
+  }
+  .story .cover .ink .kicker{font-size:11px;letter-spacing:.16em;opacity:.85}
+  .story .cover .ink h3{font-family:"Noto Serif KR",serif;margin:4px 0 0;font-size:20px;font-weight:700}
+  .story .body{padding:14px 16px 16px}
+  .story .body p{margin:0;color:var(--ink-2);font-size:13.5px;line-height:1.6}
+  .story .by{margin-top:10px;font-size:12px;color:var(--ink-3)}
+
+  /* ===== 명인소 그리드 (2열) ===== */
+  .grid-2{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  }
+  .place{
+    background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    text-decoration:none;color:inherit;display:block;
+  }
+  .place .img{aspect-ratio:1/1;background:#ccc center/cover no-repeat}
+  .place .body{padding:10px 12px 12px}
+  .place .body h4{margin:0 0 4px;font-size:13.5px;font-weight:700}
+  .place .body .reg{font-size:11px;color:var(--ink-3)}
+
+  /* ===== 음악 큐레이션 ===== */
+  .playlist{
+    background:linear-gradient(160deg,#2b1f1a,#3a2c25);
+    color:#fff8ec;border-radius:var(--radius);
+    padding:18px 18px 8px;
+    margin-top:6px;
+  }
+  .playlist h3{font-family:"Noto Serif KR",serif;font-size:18px;margin:0 0 4px}
+  .playlist .desc{font-size:12.5px;opacity:.78;margin-bottom:12px}
+  .track{
+    display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,248,236,.08);
+  }
+  .track:last-child{border-bottom:0}
+  .track .num{width:22px;font-size:13px;color:var(--gold);font-weight:700}
+  .track .ti{flex:1}
+  .track .ti b{display:block;font-size:13.5px;font-weight:600}
+  .track .ti span{font-size:11.5px;opacity:.7}
+  .track .pl{
+    width:32px;height:32px;border-radius:50%;background:var(--gold);color:#2b1f1a;
+    display:grid;place-items:center;font-size:12px;
+  }
+
+  /* ===== 후기 ===== */
+  .review{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;
+  }
+  .review + .review{margin-top:10px}
+  .review .who{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .review .who .av{width:32px;height:32px;border-radius:50%;background:#ddd center/cover no-repeat;flex:0 0 32px}
+  .review .who b{font-size:13px}
+  .review .who span{font-size:11px;color:var(--ink-3);margin-left:auto}
+  .review p{margin:0;font-size:13px;line-height:1.65;color:var(--ink-2)}
+  .review .stars{
+    display:inline-block;margin:2px 0 8px;
+    background:var(--tag-bg);color:var(--tag-ink);
+    font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:0;
+  }
+
+  /* ===== 푸터 / 카톡 CTA ===== */
+  .kakao-cta{
+    margin:24px 18px 0;
+    background:#fee500;
+    border-radius:var(--radius);
+    padding:16px 18px;
+    display:flex;align-items:center;gap:12px;
+    text-decoration:none;color:#2b1f1a;
+  }
+  .kakao-cta .k-ico{
+    width:40px;height:40px;border-radius:12px;background:#2b1f1a;color:#fee500;
+    display:grid;place-items:center;font-weight:800;
+  }
+  .kakao-cta b{display:block;font-size:14px}
+  .kakao-cta span{font-size:11.5px;color:#5a4b44}
+
+  footer{
+    margin-top:28px;padding:24px 18px 110px;color:var(--ink-3);font-size:12px;line-height:1.7;
+    border-top:1px solid var(--line);
+  }
+  footer .brand-name{font-size:14px;color:var(--ink-2)}
+  footer a{color:var(--ink-2);text-decoration:none}
+
+  /* ===== 하단 고정 내비 (모바일) ===== */
+  .tabbar{
+    position:sticky;bottom:0;left:0;right:0;
+    background:rgba(255,248,236,.96);
+    backdrop-filter:saturate(140%) blur(10px);
+    border-top:1px solid var(--line);
+    display:grid;grid-template-columns:repeat(5,1fr);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    z-index:40;
+  }
+  .tabbar a{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    text-decoration:none;color:var(--ink-3);font-size:10.5px;font-weight:600;
+  }
+  .tabbar a.is-on{color:var(--wine)}
+  .tabbar svg{width:22px;height:22px}
+
+  /* ===== 플로팅 카톡 버튼 ===== */
+  .fab{
+    position:fixed;right:max(18px, calc(50% - 222px));bottom:84px;z-index:50;
+    width:54px;height:54px;border-radius:50%;
+    background:#fee500;color:#2b1f1a;
+    display:grid;place-items:center;
+    box-shadow:0 14px 28px rgba(0,0,0,.25);
+    font-weight:800;font-size:12px;text-decoration:none;
+    border:0;cursor:pointer;
+  }
+
+  /* 데스크탑에서 좌측에 디자인 노트 표시 */
+  .design-notes{
+    display:none;
+    position:fixed;top:24px;left:24px;
+    width:300px;max-height:calc(100vh - 48px);overflow:auto;
+    background:rgba(255,248,236,.96);color:var(--ink);
+    border-radius:18px;padding:18px 18px;
+    font-size:12.5px;line-height:1.65;
+    box-shadow:0 18px 50px rgba(0,0,0,.4);
+  }
+  .design-notes h4{margin:14px 0 6px;font-size:13px;color:var(--wine)}
+  .design-notes h4:first-child{margin-top:0}
+  .design-notes code{background:#fff;border:1px solid var(--line);padding:1px 6px;border-radius:6px;font-size:11.5px}
+  .design-notes ul{margin:0 0 4px;padding-left:18px}
+  @media (min-width:1100px){
+    .design-notes{display:block}
+  }
+</style>
+</head>
+<body>
+
+<aside class="design-notes">
+  <h4>시안 v0.2 — IA 재설계</h4>
+  <p>다음 카페 22개 게시판 → 모바일 5탭으로 흡수. 빈 카테고리 없이 모든 글에 갈 자리가 있도록.</p>
+
+  <h4>🏠 홈</h4>
+  <p>자동 히어로 + 다음 여행 + 명인소 + 이야기 + 플레이리스트 큐레이션</p>
+
+  <h4>🚆 여행</h4>
+  <ul>
+    <li>다가오는 일정 / 정기 / 원데이 / 해외 / 클래스 / 후기</li>
+    <li>← 여행 가는날, 해외문화탐방, 일본 여행, 집밥 아카데미, 여행후기</li>
+  </ul>
+
+  <h4>📖 이야기</h4>
+  <ul>
+    <li>길 위의 인문학 / 능파의 글 / 여행 편지 / 한줄 / 음악·영상 / 사진 / 도랑가제</li>
+    <li>← 길위의 인문학, 임상수(능파), 당신은 술보다, 여행! 편지!, 한줄메모, 음악 동영상, 사진, 도랑가제, 숲으로간 미술관</li>
+  </ul>
+
+  <h4>📍 명인소</h4>
+  <ul>
+    <li>명인 추천 / 명품 맛집 / 칼국수로드 / 산책 / 지도</li>
+    <li>← 명인 추천, 명품 맛집!, 칼국수로드, 산책!!</li>
+  </ul>
+
+  <h4>👤 마이</h4>
+  <ul>
+    <li>프로필 / 신청 / 카톡 / 검색 / 공지 / 가입</li>
+    <li>← 명인방공지, 회원가입, 일반 게시판</li>
+  </ul>
+
+  <h4>⚙️ 자동 히어로 (구현 완료)</h4>
+  <ul>
+    <li><code>data/tours.json</code>만 편집 = 자동 갱신</li>
+    <li>오늘 이후 가장 빠른 일정 자동 픽</li>
+    <li>토글 <code>AUTO_HERO = true</code>로 활성화</li>
+    <li>현재: <b>OFF</b> (정선 단풍 곤도라 수동 고정)</li>
+  </ul>
+
+  <h4>다음 단계</h4>
+  <ul>
+    <li>여행 / 이야기 / 명인소 / 마이 각 탭 페이지 시안</li>
+    <li>여행 상세 + 예약 폼 와이어</li>
+    <li>tours.json → posts.json 도 추가하면 이야기·명인소도 자동 큐레이션</li>
+  </ul>
+</aside>
+
+<main class="stage">
+
+  <!-- 상단 띠 -->
+  <div class="topbar">
+    <span>🚉</span>
+    <span><b>가을 정기</b> · 10/30~31 정선 운탄고도 단풍 곤도라 · 9/27~10/6 베네룩스 10일</span>
+  </div>
+
+  <!-- 헤더 -->
+  <header class="header">
+    <a class="brand" href="#">
+      <div class="brand-mark">明</div>
+      <div>
+        <div class="brand-name">명인방투어</div>
+        <div class="brand-sub">능파의 길 위 인문학 · since 2009</div>
+      </div>
+    </a>
+    <div class="nav-icons">
+      <button aria-label="검색">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button aria-label="알림">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+      </button>
+      <button aria-label="메뉴">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 메인 메뉴 칩 (IA 5탭) -->
+  <div class="chips">
+    <a class="chip is-on" href="./index.html">홈</a>
+    <a class="chip" href="./tour.html">여행</a>
+    <a class="chip" href="./story.html">이야기</a>
+    <a class="chip" href="./place.html">명인소</a>
+    <a class="chip" href="./my.html">마이</a>
+  </div>
+
+  <!-- 히어로 -->
+  <div class="hero">
+    <span class="hero-tag">10월 정기 여행 · 1박 2일</span>
+    <div class="hero-body">
+      <div class="hero-eyebrow">OCTOBER · JEONGSEON</div>
+      <h1 class="hero-title">정선 &amp; 로미지안,<br/>백두대간 운탄고도 단풍 곤도라</h1>
+      <div class="hero-meta">
+        <span>10.30(목)~31(금)</span><span>1박 2일</span><span>여행 가는날</span><span>능파 동행</span>
+      </div>
+      <a class="hero-cta" href="./tour-detail.html?id=jeongseon-2026-10">자세히 보고 신청하기 →</a>
+    </div>
+  </div>
+
+  <!-- 카테고리 원형 -->
+  <section style="padding-top:22px">
+    <div class="cats">
+      <a class="cat"><div class="cat-ico">🚆</div><div class="cat-name">정기 여행</div></a>
+      <a class="cat"><div class="cat-ico">🌿</div><div class="cat-name">원데이</div></a>
+      <a class="cat"><div class="cat-ico">📖</div><div class="cat-name">인문학</div></a>
+      <a class="cat"><div class="cat-ico">🎼</div><div class="cat-name">음악회</div></a>
+    </div>
+  </section>
+
+  <!-- 다음 여행 일정 -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title">다음 여행 일정<span class="arrow">›</span></h2>
+        <div class="sec-sub">정원이 한정된 정성스러운 동행</div>
+      </div>
+      <a class="sec-link" href="./tour.html#upcoming">전체보기 ›</a>
+    </div>
+
+    <div class="h-scroll">
+      <a class="tour-card" href="./tour-detail.html?id=jeju-2026-06">
+        <div class="img" style="background-image:url('./assets/tour-01.jpg')">
+          <span class="badge">정기 여행</span>
+        </div>
+        <div class="body">
+          <div class="date">6.15(월)~18(목) · 3박 4일</div>
+          <h3>제주 수국 · 우도 훈데르트 바서</h3>
+          <div class="meta"><b>여행 가는날</b> · 능파 동행</div>
+          <div class="seats"><i style="width:78%"></i></div>
+          <div class="seats-txt">섬의 수국이 깊어진 6월, 우도까지의 4일</div>
+        </div>
+      </a>
+
+      <a class="tour-card" href="./tour-detail.html?id=coastal7-2026-06">
+        <div class="img" style="background-image:url('./assets/tour-02.jpg')">
+          <span class="badge">정기 여행</span>
+        </div>
+        <div class="body">
+          <div class="date">6.23(화)~25(목) · 2박 3일</div>
+          <h3>바라던 바다 — 7번 국도 바닷길</h3>
+          <div class="meta"><b>여행 가는날</b> · 능파 동행</div>
+          <div class="seats"><i style="width:68%"></i></div>
+          <div class="seats-txt">sea of hope · 당신의 바다를 꿈꾸는 길</div>
+        </div>
+      </a>
+
+      <a class="tour-card" href="./tour-detail.html?id=benelux-2026-09">
+        <div class="img" style="background-image:url('./assets/tour-03.jpg')">
+          <span class="badge">해외 문화</span>
+        </div>
+        <div class="body">
+          <div class="date">9.27(일)~10.6(화) · 10일</div>
+          <h3>베네룩스 3국 10일</h3>
+          <div class="meta"><b>해외문화탐방</b> · 능파 동행</div>
+          <div class="seats"><i style="width:84%"></i></div>
+          <div class="seats-txt">벨기에 · 네덜란드 · 룩셈부르크</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 길 위의 인문학 -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title">길 위의 인문학<span class="arrow">›</span></h2>
+        <div class="sec-sub">능파와 명인들이 보낸 편지</div>
+      </div>
+      <a class="sec-link" href="./story.html">매거진 ›</a>
+    </div>
+
+    <a class="story" href="https://cafe.daum.net/redtraintour/RfFr/128" target="_blank" rel="noopener">
+      <div class="cover" style="background-image:url('./assets/story-01.jpg')">
+        <div class="ink">
+          <div class="kicker">ESSAY · 길위의 인문학</div>
+          <h3>해안 따라 가득한 카페의 유혹</h3>
+        </div>
+      </div>
+      <div class="body">
+        <p>"수평선 보며 한 모금, 바닷바람 쐬며 두 모금…" 박경일 기자가 안내하는 한국 해안 카페 기행. 능파가 길위의 인문학 코너에 큐레이션한 글.</p>
+        <div class="by">큐레이션 · 능파 / 원글 · 박경일 기자의 여행</div>
+      </div>
+    </a>
+  </section>
+
+  <!-- 추천 명인소 -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title">이번 달의 명인소<span class="arrow">›</span></h2>
+        <div class="sec-sub">사람 한 명을 보러 가는 여행</div>
+      </div>
+      <a class="sec-link" href="./place.html">지도 ›</a>
+    </div>
+
+    <div class="grid-2">
+      <a class="place" href="https://cafe.daum.net/redtraintour/RrBS/127" target="_blank" rel="noopener">
+        <div class="img" style="background-image:url('./assets/place-01.jpg')"></div>
+        <div class="body">
+          <h4>군산 장국명가</h4>
+          <div class="reg">군산 · 보리굴비정식</div>
+        </div>
+      </a>
+      <a class="place" href="https://cafe.daum.net/redtraintour/RrBS/120" target="_blank" rel="noopener">
+        <div class="img" style="background-image:url('./assets/place-02.jpg')"></div>
+        <div class="body">
+          <h4>오레브 리조트&amp;스파</h4>
+          <div class="reg">제주 · 예술과 자연의 휴양</div>
+        </div>
+      </a>
+      <a class="place" href="https://cafe.daum.net/redtraintour/Gz1K/1443" target="_blank" rel="noopener">
+        <div class="img" style="background-image:url('./assets/place-03.jpg')"></div>
+        <div class="body">
+          <h4>봄나물 파티</h4>
+          <div class="reg">전남 강진 · 산책</div>
+        </div>
+      </a>
+      <a class="place" href="https://cafe.daum.net/redtraintour/S7cl/5" target="_blank" rel="noopener">
+        <div class="img" style="background-image:url('./assets/place-04.jpg')"></div>
+        <div class="body">
+          <h4>소금란 시아노그라피</h4>
+          <div class="reg">도랑가제 컬렉션 · 내 마음의 오브제</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 능파 큐레이션 플레이리스트 -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title">능파의 플레이리스트<span class="arrow">›</span></h2>
+        <div class="sec-sub">길에서 듣기 좋은 노래</div>
+      </div>
+      <a class="sec-link" href="./story.html#music">전체 ›</a>
+    </div>
+
+    <div class="playlist">
+      <h3>6월 — 비 오는 정선행</h3>
+      <div class="desc">덜컹이는 차창과 산문을 닮은 11곡. 능파가 직접 골랐습니다.</div>
+
+      <div class="track">
+        <div class="num">01</div>
+        <div class="ti"><b>북한강에서</b><span>정태춘</span></div>
+        <div class="pl">▶</div>
+      </div>
+      <div class="track">
+        <div class="num">02</div>
+        <div class="ti"><b>한계령</b><span>양희은</span></div>
+        <div class="pl">▶</div>
+      </div>
+      <div class="track">
+        <div class="num">03</div>
+        <div class="ti"><b>Adagio in G minor</b><span>Albinoni · I Musici</span></div>
+        <div class="pl">▶</div>
+      </div>
+      <div class="track">
+        <div class="num">04</div>
+        <div class="ti"><b>가을 우체국 앞에서</b><span>윤도현</span></div>
+        <div class="pl">▶</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 회원 후기 -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title">멤버의 여행 편지<span class="arrow">›</span></h2>
+        <div class="sec-sub">다녀와서 보내주신 진짜 후기</div>
+      </div>
+      <a class="sec-link" href="./story.html">모두 보기 ›</a>
+    </div>
+
+    <a class="review" href="https://cafe.daum.net/redtraintour/1fXs/1063" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit">
+      <div class="who">
+        <div class="av" style="background-image:url('./assets/avatar-01.jpg')"></div>
+        <b>조지아 여행후기</b>
+        <span>코카서스 다녀온 길</span>
+      </div>
+      <div class="stars">여행후기</div>
+      <p>코카서스의 조지아를 능파와 함께 다녀온 멤버의 여행후기 — 카페 원문에서 전문 읽기.</p>
+    </a>
+
+    <a class="review" href="https://cafe.daum.net/redtraintour/1fY7/1483" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit">
+      <div class="who">
+        <div class="av" style="background-image:url('./assets/avatar-02.jpg')"></div>
+        <b>물머리와 정약용 유적 탐방기</b>
+        <span>여행! 편지!!</span>
+      </div>
+      <div class="stars">여행 편지</div>
+      <p>물머리에서 만난 다산의 자취 — 한 멤버가 보내온 답사 편지.</p>
+    </a>
+  </section>
+
+  <!-- 카톡 CTA -->
+  <a class="kakao-cta" href="#">
+    <div class="k-ico">k</div>
+    <div>
+      <b>카톡으로 편하게 물어보세요</b>
+      <span>여행·예약·문의 — 평일 10시~18시</span>
+    </div>
+    <div style="margin-left:auto;font-size:18px">›</div>
+  </a>
+
+  <!-- 푸터 -->
+  <footer>
+    <div class="brand-name">명인방투어 · 능파</div>
+    <div>대표 임상수 · 서울 강남구 논현로 114길 8, 2층 현현동</div>
+    <div>since 2009 · 회원 1,927명과 함께 걷는 길</div>
+    <div style="margin-top:10px">
+      <a href="#">이용약관</a> · <a href="#">개인정보처리방침</a> · <a href="#">사업자정보</a>
+    </div>
+    <div style="margin-top:14px;color:var(--ink-3)">
+      © 2026 명인방투어. 다음 카페에서 독립 플랫폼으로 이전 중 (v0.1 시안).
+    </div>
+  </footer>
+
+  <!-- 하단 탭바 -->
+  <nav class="tabbar">
+    <a class="is-on" href="./index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>
+      홈
+    </a>
+    <a href="./tour.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V6h16v11"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 11h16"/></svg>
+      여행
+    </a>
+    <a href="./story.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 13h7"/></svg>
+      이야기
+    </a>
+    <a href="./place.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      명인소
+    </a>
+    <a href="./my.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+      마이
+    </a>
+  </nav>
+</main>
+
+<!-- ============================================================ -->
+<!-- 자동 히어로 시스템 — data/tours.json 한 파일만 편집하면 갱신 -->
+<!-- ============================================================ -->
+<script>
+  // ⚙️ 토글: true로 바꾸면 가장 가까운 미래 일정으로 히어로 자동 교체
+  //         (현재는 운영자 요청에 따라 OFF — 정선 운탄고도 단풍 곤도라가 수동 고정)
+  const AUTO_HERO = false;
+
+  // 인라인 데이터 — 실서버 배포 시 data/tours.json을 fetch로 로드하면 됨.
+  // 파일 시스템에서 직접 index.html을 열면 fetch가 CORS로 막히므로 인라인.
+  const TOURS = [
+    {id:"jeju-2026-06",      title:"제주 수국 · 우도 훈데르트 바서",          subtitle:"섬의 수국이 깊어진 6월",                  category:"정기", duration:"3박 4일", startDate:"2026-06-15", endDate:"2026-06-18", host:"능파 동행", image:"./assets/tour-01.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/4b2T/1624"},
+    {id:"coastal7-2026-06",  title:"바라던 바다 — 7번 국도 바닷길",            subtitle:"sea of hope · 당신의 바다를 꿈꾸는",      category:"정기", duration:"2박 3일", startDate:"2026-06-23", endDate:"2026-06-25", host:"능파 동행", image:"./assets/tour-02.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1057"},
+    {id:"benelux-2026-09",   title:"베네룩스 3국 10일",                       subtitle:"벨기에 · 네덜란드 · 룩셈부르크",          category:"해외", duration:"10일",    startDate:"2026-09-27", endDate:"2026-10-06", host:"능파 동행", image:"./assets/tour-03.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/RfFv/96"},
+    {id:"jeongseon-2026-10", title:"정선 & 로미지안, 백두대간 운탄고도 단풍 곤도라", subtitle:"운탄고도에서 보는 백두대간 단풍",        category:"정기", duration:"1박 2일", startDate:"2026-10-30", endDate:"2026-10-31", host:"능파 동행", image:"./assets/hero.jpg",    cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1040"}
+  ];
+
+  function pickNearestTour(){
+    const today = new Date().toISOString().slice(0,10);
+    return TOURS.filter(t => t.startDate >= today)
+                .sort((a,b) => a.startDate.localeCompare(b.startDate))[0];
+  }
+
+  function formatRange(start, end){
+    const s = new Date(start), e = new Date(end);
+    const m = (d) => `${d.getMonth()+1}.${d.getDate()}`;
+    const dow = ['일','월','화','수','목','금','토'];
+    if (start === end) return `${m(s)}(${dow[s.getDay()]})`;
+    return `${m(s)}(${dow[s.getDay()]})~${m(e)}(${dow[e.getDay()]})`;
+  }
+
+  function renderHero(t){
+    const hero = document.querySelector('.hero');
+    if (!hero || !t) return;
+    hero.style.backgroundImage =
+      "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%), url('"+t.image+"')";
+    hero.querySelector('.hero-tag').textContent =
+      `${t.startDate.slice(5,7)}월 ${t.category} 여행 · ${t.duration}`;
+    hero.querySelector('.hero-eyebrow').textContent =
+      `D-${Math.max(0, Math.ceil((new Date(t.startDate)-new Date())/86400000))} · ${t.board||t.category}`;
+    hero.querySelector('.hero-title').innerHTML =
+      t.title.replace(/, /,',<br/>').replace(/ — /,'<br/>');
+    hero.querySelector('.hero-meta').innerHTML =
+      `<span>${formatRange(t.startDate, t.endDate)}</span><span>${t.duration}</span><span>${t.host}</span>`;
+    hero.querySelector('.hero-cta').href = t.cafeUrl;
+  }
+
+  if (AUTO_HERO) {
+    const next = pickNearestTour();
+    if (next) renderHero(next);
+  }
+  // 콘솔에서 확인용 — F12 열고 "현재 가장 가까운 일정"이 어느 투어인지 즉시 알 수 있음
+  console.log('[명인방투어] 다음 가까운 일정:', pickNearestTour());
+</script>
+
+<a class="fab" href="#" aria-label="카카오 채널">TALK</a>
+
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>명인방투어 · 명인소</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="./shared.css" />
+<!-- Leaflet (실제 동작하는 지도) — 추후 카카오맵 SDK로 교체 가능 -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  .page-head{padding:20px 18px 6px}
+  .page-head h1{font-family:"Noto Serif KR",serif;font-size:24px;margin:0 0 4px}
+  .page-head p{margin:0;color:var(--ink-3);font-size:13px}
+
+  /* 뷰 토글 */
+  .view-toggle{
+    margin:14px 18px;
+    display:flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px;
+  }
+  .view-toggle button{
+    flex:1;background:none;border:0;padding:9px;
+    font-size:13px;color:var(--ink-3);font-weight:600;
+    border-radius:8px;cursor:pointer;
+    font-family:inherit;
+  }
+  .view-toggle button.is-on{background:var(--ink);color:#fff8ec}
+
+  /* 지역 칩 (작은 보조) */
+  .region-chips{
+    display:flex;gap:6px;overflow-x:auto;padding:6px 18px;
+    scrollbar-width:none;
+  }
+  .region-chips::-webkit-scrollbar{display:none}
+  .region-chip{
+    flex:0 0 auto;
+    padding:6px 12px;border-radius:999px;
+    background:#fff8ec;border:1px solid var(--line-2);
+    font-size:12px;color:var(--ink-2);
+    white-space:nowrap;
+  }
+  .region-chip.is-on{background:var(--wine);color:#fff8ec;border-color:var(--wine)}
+
+  /* 이번 달 명인소 (큰 카드) */
+  .pick{
+    margin:14px 18px;background:#fff;border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;
+    box-shadow:var(--shadow);
+    text-decoration:none;color:inherit;display:block;
+  }
+  .pick .img{
+    aspect-ratio:4/3;background:#ccc center/cover no-repeat;
+    position:relative;
+  }
+  .pick .img .tag{
+    position:absolute;top:12px;left:12px;
+    background:var(--wine);color:#fff8ec;
+    font-size:11px;font-weight:700;
+    padding:5px 9px;border-radius:999px;
+  }
+  .pick .body{padding:14px 18px 16px}
+  .pick h2{font-family:"Noto Serif KR",serif;font-size:20px;margin:0 0 4px}
+  .pick .meta{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+  .pick .by{font-size:12.5px;color:var(--ink-2);line-height:1.55}
+  .pick .by b{color:var(--wine);font-weight:700}
+
+  /* 명인소 2열 그리드 */
+  .grid-2{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+    padding:8px 18px 0;
+  }
+  .place{
+    background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    text-decoration:none;color:inherit;display:block;
+  }
+  .place .img{aspect-ratio:1/1;background:#ccc center/cover no-repeat;position:relative}
+  .place .img .cat{
+    position:absolute;top:8px;left:8px;
+    background:rgba(255,248,236,.92);color:var(--wine);
+    font-size:10px;font-weight:700;padding:3px 7px;border-radius:999px;
+  }
+  .place .body{padding:10px 12px 12px}
+  .place .body h4{margin:0 0 4px;font-size:13.5px;font-weight:700}
+  .place .body .reg{font-size:11px;color:var(--ink-3)}
+
+  /* 시리즈 배너 (칼국수로드) */
+  .series-banner{
+    margin:14px 18px;
+    background:linear-gradient(160deg,#fff3d6,#fde2c1);
+    border:1px solid var(--line-2);border-radius:var(--radius);
+    padding:18px;
+    text-decoration:none;color:inherit;display:block;
+  }
+  .series-banner .kicker{font-size:11px;letter-spacing:.15em;color:var(--wine);font-weight:700}
+  .series-banner h3{font-family:"Noto Serif KR",serif;font-size:19px;margin:4px 0 4px;color:var(--ink)}
+  .series-banner p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.55}
+  .series-banner .count{
+    margin-top:10px;display:inline-block;
+    background:var(--wine);color:#fff8ec;font-size:11px;font-weight:700;
+    padding:5px 10px;border-radius:999px;
+  }
+
+  /* 실제 지도 */
+  .map-real{
+    margin:14px 18px;border-radius:var(--radius);
+    height:340px;
+    border:1px solid var(--line-2);
+    display:none;overflow:hidden;
+  }
+  .map-real.is-on{display:block}
+  .map-real .leaflet-container{height:100%;font-family:inherit;background:#eee5d6}
+  /* 마커 팝업 스타일 — 명인방 톤 */
+  .leaflet-popup-content-wrapper{
+    border-radius:12px !important;
+    box-shadow:0 8px 24px rgba(43,31,26,.18) !important;
+  }
+  .leaflet-popup-content{margin:12px 14px !important;font-family:inherit;color:var(--ink)}
+  .leaflet-popup-content b{font-family:"Noto Serif KR",serif;color:var(--wine);font-size:14px}
+  .leaflet-popup-content small{display:block;color:var(--ink-3);font-size:11px;margin:2px 0 6px}
+  .leaflet-popup-content a{color:var(--wine);font-size:12px;text-decoration:none;font-weight:700}
+  .my-pin{
+    background:var(--wine);color:#fff8ec;
+    border-radius:50% 50% 50% 0;
+    transform:rotate(-45deg);
+    width:30px !important;height:30px !important;
+    display:grid;place-items:center;
+    font-weight:800;font-size:13px;
+    box-shadow:0 4px 10px rgba(0,0,0,.25);
+    border:2px solid #fff8ec;
+  }
+  .my-pin span{transform:rotate(45deg)}
+
+  .section-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:24px 18px 8px;
+  }
+  .section-bar h2{font-family:"Noto Serif KR",serif;font-size:17px;margin:0}
+  .section-bar small{color:var(--ink-3);font-size:11.5px}
+</style>
+</head>
+<body>
+
+<main class="stage">
+
+  <div class="topbar">
+    <span>📍</span>
+    <span><b>명인소</b> · 능파가 손꼽은 사람과 장소</span>
+  </div>
+
+  <header class="header">
+    <a class="brand" href="./index.html">
+      <div class="brand-mark">明</div>
+      <div>
+        <div class="brand-name">명인방투어</div>
+        <div class="brand-sub">명인소</div>
+      </div>
+    </a>
+    <div class="nav-icons">
+      <button aria-label="검색"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <button aria-label="알림"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></button>
+      <button aria-label="메뉴"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+    </div>
+  </header>
+
+  <div class="page-head">
+    <h1>명인소</h1>
+    <p>사람 한 명을 보러 가는 여행</p>
+  </div>
+
+  <!-- 카드/지도 토글 -->
+  <div class="view-toggle">
+    <button class="is-on" id="btn-card">카드 보기</button>
+    <button id="btn-map">지도 보기</button>
+  </div>
+
+  <!-- 카테고리 칩 -->
+  <div class="chips">
+    <span class="chip is-on">전체</span>
+    <span class="chip">음식</span>
+    <span class="chip">공간</span>
+    <span class="chip">자연</span>
+    <span class="chip">예술</span>
+  </div>
+
+  <!-- 지역 칩 -->
+  <div class="region-chips">
+    <span class="region-chip is-on">전국</span>
+    <span class="region-chip">서울</span>
+    <span class="region-chip">경기</span>
+    <span class="region-chip">강원</span>
+    <span class="region-chip">충청</span>
+    <span class="region-chip">전라</span>
+    <span class="region-chip">경상</span>
+    <span class="region-chip">제주</span>
+  </div>
+
+  <!-- 실제 지도 (토글 시 보임) — Leaflet + OpenStreetMap -->
+  <div class="map-real" id="map-view"></div>
+
+  <!-- 이번 달 명인소 -->
+  <div class="section-bar">
+    <h2>이번 달 명인소</h2>
+    <small>5월 추천</small>
+  </div>
+  <a class="pick" href="https://cafe.daum.net/redtraintour/RrBS/127" target="_blank" rel="noopener">
+    <div class="img" style="background-image:url('./assets/place-01.jpg')">
+      <span class="tag">음식 · 군산</span>
+    </div>
+    <div class="body">
+      <h2>군산 장국명가</h2>
+      <div class="meta">전라북도 군산 · 보리굴비정식</div>
+      <p class="by">"한 그릇 안에 항구의 시간이 다 들어 있더라" — <b>능파의 한 줄</b></p>
+    </div>
+  </a>
+
+  <!-- 명인소 그리드 -->
+  <div class="section-bar">
+    <h2>전체 명인소</h2>
+    <small>4곳</small>
+  </div>
+  <div class="grid-2">
+    <a class="place" href="https://cafe.daum.net/redtraintour/RrBS/127" target="_blank" rel="noopener">
+      <div class="img" style="background-image:url('./assets/place-01.jpg')"><span class="cat">음식</span></div>
+      <div class="body"><h4>군산 장국명가</h4><div class="reg">전라 · 보리굴비정식</div></div>
+    </a>
+    <a class="place" href="https://cafe.daum.net/redtraintour/RrBS/120" target="_blank" rel="noopener">
+      <div class="img" style="background-image:url('./assets/place-02.jpg')"><span class="cat">공간</span></div>
+      <div class="body"><h4>오레브 리조트&amp;스파</h4><div class="reg">제주 · 예술 휴양</div></div>
+    </a>
+    <a class="place" href="https://cafe.daum.net/redtraintour/Gz1K/1443" target="_blank" rel="noopener">
+      <div class="img" style="background-image:url('./assets/place-03.jpg')"><span class="cat">자연</span></div>
+      <div class="body"><h4>봄나물 파티</h4><div class="reg">전라 · 강진 산책</div></div>
+    </a>
+    <a class="place" href="https://cafe.daum.net/redtraintour/S7cl/5" target="_blank" rel="noopener">
+      <div class="img" style="background-image:url('./assets/place-04.jpg')"><span class="cat">예술</span></div>
+      <div class="body"><h4>소금란 시아노그라피</h4><div class="reg">도랑가제 컬렉션</div></div>
+    </a>
+  </div>
+
+  <!-- 칼국수로드 배너 -->
+  <div class="section-bar">
+    <h2>2026 칼국수로드</h2>
+    <small>특별 시리즈</small>
+  </div>
+  <a class="series-banner" href="https://cafe.daum.net/redtraintour" target="_blank" rel="noopener">
+    <div class="kicker">2026 SPECIAL SERIES</div>
+    <h3>전국 칼국수 한 그릇씩, 1년의 기록</h3>
+    <p>춘천 이심전 → 강원 정선 화암 → 안동 도산 → ⋯ 능파가 1년 동안 한 그릇씩 다녀오며 적은 칼국수 지도. 다음 카페에서 전편 보기.</p>
+    <span class="count">현재 11편</span>
+  </a>
+
+  <!-- 카톡 CTA -->
+  <a class="kakao-cta" href="#">
+    <div class="k-ico">k</div>
+    <div>
+      <b>나만의 명인소 추천하기</b>
+      <span>카톡으로 사진과 사연 보내주시면 큐레이션 검토</span>
+    </div>
+    <div style="margin-left:auto;font-size:18px">›</div>
+  </a>
+
+  <footer>
+    <div class="brand-name">명인방투어 · 능파</div>
+    <div>모든 명인소는 다음 카페 「명인방 추천 명인,명소」 게시판에서 → <a href="https://cafe.daum.net/redtraintour" target="_blank">전체보기</a></div>
+    <div style="margin-top:14px;color:var(--ink-3)">© 2026 명인방투어 v0.2</div>
+  </footer>
+
+  <nav class="tabbar">
+    <a href="./index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+    <a href="./tour.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V6h16v11"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 11h16"/></svg>여행</a>
+    <a href="./story.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 13h7"/></svg>이야기</a>
+    <a class="is-on" href="./place.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>명인소</a>
+    <a href="./my.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>마이</a>
+  </nav>
+</main>
+
+<a class="fab" href="#" aria-label="카카오 채널">TALK</a>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+  // ===== 명인소 데이터 =====
+  // 좌표는 대표 지역 기준 근사값 (능파님 확정 위치로 차후 보정)
+  const PLACES = [
+    {n:1, name:"군산 장국명가", cat:"음식", region:"전라북도 군산",
+     desc:"보리굴비정식 · 항구의 시간이 담긴 한 그릇",
+     img:"./assets/place-01.jpg",
+     url:"https://cafe.daum.net/redtraintour/RrBS/127",
+     lat:35.9676, lng:126.7367},
+    {n:2, name:"오레브 리조트 & 스파", cat:"공간", region:"제주 서귀포",
+     desc:"예술과 자연이 어우러진 휴양 명소",
+     img:"./assets/place-02.jpg",
+     url:"https://cafe.daum.net/redtraintour/RrBS/120",
+     lat:33.2542, lng:126.5601},
+    {n:3, name:"봄나물 파티", cat:"자연", region:"전라남도 강진",
+     desc:"산책에서 마주친 봄의 식탁",
+     img:"./assets/place-03.jpg",
+     url:"https://cafe.daum.net/redtraintour/Gz1K/1443",
+     lat:34.6420, lng:126.7672},
+    {n:4, name:"소금란 시아노그라피", cat:"예술", region:"도랑가제 컬렉션",
+     desc:"내 마음의 오브제 — 푸른빛 사진",
+     img:"./assets/place-04.jpg",
+     url:"https://cafe.daum.net/redtraintour/S7cl/5",
+     lat:37.5665, lng:126.9780}  // 서울 (대략, 실제 위치 확인 필요)
+  ];
+
+  // ===== 지도 초기화 =====
+  let map = null;
+  function initMap(){
+    if (map) return;
+    map = L.map('map-view', {
+      zoomControl:true, attributionControl:true, scrollWheelZoom:false
+    }).setView([36.0, 127.5], 7);  // 한국 중심
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:18,
+      attribution:'&copy; OpenStreetMap'
+    }).addTo(map);
+
+    // 명인소 마커
+    PLACES.forEach(p => {
+      const icon = L.divIcon({
+        className:'',
+        html:`<div class="my-pin"><span>${p.n}</span></div>`,
+        iconSize:[30,30],
+        iconAnchor:[15,30]
+      });
+      const m = L.marker([p.lat, p.lng], {icon}).addTo(map);
+      m.bindPopup(`
+        <b>${p.name}</b>
+        <small>${p.cat} · ${p.region}</small>
+        ${p.desc}
+        <div style="margin-top:6px"><a href="${p.url}" target="_blank">카페에서 보기 →</a></div>
+      `);
+    });
+
+    // 모든 마커가 보이도록 자동 줌
+    const bounds = L.latLngBounds(PLACES.map(p => [p.lat, p.lng]));
+    map.fitBounds(bounds, {padding:[40,40]});
+  }
+
+  // 카드/지도 토글
+  const btnCard = document.getElementById('btn-card');
+  const btnMap = document.getElementById('btn-map');
+  const mapView = document.getElementById('map-view');
+  btnMap.addEventListener('click', ()=>{
+    btnMap.classList.add('is-on'); btnCard.classList.remove('is-on');
+    mapView.classList.add('is-on');
+    initMap();
+    // 토글 후 사이즈 재계산
+    setTimeout(()=> map && map.invalidateSize(), 50);
+  });
+  btnCard.addEventListener('click', ()=>{
+    btnCard.classList.add('is-on'); btnMap.classList.remove('is-on');
+    mapView.classList.remove('is-on');
+  });
+
+  // ====================================================
+  // 향후 카카오맵 전환 가이드 (능파님이 dev.kakao.com에서 앱키 발급 후):
+  //   1. <head>에 추가: <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=APP_KEY"></script>
+  //   2. initMap() 안의 L.map(...) → new kakao.maps.Map(container, {center: new kakao.maps.LatLng(lat,lng), level:8})
+  //   3. L.marker → new kakao.maps.Marker(...)
+  //   4. L.tileLayer는 카카오맵에선 기본 제공되므로 제거
+  // 데이터 구조(PLACES)는 그대로 재사용 가능.
+  // ====================================================
+</script>
+
+</body>
+</html>
