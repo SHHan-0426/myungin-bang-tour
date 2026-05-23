@@ -3,10 +3,20 @@
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').then(reg => {
-        // console.log('[명인방투어] PWA 등록 완료', reg.scope);
-      }).catch(err => {
-        // 정적 호스팅이라 등록 실패 가능 — 조용히 무시
-      });
+        // 새 버전 SW가 활성화되면 페이지 자동 리로드 (캐시 stale 방지)
+        reg.addEventListener('updatefound', () => {
+          const nw = reg.installing;
+          if (!nw) return;
+          nw.addEventListener('statechange', () => {
+            if (nw.state === 'activated' && navigator.serviceWorker.controller) {
+              // 기존에 컨트롤러가 있던 상태에서 새 SW가 활성 → 페이지 리로드
+              window.location.reload();
+            }
+          });
+        });
+        // 1시간마다 update 체크
+        setInterval(() => reg.update(), 3600000);
+      }).catch(() => {});
     });
   }
 

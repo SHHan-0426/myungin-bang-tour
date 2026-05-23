@@ -1,7 +1,7 @@
 // 명인방투어 — 서비스 워커
 // 오프라인 캐시 + "홈 화면에 추가" PWA 지원
 
-const CACHE_VERSION = 'mb-tour-v3';
+const CACHE_VERSION = 'mb-tour-v5';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -49,22 +49,27 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
-  // 외부 도메인(unsplash, daumcdn, leaflet 등)은 패스 — 브라우저 기본
   if (url.origin !== self.location.origin) return;
 
-  // data/*.json 은 stale-while-revalidate (네트워크 우선, 캐시 폴백)
-  if (url.pathname.includes('/data/')) {
+  // HTML과 data/*.json은 네트워크 우선 — 항상 최신 콘텐츠 보장
+  const isHtml = event.request.mode === 'navigate' ||
+                 url.pathname.endsWith('.html') ||
+                 url.pathname === '/' ||
+                 url.pathname.includes('/data/');
+  if (isHtml) {
     event.respondWith(
       fetch(event.request).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE_VERSION).then(c => c.put(event.request, copy));
+        if (res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE_VERSION).then(c => c.put(event.request, copy));
+        }
         return res;
       }).catch(() => caches.match(event.request))
     );
     return;
   }
 
-  // 그 외: 캐시 우선, 없으면 네트워크
+  // 정적 자산 (CSS, JS, 이미지, 폰트): 캐시 우선
   event.respondWith(
     caches.match(event.request).then(cached =>
       cached || fetch(event.request).then(res => {
