@@ -591,21 +591,48 @@
     });
   }
 
+  // ===== 제목에서 실제 여행 날짜 추출 =====
+  // 우선순위:
+  //   (1) "2026 4월 3" 처럼 명시된 연·월·일
+  //   (2) "4월 22" 또는 "6월 23" — 연도는 post.year
+  //   (3) "4월" 만 있는 경우 day=1
+  //   (4) 추출 실패 시 게시일 기반 폴백
+  function extractTravelDate(p){
+    const t = p.title || '';
+    let m = t.match(/(20\d{2})[\s\S]{0,3}?(\d{1,2})\s*월\s*(\d{1,2})/);
+    if (m) return {y:+m[1], mo:+m[2], d:+m[3]};
+    m = t.match(/(\d{1,2})\s*월\s*(\d{1,2})/);
+    if (m) return {y:p.year, mo:+m[1], d:+m[2]};
+    m = t.match(/(\d{1,2})\s*월/);
+    if (m) return {y:p.year, mo:+m[1], d:1};
+    if (p.posted) {
+      const [py,pm,pd] = p.posted.split('-').map(Number);
+      return {y:py, mo:pm, d:pd};
+    }
+    return {y:p.year, mo:1, d:1};
+  }
+  // 각 post에 _td 캐싱
+  function ensureTravelDates(){
+    PAST.forEach(p => { if (!p._td) p._td = extractTravelDate(p); });
+  }
+
   function renderMuseum() {
+    ensureTravelDates();
     let posts = PAST;
     if (currentFilter !== 'all') {
       if (currentMode === 'year') posts = PAST.filter(p => p.year === parseInt(currentFilter));
       else if (currentMode === 'region') posts = PAST.filter(p => p.region === currentFilter);
       else if (currentMode === 'season') posts = PAST.filter(p => p.season === currentFilter);
     }
-    // 최신순 정렬: 연도 ↓, 게시일 ↓ (게시일 없으면 pid ↓)
+    // 실제 여행 시점 기준 최신순 — 가장 먼 미래부터
     posts = [...posts].sort((a,b) => {
-      if (a.year !== b.year) return b.year - a.year;
-      const ap = a.posted || '', bp = b.posted || '';
-      if (ap !== bp) return bp.localeCompare(ap);
+      const A = a._td, B = b._td;
+      if (A.y !== B.y) return B.y - A.y;
+      if (A.mo !== B.mo) return B.mo - A.mo;
+      if (A.d !== B.d) return B.d - A.d;
       return parseInt(b.pid) - parseInt(a.pid);
     });
-    document.getElementById('mu-section-title').textContent = currentFilter === 'all' ? '전체 (최신순)' : currentFilter + (currentMode==='year'?'년':'') + ' (최신순)';
+    document.getElementById('mu-section-title').textContent = currentFilter === 'all' ? '전체 (먼 미래부터)' : currentFilter + (currentMode==='year'?'년':'') + ' (먼 미래부터)';
     document.getElementById('mu-section-count').textContent = posts.length + '건';
 
     const list = document.getElementById('museum-grid');
