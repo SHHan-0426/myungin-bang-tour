@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>명인방투어 · 이야기</title>
-<meta name="description" content="길 위의 인문학, 여행 편지, 한줄 메모, 음악, 사진, 도랑가제 컬렉션." />
+<title>명인방투어 · 여행스케치</title>
+<meta name="description" content="길 위의 인문학, 여행 편지, 음악, 산책 — 능파의 큐레이션." />
 <meta name="theme-color" content="#7a1b25" />
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="apple-touch-icon" href="./assets/icon-192.png" />
 <link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="명인방투어" />
-<meta property="og:title" content="명인방투어 · 이야기" />
+<meta property="og:title" content="명인방투어 · 여행스케치" />
 <meta property="og:description" content="길 위에서 만난 사람과 문장." />
 <meta property="og:image" content="https://myungin-bang-tour.netlify.app/assets/story-01.jpg" />
 <meta property="og:url" content="https://myungin-bang-tour.netlify.app/story.html" />
@@ -24,99 +24,91 @@
   .page-head h1{font-family:"Noto Serif KR",serif;font-size:24px;margin:0 0 4px}
   .page-head p{margin:0;color:var(--ink-3);font-size:13px}
 
-  /* 매거진 메인 (큰 표지 + 발췌) */
-  .magazine{
-    margin:14px 18px;border-radius:var(--radius);overflow:hidden;
-    background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
-    text-decoration:none;color:inherit;display:block;
+  /* 4-탭 세그먼트 */
+  .seg{
+    margin:14px 18px;
+    display:flex;background:#fff;border:1px solid var(--line);border-radius:14px;padding:4px;
+    gap:3px;
   }
-  .magazine .cover{
-    aspect-ratio:16/10;background:#bbb center/cover no-repeat;
-    position:relative;
+  .seg button{
+    flex:1;background:none;border:0;padding:10px 0;
+    font-size:12.5px;color:var(--ink-3);font-weight:600;
+    border-radius:10px;cursor:pointer;font-family:inherit;
+    display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;
   }
-  .magazine .cover .ink{
-    position:absolute;inset:auto 0 0 0;padding:18px 18px;color:#fff8ec;
-    background:linear-gradient(180deg,transparent, rgba(0,0,0,.7));
+  .seg button.is-on{background:var(--ink);color:#fff8ec}
+  .seg button .ct{
+    background:rgba(0,0,0,.12);font-size:10px;font-weight:800;
+    padding:1px 6px;border-radius:999px;
   }
-  .magazine .cover .kicker{font-size:11px;letter-spacing:.16em;opacity:.85;margin-bottom:6px}
-  .magazine .cover h2{font-family:"Noto Serif KR",serif;margin:0;font-size:22px;font-weight:700;line-height:1.3}
-  .magazine .body{padding:16px 18px}
-  .magazine .body p{margin:0 0 10px;color:var(--ink-2);font-size:13.5px;line-height:1.65}
-  .magazine .by{font-size:11.5px;color:var(--ink-3)}
+  .seg button.is-on .ct{background:rgba(255,248,236,.2)}
 
-  /* 아티클 카드 (1열 가로) */
-  .article{
-    margin:10px 18px;background:#fff;border:1px solid var(--line);
-    border-radius:14px;overflow:hidden;display:flex;
+  /* 섹션 인트로 */
+  .sec-intro{
+    margin:14px 18px 0;
+    padding:16px 18px;
+    background:linear-gradient(160deg,#fff3d6,#fde9c8);
+    border:1px solid var(--line-2);border-radius:var(--radius);
+  }
+  .sec-intro .ico{font-size:28px;margin-bottom:4px}
+  .sec-intro h2{font-family:"Noto Serif KR",serif;font-size:19px;margin:0 0 2px}
+  .sec-intro p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.55}
+  .sec-intro .count{
+    margin-top:8px;display:inline-block;
+    background:var(--wine);color:#fff8ec;
+    font-size:11px;font-weight:700;
+    padding:3px 9px;border-radius:999px;
+  }
+
+  /* 리스트 카드 */
+  .post-list{margin:14px 18px 0}
+  .post-card{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;
     text-decoration:none;color:inherit;
+    display:flex;align-items:center;gap:12px;
+    position:relative;
+    margin-bottom:8px;
   }
-  .article .img{flex:0 0 110px;background:#ccc center/cover no-repeat}
-  .article .body{padding:12px 14px;flex:1;min-width:0}
-  .article .tag{
-    display:inline-block;background:var(--tag-bg);color:var(--tag-ink);
-    font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;
+  .post-card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--wine);border-radius:12px 0 0 12px;
   }
-  .article h3{font-size:14.5px;margin:6px 0 4px;font-weight:700;line-height:1.35}
-  .article .by{font-size:11.5px;color:var(--ink-3)}
-
-  /* 한줄 카드 (텍스트만) */
-  .one-line{
-    margin:10px 18px;background:#fff;border:1px solid var(--line);
-    border-radius:14px;padding:16px 18px;
+  .post-card.humanities::before{background:var(--wine)}
+  .post-card.letters::before{background:var(--gold)}
+  .post-card.music::before{background:var(--moss)}
+  .post-card.walks::before{background:var(--sky)}
+  .post-card .body{flex:1;min-width:0}
+  .post-card h4{
+    font-size:13.5px;margin:0;font-weight:600;line-height:1.45;
+    color:var(--ink);
   }
-  .one-line .quote{
-    font-family:"Noto Serif KR",serif;font-size:17px;line-height:1.55;
-    color:var(--ink);margin:0 0 8px;
+  .post-card .meta{
+    font-size:10.5px;color:var(--ink-3);margin-top:3px;
+    display:flex;gap:8px;align-items:center;
   }
-  .one-line .by{font-size:11.5px;color:var(--ink-3)}
-
-  /* 음악 플레이리스트 */
-  .playlist{
-    margin:14px 18px;background:linear-gradient(160deg,#2b1f1a,#3a2c25);
-    color:#fff8ec;border-radius:var(--radius);
-    padding:18px 18px 10px;
-  }
-  .playlist h3{font-family:"Noto Serif KR",serif;font-size:18px;margin:0 0 4px}
-  .playlist .desc{font-size:12.5px;opacity:.78;margin-bottom:12px}
-  .track{
-    display:flex;align-items:center;gap:12px;padding:10px 0;
-    border-bottom:1px solid rgba(255,248,236,.08);
-  }
-  .track:last-child{border-bottom:0}
-  .track .num{width:22px;font-size:13px;color:var(--gold);font-weight:700}
-  .track .ti{flex:1}
-  .track .ti b{display:block;font-size:13.5px;font-weight:600}
-  .track .ti span{font-size:11.5px;opacity:.7}
-  .track .pl{width:32px;height:32px;border-radius:50%;background:var(--gold);color:#2b1f1a;display:grid;place-items:center;font-size:12px}
-
-  /* 사진 갤러리 (인스타 풍 3x3) */
-  .gallery-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:3px;
-    padding:8px 18px;
-  }
-  .gallery-grid .ph{
-    aspect-ratio:1/1;background:#ccc center/cover no-repeat;
-    border-radius:4px;
-  }
-
-  /* 도랑가제 컬렉션 */
-  .collection{
-    margin:14px 18px;border-radius:var(--radius);overflow:hidden;
-    background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
-    text-decoration:none;color:inherit;display:block;
-  }
-  .collection .img{aspect-ratio:4/3;background:#bbb center/cover no-repeat}
-  .collection .body{padding:14px 18px}
-  .collection .tag{display:inline-block;background:#e9efe2;color:var(--moss);font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px}
-  .collection h3{font-family:"Noto Serif KR",serif;font-size:18px;margin:6px 0 4px;font-weight:700}
-  .collection .by{font-size:11.5px;color:var(--ink-3)}
+  .post-card .meta .num{font-weight:700}
+  .post-card .arrow{color:var(--ink-3);font-size:18px;flex:0 0 16px}
 
   .section-bar{
     display:flex;align-items:center;justify-content:space-between;
-    padding:24px 18px 8px;
+    padding:20px 18px 8px;
   }
-  .section-bar h2{font-family:"Noto Serif KR",serif;font-size:17px;margin:0}
-  .section-bar small{color:var(--ink-3);font-size:11.5px}
+  .section-bar h3{font-family:"Noto Serif KR",serif;font-size:15px;margin:0;color:var(--wine)}
+  .section-bar small{color:var(--ink-3);font-size:11px}
+
+  .full-link{
+    text-align:center;padding:20px 18px;
+  }
+  .full-link a{
+    display:inline-block;background:var(--wine);color:#fff8ec;
+    padding:10px 18px;border-radius:999px;
+    text-decoration:none;font-size:12.5px;font-weight:700;
+  }
+
+  .loading{padding:30px 18px;text-align:center;color:var(--ink-3);font-size:13px}
+
+  .hide{display:none !important}
 </style>
 </head>
 <body>
@@ -125,7 +117,7 @@
 
   <div class="topbar">
     <span>📖</span>
-    <span><b>이야기</b> · 능파의 큐레이션 · 멤버의 편지 · 길 위의 인문학</span>
+    <span><b>여행스케치</b> · 능파의 큐레이션 · 길 위의 인문학 · 편지 · 음악</span>
   </div>
 
   <header class="header">
@@ -133,7 +125,7 @@
       <div class="brand-mark">明</div>
       <div>
         <div class="brand-name">명인방투어</div>
-        <div class="brand-sub">이야기</div>
+        <div class="brand-sub">여행스케치</div>
       </div>
     </a>
     <div class="nav-icons">
@@ -144,119 +136,39 @@
   </header>
 
   <div class="page-head">
-    <h1>이야기</h1>
+    <h1>여행스케치</h1>
     <p>길 위에서 만난 사람과 문장</p>
   </div>
 
-  <div class="chips">
-    <span class="chip is-on">전체</span>
-    <span class="chip">길 위의 인문학</span>
-    <span class="chip">능파의 글</span>
-    <span class="chip">여행 편지</span>
-    <span class="chip">한줄 메모</span>
-    <span class="chip">음악·영상</span>
-    <span class="chip">사진</span>
-    <span class="chip">도랑가제</span>
+  <!-- 섹션 세그먼트 -->
+  <div class="seg">
+    <button data-sec="humanities" class="is-on">📖 인문학 <span class="ct" id="ct-humanities">—</span></button>
+    <button data-sec="letters">💌 편지 <span class="ct" id="ct-letters">—</span></button>
+    <button data-sec="music">🎵 음악 <span class="ct" id="ct-music">—</span></button>
+    <button data-sec="walks">🌿 산책 <span class="ct" id="ct-walks">—</span></button>
   </div>
 
-  <!-- 길 위의 인문학 메인 매거진 -->
-  <div class="section-bar">
-    <h2>길 위의 인문학</h2>
-    <small>능파 큐레이션</small>
-  </div>
-  <a class="magazine" href="https://cafe.daum.net/redtraintour/RfFr/128" target="_blank" rel="noopener">
-    <div class="cover" style="background-image:url('./assets/story-01.jpg')">
-      <div class="ink">
-        <div class="kicker">ESSAY · NO.42</div>
-        <h2>해안 따라 가득한 카페의 유혹</h2>
-      </div>
-    </div>
-    <div class="body">
-      <p>"수평선 보며 한 모금, 바닷바람 쐬며 두 모금…" 박경일 기자가 안내하는 한국 해안 카페 기행. 능파가 길 위의 인문학 코너에 큐레이션한 글.</p>
-      <div class="by">큐레이션 · 능파 / 원글 · 박경일 기자의 여행</div>
-    </div>
-  </a>
-
-  <!-- 여행 편지 -->
-  <div class="section-bar">
-    <h2>여행 편지</h2>
-    <small>멤버가 보내온 답사기</small>
-  </div>
-  <a class="article" href="https://cafe.daum.net/redtraintour/1fY7/1483" target="_blank" rel="noopener">
-    <div class="img" style="background-image:url('./assets/avatar-02.jpg')"></div>
-    <div class="body">
-      <span class="tag">여행! 편지!!</span>
-      <h3>물머리와 정약용 유적 탐방기</h3>
-      <div class="by">멤버 답사기 · 남양주</div>
-    </div>
-  </a>
-  <a class="article" href="https://cafe.daum.net/redtraintour/1fXs/1063" target="_blank" rel="noopener">
-    <div class="img" style="background-image:url('./assets/avatar-01.jpg')"></div>
-    <div class="body">
-      <span class="tag">여행후기</span>
-      <h3>조지아 여행후기</h3>
-      <div class="by">코카서스 다녀온 길</div>
-    </div>
-  </a>
-
-  <!-- 한줄 메모 -->
-  <div class="section-bar">
-    <h2>한줄 메모</h2>
-    <small>능파가 보내온 한 문장</small>
-  </div>
-  <div class="one-line">
-    <p class="quote">"기차가 지나간 폐선을 걷는 일은, 잠시 사라진 시간을 다시 만나는 일."</p>
-    <div class="by">— 능파, 정선 운탄고도에서</div>
-  </div>
-  <div class="one-line">
-    <p class="quote">"여행은 새 풍경을 찾는 것이 아니라, 같은 풍경을 다른 눈으로 보는 일이다."</p>
-    <div class="by">— 능파, 한줄메모 #103</div>
+  <!-- 섹션 인트로 (현재 섹션) -->
+  <div class="sec-intro" id="sec-intro">
+    <div class="ico" id="sec-icon">📖</div>
+    <h2 id="sec-name">로딩 중</h2>
+    <p id="sec-sub">잠시만요</p>
+    <span class="count" id="sec-count"></span>
   </div>
 
-  <!-- 음악·영상 -->
+  <!-- 리스트 -->
   <div class="section-bar">
-    <h2>음악 · 영상</h2>
-    <small>길에서 듣기 좋은</small>
+    <h3 id="list-h">최근 글</h3>
+    <small id="list-small">최신순</small>
   </div>
-  <div class="playlist">
-    <h3>6월 — 바라던 바다로 가는 길</h3>
-    <div class="desc">7번 국도 차창과 닮은 11곡. 능파가 직접 골랐습니다.</div>
-    <div class="track"><div class="num">01</div><div class="ti"><b>북한강에서</b><span>정태춘</span></div><div class="pl">▶</div></div>
-    <div class="track"><div class="num">02</div><div class="ti"><b>한계령</b><span>양희은</span></div><div class="pl">▶</div></div>
-    <div class="track"><div class="num">03</div><div class="ti"><b>Adagio in G minor</b><span>Albinoni · I Musici</span></div><div class="pl">▶</div></div>
-    <div class="track"><div class="num">04</div><div class="ti"><b>가을 우체국 앞에서</b><span>윤도현</span></div><div class="pl">▶</div></div>
+  <div class="post-list" id="post-list">
+    <div class="loading">데이터 불러오는 중…</div>
   </div>
 
-  <!-- 사진 갤러리 -->
-  <div class="section-bar">
-    <h2>사진 갤러리</h2>
-    <small>다녀온 길</small>
+  <!-- 카페에서 더 보기 -->
+  <div class="full-link">
+    <a id="full-link" href="https://cafe.daum.net/redtraintour" target="_blank" rel="noopener">다음 카페에서 전체 보기 →</a>
   </div>
-  <div class="gallery-grid">
-    <div class="ph" style="background-image:url('./assets/hero.jpg')"></div>
-    <div class="ph" style="background-image:url('./assets/tour-01.jpg')"></div>
-    <div class="ph" style="background-image:url('./assets/tour-02.jpg')"></div>
-    <div class="ph" style="background-image:url('./assets/tour-03.jpg')"></div>
-    <div class="ph" style="background-image:url('./assets/story-01.jpg')"></div>
-    <div class="ph" style="background-image:url('./assets/place-01.jpg')"></div>
-    <div class="ph" style="background-image:url('./assets/place-02.jpg')"></div>
-    <div class="ph" style="background-image:url('./assets/place-03.jpg')"></div>
-    <div class="ph" style="background-image:url('./assets/place-04.jpg')"></div>
-  </div>
-
-  <!-- 도랑가제 컬렉션 -->
-  <div class="section-bar">
-    <h2>도랑가제 컬렉션</h2>
-    <small>예술·시아노그라피</small>
-  </div>
-  <a class="collection" href="https://cafe.daum.net/redtraintour/S7cl/5" target="_blank" rel="noopener">
-    <div class="img" style="background-image:url('./assets/place-04.jpg')"></div>
-    <div class="body">
-      <span class="tag">도랑가제 컬렉션</span>
-      <h3>내 마음의 오브제 — 소금란 작가와의 시아노그라피</h3>
-      <div class="by">큐레이션 · 도랑가제</div>
-    </div>
-  </a>
 
   <!-- 카톡 CTA -->
   <a class="kakao-cta" href="#">
@@ -270,20 +182,93 @@
 
   <footer>
     <div class="brand-name">명인방투어 · 능파</div>
-    <div>이야기 원본은 다음 카페에서 → <a href="https://cafe.daum.net/redtraintour" target="_blank">cafe.daum.net/redtraintour</a></div>
-    <div style="margin-top:14px;color:var(--ink-3)">© 2026 명인방투어 v0.2</div>
+    <div>여행스케치 원본은 다음 카페에서 → <a href="https://cafe.daum.net/redtraintour" target="_blank">cafe.daum.net/redtraintour</a></div>
+    <div style="margin-top:14px;color:var(--ink-3)">© 2026 명인방투어 v0.6</div>
   </footer>
 
   <nav class="tabbar">
     <a href="./index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
     <a href="./tour.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V6h16v11"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 11h16"/></svg>여행</a>
-    <a class="is-on" href="./story.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 13h7"/></svg>이야기</a>
+    <a class="is-on" href="./story.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 13h7"/></svg>여행스케치</a>
     <a href="./place.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>명인소</a>
     <a href="./my.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>마이</a>
   </nav>
 </main>
 
 <a class="fab" href="#" aria-label="카카오 채널">TALK</a>
+
+<script>
+  let SECTIONS = null;
+  let currentSec = 'humanities';
+
+  async function loadStories() {
+    try {
+      const res = await fetch('./data/stories.json');
+      const json = await res.json();
+      SECTIONS = json.sections;
+      // 카운트 갱신
+      Object.keys(SECTIONS).forEach(key => {
+        const el = document.getElementById('ct-' + key);
+        if (el) el.textContent = SECTIONS[key].posts.length;
+      });
+      renderSection(currentSec);
+    } catch (e) {
+      document.getElementById('post-list').innerHTML =
+        '<div class="loading">데이터 로딩 실패 (file://에서는 fetch 차단됩니다 — Netlify 배포에서 정상 작동)</div>';
+    }
+  }
+
+  function renderSection(key) {
+    if (!SECTIONS || !SECTIONS[key]) return;
+    currentSec = key;
+    const sec = SECTIONS[key];
+    // 인트로
+    document.getElementById('sec-icon').textContent = sec.icon;
+    document.getElementById('sec-name').textContent = sec.name;
+    document.getElementById('sec-sub').textContent = sec.subtitle;
+    document.getElementById('sec-count').textContent = sec.posts.length + '편 수집';
+    document.getElementById('list-h').textContent = '최근 ' + sec.name;
+    document.getElementById('list-small').textContent = sec.posts.length + '편';
+    document.getElementById('full-link').href = sec.cafeUrl;
+
+    // 리스트
+    const list = document.getElementById('post-list');
+    if (sec.posts.length === 0) {
+      list.innerHTML = '<div class="loading">아직 글이 없습니다</div>';
+      return;
+    }
+    list.innerHTML = sec.posts.map((p, idx) => `
+      <a class="post-card ${key}" href="https://cafe.daum.net/redtraintour/${sec.bid}/${p.pid}" target="_blank" rel="noopener">
+        <div class="body">
+          <h4>${p.title}</h4>
+          <div class="meta">
+            <span class="num">No.${p.pid}</span>
+            <span>${sec.name}</span>
+          </div>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+    `).join('');
+  }
+
+  // 탭 클릭
+  document.querySelectorAll('.seg button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.seg button').forEach(x => x.classList.remove('is-on'));
+      b.classList.add('is-on');
+      renderSection(b.dataset.sec);
+    });
+  });
+
+  // URL hash로 초기 섹션
+  const hashSec = (location.hash || '').replace('#', '');
+  if (['humanities','letters','music','walks'].includes(hashSec)) {
+    currentSec = hashSec;
+    document.querySelectorAll('.seg button').forEach(x => x.classList.toggle('is-on', x.dataset.sec === hashSec));
+  }
+
+  loadStories();
+</script>
 
 <script src="./pwa.js"></script>
 </body>

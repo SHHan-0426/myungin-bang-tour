@@ -1,7 +1,7 @@
 // 명인방투어 — 서비스 워커
 // 오프라인 캐시 + "홈 화면에 추가" PWA 지원
 
-const CACHE_VERSION = 'mb-tour-v14';
+const CACHE_VERSION = 'mb-tour-v15';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -30,7 +30,10 @@ const CORE_ASSETS = [
   './assets/upcoming-kyoto-fall.jpg',
   './assets/upcoming-sendai.jpg',
   './data/tours.json',
-  './data/past-travels.json'
+  './data/past-travels.json',
+  './data/reviews.json',
+  './data/stories.json',
+  './data/places.json'
 ];
 
 self.addEventListener('install', (event) => {

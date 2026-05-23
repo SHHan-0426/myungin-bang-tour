@@ -277,7 +277,7 @@
     <h3>명인방투어</h3>
     <a class="menu-row" href="#">
       <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-      <div class="m-body"><b>명인방투어 소개</b><span>능파와 길 위의 인문학 이야기</span></div>
+      <div class="m-body"><b>명인방투어 소개</b><span>능파와 길 위의 인문학 여행스케치</span></div>
       <div class="chev">›</div>
     </a>
     <a class="menu-row" href="#">
@@ -358,7 +358,7 @@
   <nav class="tabbar">
     <a href="./index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
     <a href="./tour.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V6h16v11"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 11h16"/></svg>여행</a>
-    <a href="./story.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 13h7"/></svg>이야기</a>
+    <a href="./story.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 13h7"/></svg>여행스케치</a>
     <a href="./place.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>명인소</a>
     <a class="is-on" href="./my.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>마이</a>
   </nav>
@@ -370,7 +370,7 @@
   // ====================================================
 
   // 검색 인덱스: 모든 카드형 콘텐츠를 한 배열에
-  // 다가오는 여행 + 명인소 + 이야기 = 기본 11건
+  // 다가오는 여행 + 명인소 + 여행스케치 = 기본 11건
   // 지난 여행 박물관 100건은 ./data/past-travels.json에서 fetch (아래)
   const POSTS = [
     // ===== 투어 =====
@@ -382,10 +382,10 @@
     {type:"명인소", title:"오레브 리조트 & 스파", board:"명인 추천", date:"", img:"./assets/place-02.jpg", url:"https://cafe.daum.net/redtraintour/RrBS/120", keywords:"제주 오레브 리조트 스파 휴양 공간"},
     {type:"명인소", title:"봄나물 파티 (강진)", board:"산책", date:"", img:"./assets/place-03.jpg", url:"https://cafe.daum.net/redtraintour/Gz1K/1443", keywords:"강진 봄나물 산책 전남 자연"},
     {type:"명인소", title:"소금란 시아노그라피", board:"도랑가제 컬렉션", date:"", img:"./assets/place-04.jpg", url:"https://cafe.daum.net/redtraintour/S7cl/5", keywords:"소금란 시아노그라피 예술 도랑가제 오브제"},
-    // ===== 이야기 =====
-    {type:"이야기", title:"해안 따라 가득한 카페의 유혹", board:"길위의 인문학", date:"", img:"./assets/story-01.jpg", url:"https://cafe.daum.net/redtraintour/RfFr/128", keywords:"박경일 카페 바다 해안 인문학 능파 큐레이션"},
-    {type:"이야기", title:"조지아 여행후기", board:"여행후기", date:"", img:"./assets/avatar-01.jpg", url:"https://cafe.daum.net/redtraintour/1fXs/1063", keywords:"조지아 코카서스 여행후기 유럽"},
-    {type:"이야기", title:"물머리와 정약용 유적 탐방기", board:"여행! 편지!!", date:"", img:"./assets/avatar-02.jpg", url:"https://cafe.daum.net/redtraintour/1fY7/1483", keywords:"정약용 물머리 유적 탐방 편지 멤버"}
+    // ===== 여행스케치 =====
+    {type:"여행스케치", title:"해안 따라 가득한 카페의 유혹", board:"길위의 인문학", date:"", img:"./assets/story-01.jpg", url:"https://cafe.daum.net/redtraintour/RfFr/128", keywords:"박경일 카페 바다 해안 인문학 능파 큐레이션"},
+    {type:"여행스케치", title:"조지아 여행후기", board:"여행후기", date:"", img:"./assets/avatar-01.jpg", url:"https://cafe.daum.net/redtraintour/1fXs/1063", keywords:"조지아 코카서스 여행후기 유럽"},
+    {type:"여행스케치", title:"물머리와 정약용 유적 탐방기", board:"여행! 편지!!", date:"", img:"./assets/avatar-02.jpg", url:"https://cafe.daum.net/redtraintour/1fY7/1483", keywords:"정약용 물머리 유적 탐방 편지 멤버"}
   ];
 
   // ===== 검색 =====
