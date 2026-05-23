@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>명인방투어 · 마이</title>
-<meta name="description" content="회원 정보·통합 검색·공지·운영진·약관." />
+<meta name="description" content="신청한 여행과 다음 카페 로그인." />
 <meta name="theme-color" content="#7a1b25" />
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="apple-touch-icon" href="./assets/icon-192.png" />
@@ -17,169 +17,60 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="./shared.css" />
 <style>
-  /* 프로필 카드 */
-  .profile{
-    margin:18px 18px 8px;
-    background:linear-gradient(160deg,#fff8ec,#fde9c8);
-    border-radius:var(--radius);
-    padding:20px;
-    display:flex;align-items:center;gap:14px;
-    border:1px solid var(--line-2);
+  .page-head{padding:20px 18px 6px}
+  .page-head h1{font-family:"Noto Serif KR",serif;font-size:24px;margin:0 0 4px}
+  .page-head p{margin:0;color:var(--ink-3);font-size:13px}
+
+  /* 섹션 헤더 */
+  .my-section-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:24px 18px 8px;
   }
-  .profile .av{
-    width:60px;height:60px;border-radius:50%;
-    background:var(--wine);color:#fff8ec;
-    display:grid;place-items:center;font-family:"Noto Serif KR",serif;font-size:22px;font-weight:700;
-    flex:0 0 60px;
-    box-shadow:inset 0 0 0 3px #fff8ec, 0 0 0 1px var(--wine);
+  .my-section-bar h2{
+    font-family:"Noto Serif KR",serif;
+    font-size:17px;margin:0;
   }
-  .profile .who{flex:1;min-width:0}
-  .profile .name{font-family:"Noto Serif KR",serif;font-size:18px;font-weight:700;margin:0 0 2px}
-  .profile .sub{font-size:12px;color:var(--ink-2)}
-  .profile .ed{
-    background:#fff8ec;color:var(--wine);border:1px solid var(--line-2);
-    font-size:11px;font-weight:700;padding:6px 10px;border-radius:999px;
-    text-decoration:none;
+  .my-section-bar .login-toggle{
+    font-size:11.5px;color:var(--wine);font-weight:700;
+    background:none;border:0;cursor:pointer;padding:0;
+    text-decoration:underline;text-decoration-style:dotted;
+    text-underline-offset:3px;
+    font-family:inherit;
   }
 
-  /* 빠른 액션 4종 */
-  .quick{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
-    padding:8px 18px;
-  }
-  .quick a{
-    display:flex;flex-direction:column;align-items:center;gap:6px;
-    background:#fff;border:1px solid var(--line);border-radius:14px;
-    padding:14px 6px;
-    text-decoration:none;color:var(--ink);
-    font-size:11.5px;font-weight:600;
-  }
-  .quick .ico{
-    width:34px;height:34px;border-radius:50%;background:#fff8ec;
-    display:grid;place-items:center;color:var(--wine);
-  }
-  .quick .ico svg{width:18px;height:18px}
-  .quick .badge{
-    position:relative;
-  }
-  .quick .badge::after{
-    content:"";position:absolute;top:-2px;right:-2px;
-    width:8px;height:8px;border-radius:50%;background:var(--wine);
-  }
-
-  /* 검색 */
-  .search-box{
-    margin:14px 18px;
-    background:#fff;border:1px solid var(--line);border-radius:14px;
-    padding:11px 14px;display:flex;align-items:center;gap:10px;
-  }
-  .search-box svg{width:18px;height:18px;color:var(--ink-3);flex:0 0 18px}
-  .search-box input{
-    flex:1;border:0;background:transparent;font-size:14px;
-    font-family:inherit;color:var(--ink);outline:none;
-    min-width:0;
-  }
-  .search-box input::placeholder{color:var(--ink-3)}
-  .search-hint{
-    margin:0 18px 4px;font-size:11.5px;color:var(--ink-3);
-  }
-
-  /* 메뉴 리스트 */
-  .menu-section{
-    margin:18px 18px 0;
-    background:#fff;border:1px solid var(--line);border-radius:14px;
-    overflow:hidden;
-  }
-  .menu-section h3{
-    margin:0;padding:14px 16px 8px;
-    font-size:12px;color:var(--ink-3);font-weight:700;letter-spacing:.04em;
-    border-bottom:1px solid var(--line);
-  }
-  .menu-row{
-    display:flex;align-items:center;gap:12px;
-    padding:14px 16px;
-    border-bottom:1px solid var(--line);
-    text-decoration:none;color:inherit;
-  }
-  .menu-row:last-child{border-bottom:0}
-  .menu-row .m-ico{
-    width:34px;height:34px;border-radius:10px;background:#fff8ec;
-    display:grid;place-items:center;color:var(--wine);flex:0 0 34px;
-  }
-  .menu-row .m-ico svg{width:18px;height:18px}
-  .menu-row .m-body{flex:1;min-width:0}
-  .menu-row .m-body b{display:block;font-size:14px;font-weight:600;margin-bottom:1px}
-  .menu-row .m-body span{font-size:11.5px;color:var(--ink-3)}
-  .menu-row .chev{color:var(--ink-3);font-size:16px}
-
-  /* 통계 */
-  .stats{
-    margin:18px 18px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
-  }
-  .stat{
-    background:#fff;border:1px solid var(--line);border-radius:14px;
-    padding:14px 10px;text-align:center;
-  }
-  .stat b{font-family:"Noto Serif KR",serif;font-size:20px;display:block;color:var(--wine)}
-  .stat span{font-size:11px;color:var(--ink-3)}
-
-  /* 검색 결과 드롭 */
-  .search-results{
-    margin:0 18px;
-    background:#fff;border:1px solid var(--line);border-radius:14px;
-    max-height:360px;overflow-y:auto;
-    display:none;
-  }
-  .search-results.is-on{display:block}
-  .search-results a{
-    display:flex;gap:10px;padding:10px 12px;
-    text-decoration:none;color:inherit;
-    border-bottom:1px solid var(--line);
-  }
-  .search-results a:last-child{border-bottom:0}
-  .search-results .thumb{
-    width:52px;height:52px;border-radius:8px;
-    background:#ccc center/cover no-repeat;flex:0 0 52px;
-  }
-  .search-results .info{flex:1;min-width:0}
-  .search-results .info .tag{
-    display:inline-block;background:var(--tag-bg);color:var(--tag-ink);
-    font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;margin-bottom:2px;
-  }
-  .search-results .info b{font-size:13px;display:block;line-height:1.3;font-weight:600}
-  .search-results .info span{font-size:11px;color:var(--ink-3)}
-  .search-results .empty{padding:20px;text-align:center;color:var(--ink-3);font-size:13px}
-
-  /* 신청한 투어 카드 (로그인 시) */
-  .my-trips{
-    margin:14px 18px;
-  }
-  .my-trips .empty-state{
-    background:#fff;border:1px dashed var(--line-2);
-    border-radius:14px;padding:24px 16px;
-    text-align:center;color:var(--ink-3);font-size:13px;
-  }
+  /* 신청한 여행 — 로그인 상태 */
+  .my-trips{margin:0 18px}
   .trip-card{
     background:#fff;border:1px solid var(--line);border-radius:14px;
     padding:14px;display:flex;gap:12px;align-items:center;
     text-decoration:none;color:inherit;margin-bottom:8px;
+    box-shadow:0 4px 12px rgba(43,31,26,.04);
   }
   .trip-card .img{
     width:64px;height:64px;border-radius:10px;
     background:#ccc center/cover no-repeat;flex:0 0 64px;
   }
   .trip-card .info{flex:1;min-width:0}
-  .trip-card .info b{display:block;font-size:13.5px;font-weight:700;margin-bottom:2px}
+  .trip-card .info b{display:block;font-size:13.5px;font-weight:700;margin-bottom:2px;line-height:1.35}
   .trip-card .info span{font-size:11.5px;color:var(--ink-3)}
   .trip-card .status{
     background:var(--moss);color:#fff8ec;
     font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;
+    flex:0 0 auto;
   }
   .trip-card .status.pending{background:var(--gold);color:#2b1f1a}
 
+  /* 신청한 여행 — 빈 상태 */
+  .my-trips .empty-state{
+    background:#fff;border:1px dashed var(--line-2);
+    border-radius:14px;padding:28px 16px;
+    text-align:center;color:var(--ink-3);font-size:13px;line-height:1.6;
+  }
+  .my-trips .empty-state b{display:block;color:var(--ink-2);font-size:14px;margin-bottom:4px}
+
   /* 다음 카페 로그인 강조 카드 */
   .daum-login-card{
-    margin:18px 18px 6px;
+    margin:6px 18px;
     background:linear-gradient(135deg,#fff8ec,#fde2c1);
     border:1.5px solid var(--gold);
     border-radius:14px;
@@ -209,24 +100,6 @@
     text-align:center;line-height:1.7;
   }
   .daum-login-hint b{color:var(--wine);font-weight:800}
-
-  /* 운영진 */
-  .team-card{
-    margin:14px 18px;background:#fff;border:1px solid var(--line);
-    border-radius:var(--radius);padding:18px;
-  }
-  .team-card h3{font-family:"Noto Serif KR",serif;margin:0 0 4px;font-size:18px}
-  .team-card .sub{font-size:12.5px;color:var(--ink-3);margin-bottom:14px}
-  .team-card .row{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
-  .team-card .row:first-of-type{border-top:0;padding-top:0}
-  .team-card .av{
-    width:38px;height:38px;border-radius:50%;background:var(--wine);color:#fff8ec;
-    display:grid;place-items:center;font-family:"Noto Serif KR",serif;font-weight:700;font-size:14px;
-    flex:0 0 38px;
-  }
-  .team-card .info{flex:1;min-width:0}
-  .team-card .info b{font-size:13.5px;font-weight:700;display:block}
-  .team-card .info span{font-size:11.5px;color:var(--ink-3)}
 </style>
 </head>
 <body>
@@ -235,7 +108,7 @@
 
   <div class="topbar">
     <span>👤</span>
-    <span><b>마이</b> · 회원 정보 · 통합 검색 · 공지</span>
+    <span><b>마이</b> · 신청한 여행 · 다음 카페 로그인</span>
   </div>
 
   <header class="header">
@@ -251,61 +124,28 @@
     </div>
   </header>
 
-  <!-- 프로필 (로그인 상태에 따라 갱신) -->
-  <div class="profile" id="profile-card">
-    <div class="av" id="p-av">客</div>
-    <div class="who">
-      <div class="name" id="p-name">방문자님, 환영합니다</div>
-      <div class="sub" id="p-sub">로그인하시면 신청한 여행과 알림을 한 자리에서 볼 수 있어요</div>
+  <div class="page-head">
+    <h1>마이</h1>
+    <p id="page-sub">방문자님, 신청 내역과 카페 로그인을 한 자리에</p>
+  </div>
+
+  <!-- 줄 1: 신청한 여행 -->
+  <div class="my-section-bar">
+    <h2>내가 신청한 여행</h2>
+    <button class="login-toggle" id="login-toggle">로그인</button>
+  </div>
+  <div class="my-trips" id="my-trips">
+    <div class="empty-state">
+      <b>아직 신청한 여행이 없습니다</b>
+      로그인하시면 신청한 여행과 확정 알림이 여기에 표시됩니다
     </div>
-    <a class="ed" href="#" id="p-btn" onclick="event.preventDefault(); toggleLogin()">로그인</a>
   </div>
 
-  <!-- 신청한 여행 (로그인 시 표시) -->
-  <div id="my-trips-block" style="display:none">
-    <div class="section-bar" style="padding:18px 18px 6px;display:flex;align-items:center;justify-content:space-between">
-      <h2 style="font-family:'Noto Serif KR',serif;font-size:16px;margin:0">내가 신청한 여행</h2>
-      <small style="color:var(--ink-3);font-size:11.5px" id="my-trips-count">—</small>
-    </div>
-    <div class="my-trips" id="my-trips"></div>
+  <!-- 줄 2: 다음(Daum) 로그인 하러 가기 -->
+  <div class="my-section-bar">
+    <h2>다음(Daum) 로그인</h2>
+    <small style="color:var(--ink-3);font-size:11.5px">우수회원 전용 글 읽기</small>
   </div>
-
-  <!-- 빠른 액션 -->
-  <div class="quick">
-    <a href="./tour.html">
-      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></div>
-      신청 여행
-    </a>
-    <a href="#">
-      <div class="ico badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
-      알림
-    </a>
-    <a href="#">
-      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></div>
-      찜
-    </a>
-    <a href="#">
-      <div class="ico" style="background:#fee500;color:#2b1f1a"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C7 3 3 6.5 3 10.5c0 2.6 1.8 4.9 4.4 6.1L6.5 21l3.7-2.5c.6.1 1.2.1 1.8.1 5 0 9-3.5 9-7.6S17 3 12 3z"/></svg></div>
-      카톡 연결
-    </a>
-  </div>
-
-  <!-- 통합 검색 -->
-  <div class="search-box">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-    <input id="search-input" placeholder="22개 게시판 통합 검색 — 정태춘, 칼국수, 정선…" />
-  </div>
-  <div class="search-hint" id="search-hint">최근 인기 검색어: 정선 단풍, 7번 국도, 칼국수로드, 정약용</div>
-  <div class="search-results" id="search-results"></div>
-
-  <!-- 카운트 -->
-  <div class="stats">
-    <div class="stat"><b>1,927</b><span>회원</span></div>
-    <div class="stat"><b>4</b><span>다가오는 일정</span></div>
-    <div class="stat"><b>22</b><span>카페 게시판</span></div>
-  </div>
-
-  <!-- 다음 카페 로그인 (강조 카드) -->
   <a class="daum-login-card" href="https://m.daum.net/" target="_blank" rel="noopener">
     <div class="d-ico">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
@@ -319,94 +159,12 @@
   <div class="daum-login-hint">
     1️⃣ 새 탭에서 Daum 메인 열림 → 2️⃣ 우상단 <b>로그인</b> 탭 → 3️⃣ ID·비번 입력 → 4️⃣ 탭 닫고 돌아오기
   </div>
-  <!-- 명인방투어 카페 바로가기 (로그인된 후 카페로 직접) -->
-  <a class="menu-row" style="margin:0 18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px" href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener">
-    <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M3 12h5"/></svg></div>
-    <div class="m-body"><b>명인방투어 카페 바로가기</b><span>로그인 후 카페로 직접 — m.cafe.daum.net/redtraintour</span></div>
-    <div class="chev">›</div>
-  </a>
-
-  <!-- 메뉴: 명인방투어 -->
-  <div class="menu-section">
-    <h3>명인방투어</h3>
-    <a class="menu-row" href="#">
-      <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-      <div class="m-body"><b>명인방투어 소개</b><span>능파와 길 위의 인문학 여행스케치</span></div>
-      <div class="chev">›</div>
-    </a>
-    <a class="menu-row" href="#">
-      <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div>
-      <div class="m-body"><b>운영자 능파(임상수)</b><span>대표 인사 · 길의 이력</span></div>
-      <div class="chev">›</div>
-    </a>
-    <a class="menu-row" href="https://cafe.daum.net/redtraintour" target="_blank" rel="noopener">
-      <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M3 12h5"/></svg></div>
-      <div class="m-body"><b>다음 카페 원본</b><span>cafe.daum.net/redtraintour</span></div>
-      <div class="chev">›</div>
-    </a>
-  </div>
-
-  <!-- 메뉴: 공지·게시판 -->
-  <div class="menu-section">
-    <h3>공지 · 게시판</h3>
-    <a class="menu-row" href="#">
-      <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a2 2 0 0 0 2 2h2l4 4V5L7 9H5a2 2 0 0 0-2 2Z"/><path d="M16 8a5 5 0 0 1 0 8"/><path d="M19 5a9 9 0 0 1 0 14"/></svg></div>
-      <div class="m-body"><b>명인방공지</b><span>운영자 공지 · 신청 마감 · 변동 사항</span></div>
-      <div class="chev">›</div>
-    </a>
-    <a class="menu-row" href="#">
-      <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/></svg></div>
-      <div class="m-body"><b>일반 게시판</b><span>자유 글 · 멤버 인사</span></div>
-      <div class="chev">›</div>
-    </a>
-    <a class="menu-row" href="#">
-      <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6"/><path d="M19 8v6"/></svg></div>
-      <div class="m-body"><b>회원가입</b><span>명인방투어 멤버 신청</span></div>
-      <div class="chev">›</div>
-    </a>
-  </div>
-
-  <!-- 운영진 -->
-  <div class="team-card">
-    <h3>명인방 운영진</h3>
-    <div class="sub">길 위에서 함께 일하는 사람들</div>
-    <div class="row">
-      <div class="av">能</div>
-      <div class="info"><b>임상수 (능파)</b><span>대표 · 길 위의 인문학</span></div>
-    </div>
-    <div class="row">
-      <div class="av">行</div>
-      <div class="info"><b>행복파도타기</b><span>여행 가는날 운영</span></div>
-    </div>
-    <div class="row">
-      <div class="av">圖</div>
-      <div class="info"><b>도랑가제</b><span>컬렉션 · 시아노그라피</span></div>
-    </div>
-  </div>
-
-  <!-- 메뉴: 정책 -->
-  <div class="menu-section">
-    <h3>정책 · 도움말</h3>
-    <a class="menu-row" href="#"><div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div><div class="m-body"><b>이용약관</b></div><div class="chev">›</div></a>
-    <a class="menu-row" href="#"><div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="m-body"><b>개인정보처리방침</b></div><div class="chev">›</div></a>
-    <a class="menu-row" href="#"><div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></div><div class="m-body"><b>고객지원</b><span>FAQ · 환불 정책</span></div><div class="chev">›</div></a>
-  </div>
-
-  <!-- 카톡 CTA -->
-  <a class="kakao-cta" href="#">
-    <div class="k-ico">k</div>
-    <div>
-      <b>카톡 채널에서 모든 소식 받기</b>
-      <span>주간 다이제스트 · 신규 일정 알림</span>
-    </div>
-    <div style="margin-left:auto;font-size:18px">›</div>
-  </a>
 
   <footer>
     <div class="brand-name">명인방투어 · 능파</div>
     <div>대표 임상수 · 서울 강남구 논현로 114길 8, 2층 현현동</div>
     <div>since 2009 · 회원 1,927명과 걷는 길</div>
-    <div style="margin-top:14px;color:var(--ink-3)">© 2026 명인방투어 v0.2</div>
+    <div style="margin-top:14px;color:var(--ink-3)">© 2026 명인방투어 v0.7</div>
   </footer>
 
   <nav class="tabbar">
@@ -419,140 +177,35 @@
 </main>
 
 <script>
-  // ====================================================
-  // 명인방투어 - 통합 검색 + 로그인 목업
-  // ====================================================
-
-  // 검색 인덱스: 모든 카드형 콘텐츠를 한 배열에
-  // 다가오는 여행 + 명인소 + 여행스케치 = 기본 11건
-  // 지난 여행 박물관 100건은 ./data/past-travels.json에서 fetch (아래)
-  const POSTS = [
-    // ===== 투어 =====
-    {type:"여행", title:"제주 수국 · 우도 훈데르트 바서", board:"여행 가는날", date:"2026-06-15", img:"./assets/tour-01.jpg", url:"./tour-detail.html?id=jeju-2026-06", keywords:"제주 수국 우도 훈데르트바서 여행 국내"},
-    {type:"여행", title:"바라던 바다 — 7번 국도 바닷길", board:"여행 가는날", date:"2026-06-23", img:"./assets/tour-02.jpg", url:"./tour-detail.html?id=coastal7-2026-06", keywords:"동해 7번국도 바닷길 sea of hope 국내"},
-    {type:"여행", title:"베네룩스 3국 10일", board:"해외문화탐방", date:"2026-09-27", img:"./assets/tour-03.jpg", url:"./tour-detail.html?id=benelux-2026-09", keywords:"벨기에 네덜란드 룩셈부르크 베네룩스 해외 유럽"},
-    // ===== 명인소 =====
-    {type:"명인소", title:"군산 장국명가", board:"명인 추천", date:"", img:"./assets/place-01.jpg", url:"https://cafe.daum.net/redtraintour/RrBS/127", keywords:"군산 장국명가 보리굴비 전라북도 음식"},
-    {type:"명인소", title:"오레브 리조트 & 스파", board:"명인 추천", date:"", img:"./assets/place-02.jpg", url:"https://cafe.daum.net/redtraintour/RrBS/120", keywords:"제주 오레브 리조트 스파 휴양 공간"},
-    {type:"명인소", title:"봄나물 파티 (강진)", board:"산책", date:"", img:"./assets/place-03.jpg", url:"https://cafe.daum.net/redtraintour/Gz1K/1443", keywords:"강진 봄나물 산책 전남 자연"},
-    {type:"명인소", title:"소금란 시아노그라피", board:"도랑가제 컬렉션", date:"", img:"./assets/place-04.jpg", url:"https://cafe.daum.net/redtraintour/S7cl/5", keywords:"소금란 시아노그라피 예술 도랑가제 오브제"},
-    // ===== 여행스케치 =====
-    {type:"여행스케치", title:"해안 따라 가득한 카페의 유혹", board:"길위의 인문학", date:"", img:"./assets/story-01.jpg", url:"https://cafe.daum.net/redtraintour/RfFr/128", keywords:"박경일 카페 바다 해안 인문학 능파 큐레이션"},
-    {type:"여행스케치", title:"조지아 여행후기", board:"여행후기", date:"", img:"./assets/avatar-01.jpg", url:"https://cafe.daum.net/redtraintour/1fXs/1063", keywords:"조지아 코카서스 여행후기 유럽"},
-    {type:"여행스케치", title:"물머리와 정약용 유적 탐방기", board:"여행! 편지!!", date:"", img:"./assets/avatar-02.jpg", url:"https://cafe.daum.net/redtraintour/1fY7/1483", keywords:"정약용 물머리 유적 탐방 편지 멤버"}
-  ];
-
-  // ===== 검색 =====
-  const input = document.getElementById('search-input');
-  const results = document.getElementById('search-results');
-  const hint = document.getElementById('search-hint');
-
-  function search(q){
-    q = q.trim().toLowerCase();
-    if (!q) {
-      results.classList.remove('is-on');
-      hint.style.display = 'block';
-      return;
-    }
-    hint.style.display = 'none';
-    const hits = POSTS.filter(p => {
-      const hay = (p.title + " " + p.board + " " + p.keywords).toLowerCase();
-      return hay.includes(q);
-    });
-    if (hits.length === 0) {
-      results.innerHTML = `<div class="empty">"${q}" 에 해당하는 글이 없습니다</div>`;
-    } else {
-      results.innerHTML = hits.map(h => `
-        <a href="${h.url}"${h.url.startsWith('http')?' target="_blank" rel="noopener"':''}>
-          <div class="thumb" style="background-image:url('${h.img}')"></div>
-          <div class="info">
-            <span class="tag">${h.type} · ${h.board}</span>
-            <b>${h.title}</b>
-            <span>${h.date || '—'}</span>
-          </div>
-        </a>
-      `).join('');
-    }
-    results.classList.add('is-on');
-  }
-
-  input.addEventListener('input', e => search(e.target.value));
-
-  // 지난 여행 박물관 100건도 검색되도록 추가 인덱스 (네트워크 fetch)
-  fetch('./data/past-travels.json').then(r => r.json()).then(json => {
-    const seasonImg = {봄:'tour-01.jpg', 여름:'tour-02.jpg', 가을:'tour-03.jpg', 겨울:'story-01.jpg'};
-    json.posts.forEach(p => {
-      POSTS.push({
-        type: "지난 여행",
-        title: p.title,
-        board: `${p.region} · ${p.year}년 ${p.season}`,
-        date: p.posted || '',
-        img: `./assets/${seasonImg[p.season] || 'tour-01.jpg'}`,
-        url: `https://cafe.daum.net/redtraintour/1fXs/${p.pid}`,
-        keywords: `${p.region} ${p.year} ${p.season} 박물관 지난 여행`
-      });
-    });
-    // 현재 입력값이 있으면 재검색
-    if (input.value.trim()) search(input.value);
-  }).catch(() => {
-    // 로컬 파일에서는 fetch 실패할 수 있음 — 무시
-  });
-
-  // 인기 검색어 클릭 시 자동 입력
-  hint.addEventListener('click', e => {
-    const txt = e.target.closest('span') || hint;
-    // 간단히: 힌트 전체 내에서 클릭한 텍스트를 추출
-    const keywords = ["정선 단풍","7번 국도","칼국수로드","정약용"];
-    const clicked = keywords.find(k => hint.textContent.includes(k) && e.clientX);
-    if (clicked) {
-      input.value = clicked;
-      search(clicked);
-      input.focus();
-    }
-  });
-
-  // ===== 로그인 목업 =====
+  // 신청한 여행 — 목업 로그인 상태에 따라 표시 / 숨김
   const MOCK_USER = {
-    name:"한성호",
-    initial:"한",
-    joined:"2026.04.09",
-    appliedTours:["jeju-2026-06"]  // 신청한 투어 ID
+    name: "한성호",
+    joined: "2026.04.09",
+    appliedTours: [
+      {
+        title: "제주 수국 · 우도 훈데르트 바서",
+        date: "2026-06-15 ~ 18 · 3박 4일",
+        board: "여행 가는날",
+        img: "./assets/tour-01.jpg",
+        url: "./tour-detail.html?id=jeju-2026-06"
+      }
+    ]
   };
 
-  function isLoggedIn(){
-    return localStorage.getItem('myungin_logged_in') === '1';
-  }
-  function setLoggedIn(v){
-    if (v) localStorage.setItem('myungin_logged_in','1');
-    else localStorage.removeItem('myungin_logged_in');
-    renderLoginState();
-  }
-  function toggleLogin(){
-    setLoggedIn(!isLoggedIn());
-  }
-  window.toggleLogin = toggleLogin;  // onclick에서 호출
+  function isLoggedIn(){ return localStorage.getItem('myungin_logged_in') === '1'; }
+  function setLoggedIn(v){ if (v) localStorage.setItem('myungin_logged_in','1'); else localStorage.removeItem('myungin_logged_in'); render(); }
+  function toggleLogin(){ setLoggedIn(!isLoggedIn()); }
 
-  function renderLoginState(){
+  function render(){
     const logged = isLoggedIn();
-    const card = document.getElementById('profile-card');
-    const av = document.getElementById('p-av');
-    const name = document.getElementById('p-name');
-    const sub = document.getElementById('p-sub');
-    const btn = document.getElementById('p-btn');
-    const myTripsBlock = document.getElementById('my-trips-block');
+    const sub = document.getElementById('page-sub');
+    const toggle = document.getElementById('login-toggle');
+    const list = document.getElementById('my-trips');
 
     if (logged) {
-      av.textContent = MOCK_USER.initial;
-      av.style.background = 'var(--moss)';
-      name.textContent = MOCK_USER.name + "님";
-      sub.textContent = `명인방투어 멤버 · 가입 ${MOCK_USER.joined}`;
-      btn.textContent = "로그아웃";
-
-      // 신청한 투어 렌더
-      const trips = MOCK_USER.appliedTours.map(id => POSTS.find(p => p.url.includes(id))).filter(Boolean);
-      myTripsBlock.style.display = 'block';
-      document.getElementById('my-trips-count').textContent = trips.length + "건 · 확정 대기";
-      document.getElementById('my-trips').innerHTML = trips.map(t => `
+      sub.textContent = MOCK_USER.name + "님 · 가입 " + MOCK_USER.joined;
+      toggle.textContent = '로그아웃';
+      list.innerHTML = MOCK_USER.appliedTours.map(t => `
         <a class="trip-card" href="${t.url}">
           <div class="img" style="background-image:url('${t.img}')"></div>
           <div class="info">
@@ -563,17 +216,19 @@
         </a>
       `).join('');
     } else {
-      av.textContent = "客";
-      av.style.background = 'var(--wine)';
-      name.textContent = "방문자님, 환영합니다";
-      sub.textContent = "로그인하시면 신청한 여행과 알림을 한 자리에서 볼 수 있어요";
-      btn.textContent = "로그인";
-      myTripsBlock.style.display = 'none';
+      sub.textContent = '방문자님, 신청 내역과 카페 로그인을 한 자리에';
+      toggle.textContent = '로그인';
+      list.innerHTML = `
+        <div class="empty-state">
+          <b>아직 신청한 여행이 없습니다</b>
+          로그인하시면 신청한 여행과 확정 알림이 여기에 표시됩니다
+        </div>
+      `;
     }
   }
 
-  // 초기 렌더
-  renderLoginState();
+  document.getElementById('login-toggle').addEventListener('click', toggleLogin);
+  render();
 </script>
 
 <script src="./pwa.js"></script>
