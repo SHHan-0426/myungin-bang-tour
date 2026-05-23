@@ -138,9 +138,9 @@
     {"bid":"RfFv","pid":"55","title":"북해도 — 2023 1월 17(화)~20(금)","year":2023,"season":"겨울","region":"해외","country":"일본","posted":"2022-12-15"},
     {"bid":"RfFv","pid":"54","title":"2023 명인방 해외 탐방일정","year":2023,"season":"봄","region":"해외","country":"기타","posted":"2023-01-05"},
 
-    {"bid":"S2Ss","pid":"27","title":"시즈오카현 하마마츠 — 5월 26~28","year":2026,"season":"봄","region":"해외","country":"일본","posted":"2026-04-25"},
-    {"bid":"S2Ss","pid":"26","title":"일본 3대 지역 교토 단풍 — 12월 1~4","year":2026,"season":"겨울","region":"해외","country":"일본","posted":"2026-04-10"},
-    {"bid":"S2Ss","pid":"25","title":"센다이·아키타 단풍 여행 — 2026 10월 26(월)~30(금) / 4박5일","year":2026,"season":"가을","region":"해외","country":"일본","posted":"2026-03-25"},
+    {"bid":"S2Ss","pid":"27","title":"시즈오카현 하마마츠 — 5월 26~28","year":2026,"season":"봄","region":"해외","country":"일본","posted":"2026-04-25","image":"./assets/upcoming-shizuoka.jpg"},
+    {"bid":"S2Ss","pid":"26","title":"일본 3대 지역 교토 단풍 — 12월 1~4","year":2026,"season":"겨울","region":"해외","country":"일본","posted":"2026-04-10","image":"./assets/upcoming-kyoto-fall.jpg"},
+    {"bid":"S2Ss","pid":"25","title":"센다이·아키타 단풍 여행 — 2026 10월 26(월)~30(금) / 4박5일","year":2026,"season":"가을","region":"해외","country":"일본","posted":"2026-03-25","image":"./assets/upcoming-sendai.jpg"},
     {"bid":"S2Ss","pid":"24","title":"판타스틱 설벽 알펜루트 — 2026 4월 22(수)~25(토)","year":2026,"season":"봄","region":"해외","country":"일본","posted":"2025-12-20"},
     {"bid":"S2Ss","pid":"23","title":"프리미엄 오감만족 천년 교토 — 2026 2월 24(화)~27(금) / 3박4일","year":2026,"season":"겨울","region":"해외","country":"일본","posted":"2025-11-10"},
     {"bid":"S2Ss","pid":"22","title":"나오시마·베네세하우스 숙박 — 2026 4월 12(일)~15(수)","year":2026,"season":"봄","region":"해외","country":"일본","posted":"2025-12-05"},

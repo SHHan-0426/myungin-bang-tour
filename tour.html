@@ -479,7 +479,7 @@
         startDate: x.sd,
         endDate: x.sd,
         host: '능파 동행',
-        image: null,  // 이미지 없음 — 계절 컬러 블록
+        image: p.image || null,  // past-travels.json에 image URL이 있으면 사용
         cafeUrl: `https://cafe.daum.net/redtraintour/${p.bid}/${p.pid}`,
         _featured: false
       };

@@ -780,7 +780,7 @@
             endDate: sd,
             host: '능파 동행',
             board: p.region === '해외' ? (p.bid === 'S2Ss' ? '일본 여행' : '해외문화탐방') : '여행 가는날',
-            image: null,
+            image: p.image || null,
             cafeUrl: `https://cafe.daum.net/redtraintour/${p.bid}/${p.pid}`,
             region: p.region,
             season: p.season,
