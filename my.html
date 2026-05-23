@@ -177,6 +177,38 @@
   }
   .trip-card .status.pending{background:var(--gold);color:#2b1f1a}
 
+  /* 다음 카페 로그인 강조 카드 */
+  .daum-login-card{
+    margin:18px 18px 6px;
+    background:linear-gradient(135deg,#fff8ec,#fde2c1);
+    border:1.5px solid var(--gold);
+    border-radius:14px;
+    padding:14px 16px;
+    display:flex;align-items:center;gap:12px;
+    text-decoration:none;color:inherit;
+    box-shadow:0 6px 16px rgba(199,162,90,.18);
+  }
+  .daum-login-card .d-ico{
+    width:42px;height:42px;border-radius:50%;
+    background:var(--wine);color:#fff8ec;
+    display:grid;place-items:center;flex:0 0 42px;
+  }
+  .daum-login-card .d-ico svg{width:20px;height:20px}
+  .daum-login-card .d-body{flex:1;min-width:0}
+  .daum-login-card .d-body b{
+    display:block;font-size:14.5px;font-weight:800;
+    color:var(--wine);margin-bottom:2px;
+  }
+  .daum-login-card .d-body span{font-size:11.5px;color:var(--ink-2);line-height:1.4}
+  .daum-login-card .d-chev{
+    color:var(--wine);font-size:24px;font-weight:300;
+    flex:0 0 16px;
+  }
+  .daum-login-hint{
+    margin:0 18px 14px;font-size:11px;color:var(--ink-3);
+    text-align:center;line-height:1.5;
+  }
+
   /* 운영진 */
   .team-card{
     margin:14px 18px;background:#fff;border:1px solid var(--line);
@@ -270,6 +302,21 @@
     <div class="stat"><b>1,927</b><span>회원</span></div>
     <div class="stat"><b>4</b><span>다가오는 일정</span></div>
     <div class="stat"><b>22</b><span>카페 게시판</span></div>
+  </div>
+
+  <!-- 다음 카페 로그인 (강조 카드) -->
+  <a class="daum-login-card" href="https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fcafe.daum.net%2Fredtraintour" target="_blank" rel="noopener">
+    <div class="d-ico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
+    </div>
+    <div class="d-body">
+      <b>다음 카페 로그인</b>
+      <span>한 번 로그인하면 우수회원 전용 글까지 모두 읽기 가능</span>
+    </div>
+    <div class="d-chev">›</div>
+  </a>
+  <div class="daum-login-hint">
+    💡 새 탭에서 Daum 로그인 화면이 열립니다 · 로그인 후 탭을 닫고 돌아오시면 됩니다
   </div>
 
   <!-- 메뉴: 명인방투어 -->
