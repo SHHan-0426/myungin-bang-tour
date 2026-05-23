@@ -598,7 +598,14 @@
       else if (currentMode === 'region') posts = PAST.filter(p => p.region === currentFilter);
       else if (currentMode === 'season') posts = PAST.filter(p => p.season === currentFilter);
     }
-    document.getElementById('mu-section-title').textContent = currentFilter === 'all' ? '전체' : currentFilter + (currentMode==='year'?'년':'');
+    // 최신순 정렬: 연도 ↓, 게시일 ↓ (게시일 없으면 pid ↓)
+    posts = [...posts].sort((a,b) => {
+      if (a.year !== b.year) return b.year - a.year;
+      const ap = a.posted || '', bp = b.posted || '';
+      if (ap !== bp) return bp.localeCompare(ap);
+      return parseInt(b.pid) - parseInt(a.pid);
+    });
+    document.getElementById('mu-section-title').textContent = currentFilter === 'all' ? '전체 (최신순)' : currentFilter + (currentMode==='year'?'년':'') + ' (최신순)';
     document.getElementById('mu-section-count').textContent = posts.length + '건';
 
     const list = document.getElementById('museum-grid');
