@@ -8,25 +8,7 @@
     if (!target || target.dataset.injected === '1') return;
     target.dataset.injected = '1';
 
-    // ⓐ 다음 카페 바로가기 (로그인 포함)
-    const cafe = document.createElement('a');
-    cafe.href = 'https://cafe.daum.net/redtraintour';
-    cafe.target = '_blank';
-    cafe.rel = 'noopener';
-    cafe.title = '다음 카페에서 로그인 / 원문 보기';
-    cafe.style.cssText =
-      'display:inline-flex;align-items:center;gap:3px;'+
-      'padding:5px 10px;border-radius:999px;'+
-      'background:#fff8ec;color:#7a1b25;'+
-      'font-size:11px;font-weight:800;text-decoration:none;'+
-      'border:1px solid #c7a25a;'+
-      'white-space:nowrap;margin-right:4px';
-    cafe.innerHTML =
-      '<span>다음 카페</span>'+
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>';
-    target.insertBefore(cafe, target.firstChild);
-
-    // ⓑ ↻ 새로고침
+    // ↻ 새로고침 버튼
     const btn = document.createElement('button');
     btn.setAttribute('aria-label', '새로고침');
     btn.title = '새로고침';
@@ -40,10 +22,8 @@
         location.reload();
       }
     };
-    // 새로고침 버튼은 다음 카페 버튼 다음(오른쪽)에 배치
-    target.insertBefore(btn, cafe.nextSibling);
+    target.insertBefore(btn, target.firstChild);
   }
-  // 하위 호환: 기존 코드 호출지점에서 사용했던 이름 유지
   const injectRefreshButton = injectHeaderButtons;
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', injectRefreshButton);
