@@ -1,0 +1,53 @@
+{
+  "name": "명인방투어",
+  "short_name": "명인방투어",
+  "description": "능파의 길 위 인문학. 16년차 어른의 문화 큐레이션 여행.",
+  "lang": "ko",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fbf6ef",
+  "theme_color": "#7a1b25",
+  "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "다음 여행",
+      "short_name": "여행",
+      "url": "./tour.html",
+      "icons": [{"src":"./assets/icon-192.png","sizes":"192x192"}]
+    },
+    {
+      "name": "지난 여행 박물관",
+      "short_name": "박물관",
+      "url": "./tour.html#museum",
+      "icons": [{"src":"./assets/icon-192.png","sizes":"192x192"}]
+    },
+    {
+      "name": "명인소 지도",
+      "short_name": "명인소",
+      "url": "./place.html",
+      "icons": [{"src":"./assets/icon-192.png","sizes":"192x192"}]
+    }
+  ],
+  "categories": ["lifestyle", "travel", "education"]
+}

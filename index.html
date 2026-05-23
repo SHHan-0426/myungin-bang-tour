@@ -4,7 +4,37 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>명인방투어 — 길 위의 인문학</title>
-<meta name="description" content="능파의 명인방투어. 인문학·여행·음악·맛이 흐르는 어른의 큐레이션 커뮤니티." />
+<meta name="description" content="능파의 명인방투어. 인문학·여행·음악·맛이 흐르는 어른의 큐레이션 커뮤니티. 16년차 1,927명 회원." />
+<meta name="theme-color" content="#7a1b25" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="apple-touch-icon" href="./assets/icon-192.png" />
+<link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="명인방투어" />
+<meta property="og:title" content="명인방투어 — 길 위의 인문학" />
+<meta property="og:description" content="능파와 함께 걷는 문화 큐레이션 여행. 16년차, 1,927명." />
+<meta property="og:image" content="https://myungin-bang-tour.netlify.app/assets/tour-01.jpg" />
+<meta property="og:url" content="https://myungin-bang-tour.netlify.app/" />
+<meta property="og:locale" content="ko_KR" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="명인방투어 — 길 위의 인문학" />
+<meta name="twitter:description" content="능파와 함께 걷는 문화 큐레이션 여행." />
+<meta name="twitter:image" content="https://myungin-bang-tour.netlify.app/assets/tour-01.jpg" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "명인방투어",
+  "alternateName": "능파의 명인방투어",
+  "url": "https://myungin-bang-tour.netlify.app/",
+  "logo": "https://myungin-bang-tour.netlify.app/assets/icon-512.png",
+  "description": "인문학·여행·음악·맛이 흐르는 어른의 큐레이션 커뮤니티. 능파 임상수와 함께 걷는 16년차 문화 여행.",
+  "founder": {"@type":"Person","name":"임상수","alternateName":"능파"},
+  "foundingDate": "2009",
+  "address": {"@type":"PostalAddress","addressLocality":"서울","addressRegion":"강남구","streetAddress":"논현로 114길 8","postalCode":"06035","addressCountry":"KR"},
+  "sameAs": ["https://cafe.daum.net/redtraintour"]
+}
+</script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
@@ -113,7 +143,7 @@
     aspect-ratio: 4/5;
     background:
       linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%),
-      url('./assets/hero.jpg') center/cover;
+      url('./assets/tour-01.jpg') center/cover;
     color:#fff8ec;
     box-shadow:var(--shadow);
   }
@@ -447,16 +477,16 @@
     <a class="chip" href="./my.html">마이</a>
   </div>
 
-  <!-- 히어로 -->
+  <!-- 히어로 (AUTO_HERO=true 시 JS가 자동으로 가장 가까운 미래 여행 데이터로 교체) -->
   <div class="hero">
-    <span class="hero-tag">10월 정기 여행 · 1박 2일</span>
+    <span class="hero-tag">6월 정기 여행 · 3박 4일</span>
     <div class="hero-body">
-      <div class="hero-eyebrow">OCTOBER · JEONGSEON</div>
-      <h1 class="hero-title">정선 &amp; 로미지안,<br/>백두대간 운탄고도 단풍 곤도라</h1>
+      <div class="hero-eyebrow">JUNE · JEJU</div>
+      <h1 class="hero-title">제주 수국 ·<br/>우도 훈데르트 바서</h1>
       <div class="hero-meta">
-        <span>10.30(목)~31(금)</span><span>1박 2일</span><span>여행 가는날</span><span>능파 동행</span>
+        <span>6.15(월)~18(목)</span><span>3박 4일</span><span>여행 가는날</span><span>능파 동행</span>
       </div>
-      <a class="hero-cta" href="./tour-detail.html?id=jeongseon-2026-10">자세히 보고 신청하기 →</a>
+      <a class="hero-cta" href="./tour-detail.html?id=jeju-2026-06">자세히 보고 신청하기 →</a>
     </div>
   </div>
 
@@ -708,17 +738,15 @@
 <!-- 자동 히어로 시스템 — data/tours.json 한 파일만 편집하면 갱신 -->
 <!-- ============================================================ -->
 <script>
-  // ⚙️ 토글: true로 바꾸면 가장 가까운 미래 일정으로 히어로 자동 교체
-  //         (현재는 운영자 요청에 따라 OFF — 정선 운탄고도 단풍 곤도라가 수동 고정)
-  const AUTO_HERO = false;
+  // ⚙️ 토글: true면 가장 가까운 미래 여행으로 히어로 자동 교체
+  //         (정선 단풍은 2025년 지난 여행으로 확인되어 자동 모드로 전환)
+  const AUTO_HERO = true;
 
-  // 인라인 데이터 — 실서버 배포 시 data/tours.json을 fetch로 로드하면 됨.
-  // 파일 시스템에서 직접 index.html을 열면 fetch가 CORS로 막히므로 인라인.
+  // 다가오는 여행 — data/tours.json 인라인 사본 (실서버에서 fetch 가능)
   const TOURS = [
-    {id:"jeju-2026-06",      title:"제주 수국 · 우도 훈데르트 바서",          subtitle:"섬의 수국이 깊어진 6월",                  category:"정기", duration:"3박 4일", startDate:"2026-06-15", endDate:"2026-06-18", host:"능파 동행", image:"./assets/tour-01.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/4b2T/1624"},
-    {id:"coastal7-2026-06",  title:"바라던 바다 — 7번 국도 바닷길",            subtitle:"sea of hope · 당신의 바다를 꿈꾸는",      category:"정기", duration:"2박 3일", startDate:"2026-06-23", endDate:"2026-06-25", host:"능파 동행", image:"./assets/tour-02.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1057"},
-    {id:"benelux-2026-09",   title:"베네룩스 3국 10일",                       subtitle:"벨기에 · 네덜란드 · 룩셈부르크",          category:"해외", duration:"10일",    startDate:"2026-09-27", endDate:"2026-10-06", host:"능파 동행", image:"./assets/tour-03.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/RfFv/96"},
-    {id:"jeongseon-2026-10", title:"정선 & 로미지안, 백두대간 운탄고도 단풍 곤도라", subtitle:"운탄고도에서 보는 백두대간 단풍",        category:"정기", duration:"1박 2일", startDate:"2026-10-30", endDate:"2026-10-31", host:"능파 동행", image:"./assets/hero.jpg",    cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1040"}
+    {id:"jeju-2026-06",     title:"제주 수국 · 우도 훈데르트 바서",   subtitle:"섬의 수국이 깊어진 6월",             category:"정기", domestic:true,  duration:"3박 4일", startDate:"2026-06-15", endDate:"2026-06-18", host:"능파 동행", board:"여행 가는날", image:"./assets/tour-01.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/4b2T/1624"},
+    {id:"coastal7-2026-06", title:"바라던 바다 — 7번 국도 바닷길",    subtitle:"sea of hope · 당신의 바다를 꿈꾸는", category:"정기", domestic:true,  duration:"2박 3일", startDate:"2026-06-23", endDate:"2026-06-25", host:"능파 동행", board:"여행 가는날", image:"./assets/tour-02.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1057"},
+    {id:"benelux-2026-09",  title:"베네룩스 3국 10일",               subtitle:"벨기에 · 네덜란드 · 룩셈부르크",      category:"해외", domestic:false, duration:"10일",    startDate:"2026-09-27", endDate:"2026-10-06", host:"능파 동행", board:"해외문화탐방", image:"./assets/tour-03.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/RfFv/96"}
   ];
 
   function pickNearestTour(){
@@ -748,7 +776,7 @@
       t.title.replace(/, /,',<br/>').replace(/ — /,'<br/>');
     hero.querySelector('.hero-meta').innerHTML =
       `<span>${formatRange(t.startDate, t.endDate)}</span><span>${t.duration}</span><span>${t.host}</span>`;
-    hero.querySelector('.hero-cta').href = t.cafeUrl;
+    hero.querySelector('.hero-cta').href = `./tour-detail.html?id=${t.id}`;
   }
 
   if (AUTO_HERO) {
@@ -761,5 +789,6 @@
 
 <a class="fab" href="#" aria-label="카카오 채널">TALK</a>
 
+<script src="./pwa.js"></script>
 </body>
 </html>

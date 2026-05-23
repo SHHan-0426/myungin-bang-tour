@@ -4,6 +4,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>명인방투어 · 마이</title>
+<meta name="description" content="회원 정보·통합 검색·공지·운영진·약관." />
+<meta name="theme-color" content="#7a1b25" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="apple-touch-icon" href="./assets/icon-192.png" />
+<link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="명인방투어" />
+<meta property="og:url" content="https://myungin-bang-tour.netlify.app/my.html" />
+<meta property="og:locale" content="ko_KR" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="./shared.css" />
@@ -361,12 +370,13 @@
   // ====================================================
 
   // 검색 인덱스: 모든 카드형 콘텐츠를 한 배열에
+  // 다가오는 여행 + 명인소 + 이야기 = 기본 11건
+  // 지난 여행 박물관 100건은 ./data/past-travels.json에서 fetch (아래)
   const POSTS = [
     // ===== 투어 =====
     {type:"여행", title:"제주 수국 · 우도 훈데르트 바서", board:"여행 가는날", date:"2026-06-15", img:"./assets/tour-01.jpg", url:"./tour-detail.html?id=jeju-2026-06", keywords:"제주 수국 우도 훈데르트바서 여행 정기"},
     {type:"여행", title:"바라던 바다 — 7번 국도 바닷길", board:"여행 가는날", date:"2026-06-23", img:"./assets/tour-02.jpg", url:"./tour-detail.html?id=coastal7-2026-06", keywords:"동해 7번국도 바닷길 sea of hope 정기"},
     {type:"여행", title:"베네룩스 3국 10일", board:"해외문화탐방", date:"2026-09-27", img:"./assets/tour-03.jpg", url:"./tour-detail.html?id=benelux-2026-09", keywords:"벨기에 네덜란드 룩셈부르크 베네룩스 해외 유럽"},
-    {type:"여행", title:"정선 & 로미지안, 백두대간 운탄고도 단풍 곤도라", board:"여행 가는날", date:"2026-10-30", img:"./assets/hero.jpg", url:"./tour-detail.html?id=jeongseon-2026-10", keywords:"정선 단풍 곤도라 운탄고도 강원 가을 로미지안"},
     // ===== 명인소 =====
     {type:"명인소", title:"군산 장국명가", board:"명인 추천", date:"", img:"./assets/place-01.jpg", url:"https://cafe.daum.net/redtraintour/RrBS/127", keywords:"군산 장국명가 보리굴비 전라북도 음식"},
     {type:"명인소", title:"오레브 리조트 & 스파", board:"명인 추천", date:"", img:"./assets/place-02.jpg", url:"https://cafe.daum.net/redtraintour/RrBS/120", keywords:"제주 오레브 리조트 스파 휴양 공간"},
@@ -413,6 +423,26 @@
   }
 
   input.addEventListener('input', e => search(e.target.value));
+
+  // 지난 여행 박물관 100건도 검색되도록 추가 인덱스 (네트워크 fetch)
+  fetch('./data/past-travels.json').then(r => r.json()).then(json => {
+    const seasonImg = {봄:'tour-01.jpg', 여름:'tour-02.jpg', 가을:'tour-03.jpg', 겨울:'story-01.jpg'};
+    json.posts.forEach(p => {
+      POSTS.push({
+        type: "지난 여행",
+        title: p.title,
+        board: `${p.region} · ${p.year}년 ${p.season}`,
+        date: p.posted || '',
+        img: `./assets/${seasonImg[p.season] || 'tour-01.jpg'}`,
+        url: `https://cafe.daum.net/redtraintour/1fXs/${p.pid}`,
+        keywords: `${p.region} ${p.year} ${p.season} 박물관 지난 여행`
+      });
+    });
+    // 현재 입력값이 있으면 재검색
+    if (input.value.trim()) search(input.value);
+  }).catch(() => {
+    // 로컬 파일에서는 fetch 실패할 수 있음 — 무시
+  });
 
   // 인기 검색어 클릭 시 자동 입력
   hint.addEventListener('click', e => {
@@ -492,5 +522,6 @@
   renderLoginState();
 </script>
 
+<script src="./pwa.js"></script>
 </body>
 </html>

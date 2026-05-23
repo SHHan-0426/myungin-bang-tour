@@ -3,17 +3,61 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>명인방투어 · 여행 일정</title>
+<title>명인방투어 · 여행</title>
+<meta name="description" content="능파와 함께 걷는 다가오는 여행 일정 + 지난 16년의 여행 100건 박물관." />
+<meta name="theme-color" content="#7a1b25" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="apple-touch-icon" href="./assets/icon-192.png" />
+<link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="명인방투어" />
+<meta property="og:title" content="명인방투어 · 여행" />
+<meta property="og:description" content="다가오는 여행 일정 + 지난 여행 박물관." />
+<meta property="og:image" content="https://myungin-bang-tour.netlify.app/assets/tour-01.jpg" />
+<meta property="og:url" content="https://myungin-bang-tour.netlify.app/tour.html" />
+<meta property="og:locale" content="ko_KR" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="./shared.css" />
 <style>
-  /* ===== 투어 페이지 전용 ===== */
   .page-head{padding:20px 18px 6px}
   .page-head h1{font-family:"Noto Serif KR",serif;font-size:24px;margin:0 0 4px}
   .page-head p{margin:0;color:var(--ink-3);font-size:13px}
 
-  /* 풀-리스트 카드 (다가오는 일정 — 모두 같은 크기) */
+  /* 메인 서브탭 (다가오는 / 박물관) */
+  .seg{
+    margin:14px 18px;
+    display:flex;background:#fff;border:1px solid var(--line);border-radius:14px;padding:5px;
+    gap:4px;
+  }
+  .seg button{
+    flex:1;background:none;border:0;padding:11px 0;
+    font-size:14px;color:var(--ink-3);font-weight:600;
+    border-radius:10px;cursor:pointer;font-family:inherit;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .seg button.is-on{background:var(--ink);color:#fff8ec}
+  .seg button .pill{
+    background:var(--gold);color:#2b1f1a;
+    font-size:10.5px;font-weight:800;
+    padding:1px 7px;border-radius:999px;
+  }
+  .seg button.is-on .pill{background:#fff8ec;color:var(--wine)}
+
+  /* 서브-서브탭 (국내 / 해외) — 칩 스타일 */
+  .sub-chips{
+    display:flex;gap:8px;padding:6px 18px 4px;
+  }
+  .sub-chips .chip{cursor:pointer}
+
+  .section-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 18px 8px;
+  }
+  .section-bar h2{font-family:"Noto Serif KR",serif;font-size:17px;margin:0}
+  .section-bar small{color:var(--ink-3);font-size:11.5px}
+
+  /* === 다가오는 여행 카드 (large list-card) === */
   .list-card{
     margin:10px 18px;background:#fff;border:1px solid var(--line);
     border-radius:16px;overflow:hidden;display:flex;
@@ -44,58 +88,146 @@
   .list-card .meta span{background:#fff8ec;padding:2px 7px;border-radius:999px;border:1px solid var(--line-2)}
   .list-card .seats{margin-top:6px;height:5px;border-radius:999px;background:var(--line);overflow:hidden}
   .list-card .seats i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--wine));border-radius:999px}
-  .list-card.is-near{
-    border-color:var(--wine);
-    box-shadow:0 8px 20px rgba(122,27,37,.12);
-  }
+  .list-card.is-near{border-color:var(--wine);box-shadow:0 8px 20px rgba(122,27,37,.12)}
   .list-card.is-near .body::before{
-    content:"가장 가까운 일정";
+    content:"가장 가까운 여행";
     display:inline-block;
     background:var(--wine);color:#fff8ec;
     font-size:10px;font-weight:700;
     padding:2px 7px;border-radius:999px;
     margin-bottom:4px;align-self:flex-start;
   }
-  .list-card.is-past{opacity:.72}
-  .list-card.is-past .date{color:var(--ink-3)}
 
-  .section-bar{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:24px 18px 8px;
+  /* === 지난 여행 박물관 === */
+  .museum-intro{
+    margin:8px 18px 0;
+    background:linear-gradient(160deg,#fff3d6,#fde9c8);
+    border:1px solid var(--line-2);border-radius:var(--radius);
+    padding:16px 18px;
   }
-  .section-bar h2{font-family:"Noto Serif KR",serif;font-size:17px;margin:0}
-  .section-bar small{color:var(--ink-3);font-size:11.5px}
+  .museum-intro .kicker{font-size:11px;letter-spacing:.15em;color:var(--wine);font-weight:700;margin-bottom:4px}
+  .museum-intro h2{font-family:"Noto Serif KR",serif;font-size:18px;margin:0 0 4px;color:var(--ink)}
+  .museum-intro p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.55}
+  .museum-intro .count{margin-top:8px;font-size:12px;color:var(--ink-3)}
+  .museum-intro .count b{color:var(--wine);font-weight:800}
 
-  .calendar-toggle{
-    margin:14px 18px;
-    display:flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px;
+  /* 필터 탭 (시간/지역/유형) */
+  .filter-tabs{
+    display:flex;margin:14px 18px 0;
+    border-bottom:1px solid var(--line);
   }
-  .calendar-toggle button{
-    flex:1;background:none;border:0;padding:9px;
+  .filter-tabs button{
+    flex:1;background:none;border:0;padding:11px 0;
     font-size:13px;color:var(--ink-3);font-weight:600;
-    border-radius:8px;cursor:pointer;
-    font-family:inherit;
+    cursor:pointer;font-family:inherit;
+    border-bottom:2px solid transparent;
+    margin-bottom:-1px;
   }
-  .calendar-toggle button.is-on{background:var(--ink);color:#fff8ec}
+  .filter-tabs button.is-on{color:var(--wine);border-bottom-color:var(--wine)}
+
+  /* 필터 칩 (선택지) */
+  .filter-chips{
+    display:flex;gap:6px;overflow-x:auto;padding:10px 18px 4px;
+    scrollbar-width:none;
+  }
+  .filter-chips::-webkit-scrollbar{display:none}
+  .filter-chips .fc{
+    flex:0 0 auto;
+    padding:7px 13px;border-radius:999px;
+    background:#fff;border:1px solid var(--line-2);
+    font-size:12.5px;color:var(--ink-2);font-weight:500;
+    white-space:nowrap;cursor:pointer;
+    display:inline-flex;align-items:center;gap:5px;
+  }
+  .filter-chips .fc.is-on{background:var(--wine);color:#fff8ec;border-color:var(--wine)}
+  .filter-chips .fc .ct{
+    background:rgba(0,0,0,.08);color:inherit;
+    font-size:10.5px;font-weight:700;padding:0 6px;border-radius:999px;
+  }
+  .filter-chips .fc.is-on .ct{background:rgba(255,248,236,.25)}
+
+  /* 박물관 카드 그리드 (2열) */
+  .museum-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+    padding:14px 18px 0;
+  }
+  .museum-card{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:12px 12px 14px;
+    text-decoration:none;color:inherit;
+    display:flex;flex-direction:column;gap:6px;
+    position:relative;
+    min-height:120px;
+  }
+  .museum-card .swatch{
+    position:absolute;top:0;left:0;right:0;height:6px;
+    background:var(--moss);
+    border-radius:12px 12px 0 0;
+  }
+  .museum-card.s-봄 .swatch{background:linear-gradient(90deg,#f3a4b5,#f6c576)}
+  .museum-card.s-여름 .swatch{background:linear-gradient(90deg,#7fc885,#5b6b3a)}
+  .museum-card.s-가을 .swatch{background:linear-gradient(90deg,#d97b3a,#7a1b25)}
+  .museum-card.s-겨울 .swatch{background:linear-gradient(90deg,#a8c4d6,#3f6b86)}
+  .museum-card .meta-top{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:8px;font-size:10.5px;color:var(--ink-3);font-weight:700;
+  }
+  .museum-card .year{
+    background:var(--ink);color:#fff8ec;
+    padding:2px 8px;border-radius:999px;font-size:10px;
+  }
+  .museum-card .reg{
+    background:var(--tag-bg);color:var(--tag-ink);
+    padding:2px 8px;border-radius:999px;font-size:10px;
+  }
+  .museum-card h4{
+    font-size:13px;margin:2px 0 0;font-weight:700;line-height:1.4;
+    color:var(--ink);
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .museum-card .stats{
+    margin-top:auto;padding-top:6px;
+    font-size:10.5px;color:var(--ink-3);
+    display:flex;gap:6px;
+  }
+
+  .museum-empty{
+    grid-column:1/-1;padding:30px 18px;text-align:center;color:var(--ink-3);font-size:13px;
+  }
+
+  /* 통계 카드 */
+  .stats-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+    padding:10px 18px 0;
+  }
+  .stats-row .st{
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:8px 4px;text-align:center;
+  }
+  .stats-row .st b{
+    font-family:"Noto Serif KR",serif;font-size:16px;
+    color:var(--wine);display:block;line-height:1;margin-bottom:2px;
+  }
+  .stats-row .st span{font-size:10px;color:var(--ink-3)}
+
+  .hide{display:none !important}
 </style>
 </head>
 <body>
 
 <main class="stage">
 
-  <!-- 상단 띠 -->
   <div class="topbar">
     <span>🚆</span>
-    <span><b>2026년 여행</b> · 다음 가까운 일정 자동 안내</span>
+    <span><b>여행</b> · 다가오는 여행 + 지난 여행 박물관</span>
   </div>
 
-  <!-- 헤더 -->
   <header class="header">
     <a class="brand" href="./index.html">
       <div class="brand-mark">明</div>
       <div>
         <div class="brand-name">명인방투어</div>
-        <div class="brand-sub">여행 일정</div>
+        <div class="brand-sub">여행</div>
       </div>
     </a>
     <div class="nav-icons">
@@ -105,79 +237,92 @@
     </div>
   </header>
 
-  <!-- 페이지 헤더 -->
   <div class="page-head">
     <h1>여행</h1>
-    <p>능파와 함께 걷는 모든 길의 일정</p>
+    <p>능파와 함께 걷는 모든 길</p>
   </div>
 
-  <!-- 필터 칩 -->
-  <div class="chips">
-    <span class="chip is-on">전체</span>
-    <span class="chip">다가오는</span>
-    <span class="chip">정기</span>
-    <span class="chip">원데이</span>
-    <span class="chip">해외문화탐방</span>
-    <span class="chip">집밥 아카데미</span>
-    <span class="chip">지난 여행</span>
+  <!-- 메인 서브탭 -->
+  <div class="seg">
+    <button id="seg-up" class="is-on">📅 다가오는 여행 <span class="pill" id="seg-up-count">3</span></button>
+    <button id="seg-mu">🏛 지난 여행 박물관 <span class="pill" id="seg-mu-count">100</span></button>
   </div>
 
-  <!-- 리스트/캘린더 토글 -->
-  <div class="calendar-toggle">
-    <button class="is-on">리스트</button>
-    <button>캘린더</button>
+  <!-- ====================================== -->
+  <!--   다가오는 여행 (국내 / 해외 서브탭)     -->
+  <!-- ====================================== -->
+  <div id="view-upcoming">
+    <div class="sub-chips">
+      <span class="chip is-on" data-up-filter="domestic">국내 <span style="opacity:.6">2</span></span>
+      <span class="chip" data-up-filter="overseas">해외 <span style="opacity:.6">1</span></span>
+    </div>
+
+    <div class="section-bar">
+      <h2 id="up-title">국내 여행</h2>
+      <small id="up-count">2건</small>
+    </div>
+    <div id="upcoming-list"></div>
+
+    <a class="kakao-cta" href="#" style="margin-top:24px">
+      <div class="k-ico">k</div>
+      <div>
+        <b>여행 신청·문의는 카톡 채널로</b>
+        <span>평일 10시~18시 · 즉시 답변</span>
+      </div>
+      <div style="margin-left:auto;font-size:18px">›</div>
+    </a>
   </div>
 
-  <!-- 다가오는 일정 (전체) -->
-  <div class="section-bar" id="upcoming">
-    <h2>다가오는 일정</h2>
-    <small id="up-count">—</small>
-  </div>
-  <div id="upcoming-list"><!-- JS가 모든 다가오는 일정을 렌더 --></div>
+  <!-- ====================================== -->
+  <!--   지난 여행 박물관                       -->
+  <!-- ====================================== -->
+  <div id="view-museum" class="hide">
+    <div class="museum-intro">
+      <div class="kicker">PAST TRAVELS MUSEUM</div>
+      <h2>지난 여행 박물관</h2>
+      <p>능파가 16년간 걸어온 길의 기록. 다음 카페 「여행 가는날(행복파도타기)」에서 자동 수집.</p>
+      <div class="count">현재 <b id="mu-total">100</b>건 수집 · <small id="mu-last-sync">2026.05.23 동기화</small></div>
+    </div>
 
-  <!-- 지난 여행 -->
-  <div class="section-bar">
-    <h2>지난 여행 후기</h2>
-    <small>카페에서 보기</small>
-  </div>
-  <a class="list-card is-past" href="https://cafe.daum.net/redtraintour/1fXs/1063" target="_blank" rel="noopener">
-    <div class="img" style="background-image:url('./assets/avatar-01.jpg')">
-      <span class="badge">여행후기</span>
+    <!-- 통계 -->
+    <div class="stats-row">
+      <div class="st"><b id="st-2026">0</b><span>2026</span></div>
+      <div class="st"><b id="st-2025">0</b><span>2025</span></div>
+      <div class="st"><b id="st-2024">0</b><span>2024</span></div>
+      <div class="st"><b id="st-2023">0</b><span>2023</span></div>
     </div>
-    <div class="body">
-      <div class="date">코카서스 · 완료</div>
-      <h3>조지아 여행후기</h3>
-      <div class="meta">여행후기 게시판 · 능파의 기록</div>
-    </div>
-  </a>
-  <a class="list-card is-past" href="https://cafe.daum.net/redtraintour/1fY7/1483" target="_blank" rel="noopener">
-    <div class="img" style="background-image:url('./assets/avatar-02.jpg')">
-      <span class="badge">여행 편지</span>
-    </div>
-    <div class="body">
-      <div class="date">남양주 · 완료</div>
-      <h3>물머리와 정약용 유적 탐방기</h3>
-      <div class="meta">여행! 편지!! · 멤버 답사</div>
-    </div>
-  </a>
 
-  <!-- 카톡 CTA -->
-  <a class="kakao-cta" href="#">
-    <div class="k-ico">k</div>
-    <div>
-      <b>여행 신청·문의는 카톡 채널로</b>
-      <span>평일 10시~18시 · 즉시 답변</span>
+    <!-- 필터 탭 -->
+    <div class="filter-tabs">
+      <button class="is-on" data-mode="year">시간별</button>
+      <button data-mode="region">지역별</button>
+      <button data-mode="season">계절별</button>
     </div>
-    <div style="margin-left:auto;font-size:18px">›</div>
-  </a>
+
+    <!-- 필터 칩 -->
+    <div class="filter-chips" id="filter-chips"></div>
+
+    <!-- 박물관 그리드 -->
+    <div class="section-bar">
+      <h2 id="mu-section-title">전체</h2>
+      <small id="mu-section-count">— 건</small>
+    </div>
+    <div class="museum-grid" id="museum-grid"></div>
+
+    <div style="padding:24px 18px;text-align:center">
+      <a href="https://cafe.daum.net/redtraintour/1fXs" target="_blank" rel="noopener" style="display:inline-block;background:var(--wine);color:#fff8ec;padding:11px 20px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700">
+        다음 카페에서 전체 보기 (725건) →
+      </a>
+    </div>
+  </div>
 
   <footer>
     <div class="brand-name">명인방투어 · 능파</div>
-    <div>더 많은 여행은 다음 카페에서 → <a href="https://cafe.daum.net/redtraintour" target="_blank">cafe.daum.net/redtraintour</a></div>
-    <div style="margin-top:14px;color:var(--ink-3)">© 2026 명인방투어 v0.2</div>
+    <div>지난 여행 원본 → <a href="https://cafe.daum.net/redtraintour/1fXs" target="_blank">여행 가는날 게시판</a></div>
+    <div style="margin-top:14px;color:var(--ink-3)">© 2026 명인방투어 v0.4</div>
   </footer>
 
-  <!-- 하단 탭바 (투어 활성) -->
+  <!-- 하단 탭바 (여행 활성) -->
   <nav class="tabbar">
     <a href="./index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
     <a class="is-on" href="./tour.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V6h16v11"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 11h16"/></svg>여행</a>
@@ -190,57 +335,193 @@
 <a class="fab" href="#" aria-label="카카오 채널">TALK</a>
 
 <script>
-  // ===== 공유: 투어 데이터 (data/tours.json과 동일 구조) =====
+  // ============= 데이터 =============
   const TOURS = [
-    {id:"jeju-2026-06",      title:"제주 수국 · 우도 훈데르트 바서",          subtitle:"섬의 수국이 깊어진 6월",                  category:"정기", duration:"3박 4일", startDate:"2026-06-15", endDate:"2026-06-18", host:"능파 동행", image:"./assets/tour-01.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/4b2T/1624"},
-    {id:"coastal7-2026-06",  title:"바라던 바다 — 7번 국도 바닷길",            subtitle:"sea of hope · 당신의 바다를 꿈꾸는",      category:"정기", duration:"2박 3일", startDate:"2026-06-23", endDate:"2026-06-25", host:"능파 동행", image:"./assets/tour-02.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1057"},
-    {id:"benelux-2026-09",   title:"베네룩스 3국 10일",                       subtitle:"벨기에 · 네덜란드 · 룩셈부르크",          category:"해외", duration:"10일",    startDate:"2026-09-27", endDate:"2026-10-06", host:"능파 동행", image:"./assets/tour-03.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/RfFv/96"},
-    {id:"jeongseon-2026-10", title:"정선 & 로미지안, 백두대간 운탄고도 단풍 곤도라", subtitle:"운탄고도에서 보는 백두대간 단풍",        category:"정기", duration:"1박 2일", startDate:"2026-10-30", endDate:"2026-10-31", host:"능파 동행", image:"./assets/hero.jpg",    cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1040"}
+    {id:"jeju-2026-06",     title:"제주 수국 · 우도 훈데르트 바서",          subtitle:"섬의 수국이 깊어진 6월",                  category:"정기", domestic:true,  region:"제주", duration:"3박 4일", startDate:"2026-06-15", endDate:"2026-06-18", host:"능파 동행", image:"./assets/tour-01.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/4b2T/1624"},
+    {id:"coastal7-2026-06", title:"바라던 바다 — 7번 국도 바닷길",           subtitle:"sea of hope · 당신의 바다를 꿈꾸는",      category:"정기", domestic:true,  region:"강원", duration:"2박 3일", startDate:"2026-06-23", endDate:"2026-06-25", host:"능파 동행", image:"./assets/tour-02.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/1fXs/1057"},
+    {id:"benelux-2026-09",  title:"베네룩스 3국 10일",                      subtitle:"벨기에 · 네덜란드 · 룩셈부르크",          category:"해외", domestic:false, region:"해외", duration:"10일",    startDate:"2026-09-27", endDate:"2026-10-06", host:"능파 동행", image:"./assets/tour-03.jpg", cafeUrl:"https://cafe.daum.net/redtraintour/RfFv/96"}
   ];
 
-  function fmtDate(s){
-    const d = new Date(s);
-    const dow = ['일','월','화','수','목','금','토'];
-    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}(${dow[d.getDay()]})`;
-  }
+  // 지난 여행 박물관 — data/past-travels.json에서 fetch
+  let PAST = [];
+
+  // ============= 유틸 =============
   function fmtRange(s, e){
-    const ds = new Date(s), de = new Date(e);
-    const dow = ['일','월','화','수','목','금','토'];
-    if (s === e) return `${ds.getMonth()+1}.${ds.getDate()}(${dow[ds.getDay()]})`;
+    const ds=new Date(s), de=new Date(e);
+    const dow=['일','월','화','수','목','금','토'];
+    if (s===e) return `${ds.getMonth()+1}.${ds.getDate()}(${dow[ds.getDay()]})`;
     return `${ds.getMonth()+1}.${ds.getDate()}(${dow[ds.getDay()]})~${de.getMonth()+1}.${de.getDate()}(${dow[de.getDay()]})`;
   }
   function dDay(s){
-    const today = new Date(); today.setHours(0,0,0,0);
-    const t = new Date(s); t.setHours(0,0,0,0);
+    const today=new Date(); today.setHours(0,0,0,0);
+    const t=new Date(s); t.setHours(0,0,0,0);
     return Math.round((t-today)/86400000);
   }
 
-  // 다가오는 일정 정렬 — 전체 (가장 가까운 것부터)
+  // ============= 다가오는 여행 렌더 =============
   const today = new Date().toISOString().slice(0,10);
   const upcoming = TOURS.filter(t => t.startDate >= today)
                         .sort((a,b)=>a.startDate.localeCompare(b.startDate));
+  const domestic = upcoming.filter(t => t.domestic);
+  const overseas = upcoming.filter(t => !t.domestic);
 
-  // 모든 다가오는 일정을 같은 크기 카드로 렌더 (첫 카드는 '가장 가까운' 강조)
-  const upList = document.getElementById('upcoming-list');
-  document.getElementById('up-count').textContent = upcoming.length + "건 전체";
-  upList.innerHTML = upcoming.map((t, idx) => `
-    <a class="list-card ${idx===0?'is-near':''}" href="./tour-detail.html?id=${t.id}">
-      <div class="img" style="background-image:url('${t.image}')">
-        <span class="badge">${t.category}</span>
-        <span class="dday">D-${dDay(t.startDate)}</span>
-      </div>
-      <div class="body">
-        <div class="date">${fmtRange(t.startDate,t.endDate)}</div>
-        <h3>${t.title}</h3>
-        <div class="sub">${t.subtitle}</div>
-        <div class="meta">
-          <span>⏱ ${t.duration}</span>
-          <span>👤 ${t.host}</span>
+  document.getElementById('seg-up-count').textContent = upcoming.length;
+
+  function renderUpcoming(mode){
+    const tours = mode==='domestic' ? domestic : overseas;
+    document.getElementById('up-title').textContent = mode==='domestic' ? '국내 여행' : '해외 여행';
+    document.getElementById('up-count').textContent = tours.length + '건';
+    const list = document.getElementById('upcoming-list');
+    if (tours.length === 0) {
+      list.innerHTML = `<div style="margin:30px 18px;padding:24px;background:#fff;border:1px dashed var(--line-2);border-radius:14px;text-align:center;color:var(--ink-3);font-size:13px">곧 새 일정이 추가됩니다</div>`;
+      return;
+    }
+    list.innerHTML = tours.map((t,idx) => `
+      <a class="list-card ${idx===0 && mode==='domestic' ? 'is-near' : ''}" href="./tour-detail.html?id=${t.id}">
+        <div class="img" style="background-image:url('${t.image}')">
+          <span class="badge">${t.category}</span>
+          <span class="dday">D-${dDay(t.startDate)}</span>
         </div>
-        <div class="seats"><i style="width:${[62,42,78,30][idx]||50}%"></i></div>
-      </div>
-    </a>
-  `).join('');
+        <div class="body">
+          <div class="date">${fmtRange(t.startDate,t.endDate)}</div>
+          <h3>${t.title}</h3>
+          <div class="sub">${t.subtitle}</div>
+          <div class="meta">
+            <span>⏱ ${t.duration}</span>
+            <span>👤 ${t.host}</span>
+            <span>📍 ${t.region}</span>
+          </div>
+          <div class="seats"><i style="width:${[72,42,84,30][idx]||50}%"></i></div>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  // 다가오는 서브칩 전환
+  document.querySelectorAll('[data-up-filter]').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('[data-up-filter]').forEach(x => x.classList.remove('is-on'));
+      c.classList.add('is-on');
+      renderUpcoming(c.dataset.upFilter);
+    });
+  });
+  renderUpcoming('domestic');
+
+  // ============= 메인 서브탭 (다가오는 / 박물관) =============
+  document.getElementById('seg-up').addEventListener('click', () => {
+    document.getElementById('seg-up').classList.add('is-on');
+    document.getElementById('seg-mu').classList.remove('is-on');
+    document.getElementById('view-upcoming').classList.remove('hide');
+    document.getElementById('view-museum').classList.add('hide');
+  });
+  document.getElementById('seg-mu').addEventListener('click', () => {
+    document.getElementById('seg-mu').classList.add('is-on');
+    document.getElementById('seg-up').classList.remove('is-on');
+    document.getElementById('view-museum').classList.remove('hide');
+    document.getElementById('view-upcoming').classList.add('hide');
+    if (PAST.length === 0) loadMuseum();
+  });
+
+  // ============= 지난 여행 박물관 =============
+  async function loadMuseum() {
+    try {
+      const res = await fetch('./data/past-travels.json');
+      const json = await res.json();
+      PAST = json.posts;
+      document.getElementById('seg-mu-count').textContent = PAST.length;
+      document.getElementById('mu-total').textContent = PAST.length;
+      // 연도별 통계
+      const byYear = {};
+      PAST.forEach(p => { byYear[p.year] = (byYear[p.year]||0)+1 });
+      document.getElementById('st-2026').textContent = byYear[2026] || 0;
+      document.getElementById('st-2025').textContent = byYear[2025] || 0;
+      document.getElementById('st-2024').textContent = byYear[2024] || 0;
+      document.getElementById('st-2023').textContent = byYear[2023] || 0;
+      renderFilterChips('year');
+    } catch (e) {
+      document.getElementById('museum-grid').innerHTML = `<div class="museum-empty">데이터 로딩 실패 (file://에서는 fetch가 차단됩니다 — Netlify 배포에서는 정상 작동)</div>`;
+    }
+  }
+
+  let currentMode = 'year';
+  let currentFilter = 'all';
+
+  function renderFilterChips(mode) {
+    currentMode = mode;
+    currentFilter = 'all';
+    const chips = document.getElementById('filter-chips');
+    let opts = [];
+    if (mode === 'year') {
+      const years = [...new Set(PAST.map(p => p.year))].sort((a,b)=>b-a);
+      opts = [{v:'all', label:'전체', ct:PAST.length}].concat(
+        years.map(y => ({v:String(y), label:y+'년', ct:PAST.filter(p=>p.year===y).length}))
+      );
+    } else if (mode === 'region') {
+      const regions = ['제주','강원','경상','전라','충청','수도권','해외'];
+      opts = [{v:'all', label:'전국', ct:PAST.length}].concat(
+        regions.map(r => ({v:r, label:r, ct:PAST.filter(p=>p.region===r).length})).filter(o => o.ct > 0)
+      );
+    } else if (mode === 'season') {
+      const seasons = ['봄','여름','가을','겨울'];
+      opts = [{v:'all', label:'사계절', ct:PAST.length}].concat(
+        seasons.map(s => ({v:s, label:s, ct:PAST.filter(p=>p.season===s).length}))
+      );
+    }
+    chips.innerHTML = opts.map(o => `<span class="fc${o.v==='all'?' is-on':''}" data-val="${o.v}">${o.label} <span class="ct">${o.ct}</span></span>`).join('');
+    chips.querySelectorAll('.fc').forEach(c => {
+      c.addEventListener('click', () => {
+        chips.querySelectorAll('.fc').forEach(x=>x.classList.remove('is-on'));
+        c.classList.add('is-on');
+        currentFilter = c.dataset.val;
+        renderMuseum();
+      });
+    });
+    renderMuseum();
+  }
+
+  function renderMuseum() {
+    let posts = PAST;
+    if (currentFilter !== 'all') {
+      if (currentMode === 'year') posts = PAST.filter(p => p.year === parseInt(currentFilter));
+      else if (currentMode === 'region') posts = PAST.filter(p => p.region === currentFilter);
+      else if (currentMode === 'season') posts = PAST.filter(p => p.season === currentFilter);
+    }
+    const titleMap = {year:'연도', region:'지역', season:'계절'};
+    document.getElementById('mu-section-title').textContent = currentFilter === 'all' ? '전체' : currentFilter + (currentMode==='year'?'년':'');
+    document.getElementById('mu-section-count').textContent = posts.length + '건';
+
+    const grid = document.getElementById('museum-grid');
+    if (posts.length === 0) {
+      grid.innerHTML = `<div class="museum-empty">해당 조건의 여행이 없습니다</div>`;
+      return;
+    }
+    grid.innerHTML = posts.map(p => `
+      <a class="museum-card s-${p.season}" href="https://cafe.daum.net/redtraintour/1fXs/${p.pid}" target="_blank" rel="noopener">
+        <div class="swatch"></div>
+        <div class="meta-top">
+          <span class="year">${p.year}</span>
+          <span class="reg">${p.region}</span>
+        </div>
+        <h4>${p.title}</h4>
+        <div class="stats">
+          <span>${p.season}</span>
+          ${p.views ? `<span>조회 ${p.views}</span>` : ''}
+          ${p.comments ? `<span>💬 ${p.comments}</span>` : ''}
+        </div>
+      </a>
+    `).join('');
+  }
+
+  // 필터 모드 탭 전환
+  document.querySelectorAll('.filter-tabs button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tabs button').forEach(x => x.classList.remove('is-on'));
+      b.classList.add('is-on');
+      renderFilterChips(b.dataset.mode);
+    });
+  });
 </script>
+
+<script src="./pwa.js"></script>
 </body>
 </html>
