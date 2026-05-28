@@ -131,6 +131,79 @@
   .agree{margin:10px 0 0;font-size:12px;color:var(--ink-3);display:flex;align-items:flex-start;gap:8px}
   .agree input{margin-top:3px}
 
+  /* 능파의 인사 — 강조 인용 */
+  .greet-quote{
+    margin:14px 18px 0;
+    background:linear-gradient(160deg,#fff8ec,#fde9c8);
+    border:1px solid var(--line-2);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    position:relative;
+  }
+  .greet-quote::before{
+    content:"\201C";
+    position:absolute;top:-2px;left:14px;
+    font-family:"Noto Serif KR",serif;
+    font-size:64px;color:var(--wine);opacity:.25;
+    line-height:1;
+  }
+  .greet-quote .kicker{
+    font-size:11px;letter-spacing:.16em;
+    color:var(--wine);font-weight:800;
+    text-transform:uppercase;margin-bottom:8px;
+    position:relative;z-index:2;
+  }
+  .greet-quote p{
+    font-family:"Noto Serif KR",serif;
+    font-size:15px;line-height:1.75;
+    color:var(--ink);margin:0;
+    position:relative;z-index:2;
+    font-weight:500;
+  }
+  .greet-quote .sign{
+    margin-top:14px;font-size:12px;color:var(--ink-2);
+    text-align:right;font-style:italic;
+  }
+
+  /* FAQ */
+  .faq{margin:6px 18px 0}
+  .faq-item{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-bottom:8px;overflow:hidden;
+  }
+  .faq-q{
+    display:flex;align-items:center;gap:10px;
+    padding:14px 16px;cursor:pointer;
+    font-size:13.5px;font-weight:700;color:var(--ink);
+    user-select:none;
+  }
+  .faq-q::before{
+    content:"Q";display:inline-flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border-radius:50%;
+    background:var(--wine);color:#fff8ec;
+    font-family:"Noto Serif KR",serif;font-size:12px;font-weight:700;
+    flex:0 0 22px;
+  }
+  .faq-q .chev{margin-left:auto;color:var(--ink-3);transition:transform .2s}
+  .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+  .faq-a{
+    max-height:0;overflow:hidden;transition:max-height .25s ease-out;
+    padding:0 16px;
+  }
+  .faq-item.open .faq-a{max-height:400px;padding:0 16px 14px}
+  .faq-a p{
+    margin:0;padding-left:32px;
+    font-size:13px;line-height:1.7;color:var(--ink-2);
+    position:relative;
+  }
+  .faq-a p::before{
+    content:"A";position:absolute;left:0;top:0;
+    display:inline-flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border-radius:50%;
+    background:var(--gold);color:#2b1f1a;
+    font-family:"Noto Serif KR",serif;font-size:12px;font-weight:700;
+  }
+
   /* 카페 원문 */
   .cafe-link{
     display:flex;align-items:center;gap:10px;
@@ -216,10 +289,11 @@
     <a href="#book">예약</a>
   </nav>
 
-  <!-- 인사 -->
-  <div class="det-sec">
-    <h2>능파의 인사</h2>
-    <p id="r-greet">—</p>
+  <!-- 인사 — 능파 한마디 강조 인용 -->
+  <div class="greet-quote">
+    <div class="kicker">능파의 한마디</div>
+    <p id="r-greet">로딩 중…</p>
+    <div class="sign">— 능파 임상수</div>
   </div>
 
   <!-- 일정 -->
@@ -249,6 +323,13 @@
       <div class="include-row out"><span class="ck">−</span>개인 음료·간식</div>
       <div class="include-row out"><span class="ck">−</span>출발지까지의 교통</div>
     </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="det-sec" id="faq-section">
+    <h2>자주 묻는 질문</h2>
+    <div class="sub">처음 신청하시는 분들이 가장 많이 궁금해하신 다섯 가지</div>
+    <div class="faq" id="faq-list"><!-- JS 렌더 --></div>
   </div>
 
   <!-- 후기 -->
@@ -447,6 +528,26 @@
   document.getElementById('r-timeline').innerHTML = T.itinerary.map(it =>
     `<div class="day"><div class="day-h">${it.d}</div><div class="day-t">${it.t}</div></div>`
   ).join('');
+
+  // FAQ 렌더 — 여행별 맞춤 가능 (T.faqs)이 있으면 그것, 없으면 기본 세트
+  const defaultFaqs = [
+    {q:"이번 여행은 어떤 분께 맞나요?", a:"인문학·예술·풍경을 좋아하시는 중장년 어른께 가장 잘 맞습니다. 빠른 패키지 관광이 아니라, 한 곳에 머무르며 사람과 이야기를 만나는 동행입니다."},
+    {q:"혼자 신청해도 괜찮나요?", a:"명인방투어 회원의 약 절반이 혼자 오십니다. 능파가 함께 동행하고, 멤버끼리 자연스럽게 어울리도록 자리를 살펴드립니다."},
+    {q:"정원과 신청 마감은?", a:"여행마다 다르지만 보통 12~20명 소규모로 진행됩니다. 마감은 출발 1주일 전 또는 정원 충족 시 자동 마감되며, 카톡 채널로 신청 가능합니다."},
+    {q:"환불 정책은 어떻게 되나요?", a:"출발 7일 전까지 전액 환불, 7일 이내~출발 3일 전 50% 환불, 출발 2일 이내 환불 불가입니다. 천재지변·운영자 사정으로 인한 취소는 전액 환불됩니다."},
+    {q:"출발지·교통편은?", a:"국내 여행은 서울에서 전용 미니버스로 출발이 기본이며, 일부 여행은 KTX 동행도 안내드립니다. 해외 여행은 인천공항에서 만납니다. 자세한 출발 시간·장소는 신청 확정 후 카톡으로 안내드립니다."}
+  ];
+  const faqs = T.faqs || defaultFaqs;
+  document.getElementById('faq-list').innerHTML = faqs.map(f => `
+    <div class="faq-item">
+      <div class="faq-q">${f.q}<span class="chev">⌄</span></div>
+      <div class="faq-a"><p>${f.a}</p></div>
+    </div>
+  `).join('');
+  // 펼치기/접기
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+  });
 
   // 탭 네비 클릭 시 active 표시
   document.querySelectorAll('.tab-nav a').forEach(a => {

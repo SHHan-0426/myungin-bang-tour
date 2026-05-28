@@ -1,0 +1,56 @@
+name: 다음 카페 자동 동기화
+
+# 매주 일요일 22:00 KST (= UTC 13:00) 자동 실행 + 수동 실행 가능
+on:
+  schedule:
+    - cron: '0 13 * * 0'
+  workflow_dispatch:  # 수동 트리거 (GitHub Actions 페이지에서 "Run workflow")
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js 설치
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Playwright 의존성 설치
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install chromium --with-deps
+
+      - name: 카페 데이터 스크래핑
+        id: scrape
+        run: node scripts/sync-cafe.js
+        env:
+          TZ: Asia/Seoul
+
+      - name: 변경 확인
+        id: check
+        run: |
+          if [[ -n $(git status --porcelain data/) ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 변경 사항 커밋·푸시
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "myungin-bang-bot"
+          git config user.email "bot@myungin-bang-tour.local"
+          git add data/
+          STAMP=$(date +"%Y-%m-%d %H:%M KST")
+          git commit -m "auto: 다음 카페 동기화 ($STAMP)"
+          git push
+
+      - name: 변경 없음 안내
+        if: steps.check.outputs.changed == 'false'
+        run: echo "이번 주는 카페에 새 글이 없어 데이터 변경이 없습니다."

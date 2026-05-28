@@ -85,6 +85,27 @@
     .stage{margin:24px auto;border-radius:28px;min-height:calc(100vh - 48px)}
   }
 
+  /* 이전 안내 배너 */
+  .migration-banner{
+    margin:0;
+    background:linear-gradient(135deg,#7a1b25,#9a2b35);
+    color:#fff8ec;text-decoration:none;
+    display:flex;align-items:center;gap:12px;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  .migration-banner .mb-ico{
+    width:34px;height:34px;border-radius:50%;
+    background:#fff8ec;color:#7a1b25;
+    display:grid;place-items:center;
+    font-family:"Noto Serif KR",serif;font-weight:800;font-size:18px;
+    flex:0 0 34px;
+  }
+  .migration-banner .mb-body{flex:1;min-width:0}
+  .migration-banner .mb-body b{display:block;font-size:13px;font-weight:800;line-height:1.3}
+  .migration-banner .mb-body span{font-size:11px;opacity:.9;line-height:1.4}
+  .migration-banner .mb-chev{font-size:20px;flex:0 0 16px;opacity:.85}
+
   /* ===== 상단 알림 띠 ===== */
   .topbar{
     display:flex;align-items:center;justify-content:center;gap:8px;
@@ -391,6 +412,13 @@
 </head>
 <body>
 
+<!-- Netlify Forms 인식용 hidden form — 빌드 타임에 감지됨 -->
+<form name="cafe-verify" netlify netlify-honeypot="bot-field" hidden>
+  <input type="text" name="cafe-nickname" />
+  <input type="tel" name="contact" />
+  <textarea name="hello"></textarea>
+</form>
+
 <aside class="design-notes">
   <h4>시안 v0.2 — IA 재설계</h4>
   <p>다음 카페 22개 게시판 → 모바일 5탭으로 흡수. 빈 카테고리 없이 모든 글에 갈 자리가 있도록.</p>
@@ -445,6 +473,16 @@
     <span>🚉</span>
     <span><b>다음 여행</b> · 6/15~18 제주 수국 · 6/23~25 7번 국도 · 9/27~ 베네룩스</span>
   </div>
+
+  <!-- 이전 안내 배너 — 다음 카페 1,927명 회원 이전 유도 -->
+  <a class="migration-banner" href="./my.html#cafe-verify">
+    <div class="mb-ico">⇒</div>
+    <div class="mb-body">
+      <b>다음 카페 1,927명의 새 집</b>
+      <span>카페 회원이세요? 인증하시면 카페 전용 혜택을 받으실 수 있어요</span>
+    </div>
+    <div class="mb-chev">›</div>
+  </a>
 
   <!-- 헤더 -->
   <header class="header">

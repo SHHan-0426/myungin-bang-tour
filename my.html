@@ -68,6 +68,48 @@
   }
   .my-trips .empty-state b{display:block;color:var(--ink-2);font-size:14px;margin-bottom:4px}
 
+  /* 카페 회원 셀프 인증 카드 */
+  .cafe-verify-card{
+    margin:6px 18px 0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px;
+  }
+  .cafe-verify-card.is-verified{
+    background:linear-gradient(135deg,#e9efe2,#fff8ec);
+    border-color:var(--moss);
+  }
+  .cv-status .cv-msg b{display:block;font-size:14px;font-weight:800;color:var(--ink);margin-bottom:4px}
+  .cv-status .cv-msg span{font-size:11.5px;color:var(--ink-3);line-height:1.55}
+  .cv-status .cv-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--moss);color:#fff8ec;
+    font-size:12px;font-weight:800;
+    padding:6px 12px;border-radius:999px;
+    margin-bottom:8px;
+  }
+  .cv-row{margin-top:12px}
+  .cv-row label{display:block;font-size:11.5px;color:var(--ink-2);margin-bottom:5px;font-weight:600}
+  .cv-row label small{color:var(--ink-3);font-weight:400;margin-left:4px}
+  .cv-row input, .cv-row textarea{
+    width:100%;border:1px solid var(--line);border-radius:10px;
+    padding:10px 12px;font-size:14px;font-family:inherit;
+    background:#fff;color:var(--ink);outline:none;
+    box-sizing:border-box;
+  }
+  .cv-row input:focus, .cv-row textarea:focus{border-color:var(--wine)}
+  .cv-row textarea{resize:vertical;min-height:50px}
+  .cv-submit{
+    margin-top:14px;width:100%;
+    background:var(--wine);color:#fff8ec;
+    border:0;padding:12px;border-radius:10px;
+    font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;
+  }
+  .cv-submitted{
+    text-align:center;padding:8px 0;color:var(--moss);font-size:13px;font-weight:700;
+  }
+
   /* 다음 카페 로그인 강조 카드 */
   .daum-login-card{
     margin:6px 18px;
@@ -141,7 +183,38 @@
     </div>
   </div>
 
-  <!-- 줄 2: 다음(Daum) 로그인 하러 가기 -->
+  <!-- 줄 2: 다음 카페 회원 셀프 인증 (이전 안내 배너에서 #cafe-verify로 연결) -->
+  <div class="my-section-bar" id="cafe-verify">
+    <h2>다음 카페 회원 인증</h2>
+    <small style="color:var(--ink-3);font-size:11.5px">카페 멤버 전용 혜택</small>
+  </div>
+  <div class="cafe-verify-card" id="verify-card">
+    <div class="cv-status" id="cv-status">
+      <div class="cv-msg">
+        <b>다음 카페 1,927명 중 한 분이세요?</b>
+        <span>카페 닉네임을 입력하시면 운영자가 확인 후 인증 배지를 부여해 드립니다 (보통 1~2일 이내)</span>
+      </div>
+    </div>
+    <form id="verify-form" name="cafe-verify" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="cafe-verify" />
+      <p hidden><label>채우지 마세요: <input name="bot-field" /></label></p>
+      <div class="cv-row">
+        <label>카페 닉네임 <small>(다음 카페에서 사용 중인 이름)</small></label>
+        <input type="text" name="cafe-nickname" required placeholder="예: 거닐만, 두두, 한해솔..." />
+      </div>
+      <div class="cv-row">
+        <label>연락처 <small>(카톡으로 인증 완료 안내 드립니다)</small></label>
+        <input type="tel" name="contact" required placeholder="010-0000-0000 또는 카톡ID" />
+      </div>
+      <div class="cv-row">
+        <label>한 줄 인사 <small>(선택)</small></label>
+        <textarea name="hello" rows="2" placeholder="능파님께 한 줄 인사를 남겨주세요 (선택)"></textarea>
+      </div>
+      <button type="submit" class="cv-submit">인증 신청 →</button>
+    </form>
+  </div>
+
+  <!-- 줄 3: 다음(Daum) 로그인 하러 가기 -->
   <div class="my-section-bar">
     <h2>다음(Daum) 로그인</h2>
     <small style="color:var(--ink-3);font-size:11.5px">우수회원 전용 글 읽기</small>
@@ -229,6 +302,41 @@
 
   document.getElementById('login-toggle').addEventListener('click', toggleLogin);
   render();
+
+  // ── 카페 회원 셀프 인증 ──
+  const verifyForm = document.getElementById('verify-form');
+  const verifyCard = document.getElementById('verify-card');
+  const verifyStatus = document.getElementById('cv-status');
+
+  // 이미 신청한 적 있으면 표시
+  const submittedNick = localStorage.getItem('mb-cafe-verify-nick');
+  const verified = localStorage.getItem('mb-cafe-verified') === '1';
+  if (verified) {
+    verifyCard.classList.add('is-verified');
+    verifyStatus.innerHTML = `
+      <div class="cv-badge">✓ 카페 인증 멤버</div>
+      <div class="cv-msg">
+        <b>${submittedNick || '능파님'} · 인증 완료</b>
+        <span>카페 전용 혜택을 받으실 수 있어요</span>
+      </div>`;
+    verifyForm.style.display = 'none';
+  } else if (submittedNick) {
+    verifyStatus.innerHTML = `
+      <div class="cv-msg">
+        <b>인증 신청 완료 (${submittedNick})</b>
+        <span>능파님이 다음 카페 회원 명부와 대조 후 1~2일 내 카톡으로 인증 결과를 알려드립니다</span>
+      </div>`;
+    verifyForm.innerHTML = `<div class="cv-submitted">✓ 신청이 접수되었습니다 · 카톡 안내 대기 중</div>`;
+  }
+
+  verifyForm.addEventListener('submit', (e) => {
+    // Netlify Forms로 전송 — 능파에게 이메일 도착
+    // localStorage에 신청 기록
+    const nick = verifyForm.querySelector('[name="cafe-nickname"]').value;
+    localStorage.setItem('mb-cafe-verify-nick', nick);
+    // 폼 제출은 정상 진행 (Netlify Forms 처리)
+  });
+
 </script>
 
 <script src="./pwa.js"></script>
