@@ -1,0 +1,61 @@
+# 다음 카페 자동 동기화 설정 — 능파님이 한 번만 하실 작업
+
+매주 일요일 22시 KST에 다음 카페 11개 게시판을 자동으로 스크래핑해 사이트 데이터를 갱신하는 GitHub Actions 워크플로우입니다.
+
+## 왜 능파님이 직접 설정해야 하나요
+
+GitHub의 보안 정책상 **Actions 워크플로우 파일은 사용자가 직접 등록**해야 합니다 (OAuth 앱이 자동으로 만들 수 없음). 한 번만 하시면 영구 동작.
+
+## 설정 방법 (3분 소요)
+
+### 1단계: GitHub 저장소 열기
+브라우저에서 <https://github.com/SHHan-0426/myungin-bang-tour> 접속.
+
+### 2단계: Actions 탭 → New workflow
+1. 상단 메뉴의 **Actions** 탭 클릭
+2. **"set up a workflow yourself"** 클릭
+
+### 3단계: 파일 이름 변경
+좌상단의 `main.yml` 입력칸을 `sync-cafe.yml` 로 변경 (경로는 `.github/workflows/sync-cafe.yml` 자동)
+
+### 4단계: 내용 붙여넣기
+현재 저장소 안에 있는 [`docs/setup/sync-cafe.yml.txt`](./sync-cafe.yml.txt) 파일 내용을 통째로 복사해서 붙여넣기.
+
+### 5단계: 커밋
+페이지 우측 상단 녹색 **"Commit changes…"** 버튼 → **"Commit changes"**
+
+### 6단계: 확인
+1. **Actions** 탭으로 돌아가면 워크플로우가 등록되어 있음
+2. 좌측에 **"다음 카페 자동 동기화"** 보임
+3. 우측 **"Run workflow"** 버튼으로 즉시 테스트 실행 가능 (드라이런)
+
+## 자동 실행 일정
+
+- **매주 일요일 22:00 KST** 자동 실행 (cron: `0 13 * * 0` UTC)
+- 새 게시물이 있으면 자동으로 `data/*.json` 갱신 + commit + push
+- Netlify가 받아서 1~2분 내 자동 배포
+
+## 수동 실행 (필요 시)
+
+긴급하게 동기화하고 싶을 때:
+1. GitHub → Actions → "다음 카페 자동 동기화"
+2. 우측 **"Run workflow"** → "Run workflow" 버튼
+3. 약 1~2분 후 완료
+
+## 실행 결과 확인
+
+각 실행 클릭 → 로그 확인:
+```
+🔄 다음 카페 동기화 시작
+[past] 여행 가는날 (1fXs) 스크래핑…
+  ✚ 1064: (새 글 제목)
+[reviews] 여행후기 스크래핑…
+...
+✅ 동기화 완료 — 총 N건 신규 추가
+```
+
+## 문제가 생기면
+
+- **Actions 실행 실패**: Daum 카페 구조가 바뀌었을 수 있음 → Claude 호출
+- **스크래핑은 됐는데 변경 없음**: 새 글이 없는 주 (정상)
+- **푸시 실패**: GitHub 권한 문제 → 저장소 Settings → Actions → "Read and write permissions" 활성화 확인
