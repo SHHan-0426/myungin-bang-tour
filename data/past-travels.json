@@ -1,15 +1,16 @@
 {
-  "_doc": "지난 여행 박물관 — 다음 카페에서 자동 수집. 게시판: 여행 가는날(1fXs) + 해외문화탐방(RfFv) + 일본여행(S2Ss). region: 제주/강원/경상/전라/충청/수도권/해외. 해외는 country로 세분화. 마지막 수집: 2026-05-23, 138건.",
+  "_doc": "지난 여행 박물관 — 다음 카페에서 자동 수집. 게시판: 여행 가는날(1fXs) + 해외문화탐방(RfFv) + 일본여행(S2Ss). region: 제주/강원/경상/전라/충청/수도권/해외. 해외는 country로 세분화. 마지막 수집: 2026-06-06, 139건.",
   "source": {
     "boards": [
-      {"name":"여행 가는날 (행복파도타기)","bid":"1fXs","count":100},
+      {"name":"여행 가는날 (행복파도타기)","bid":"1fXs","count":101},
       {"name":"해외문화탐방!!","bid":"RfFv","count":26},
       {"name":"일본 여행 !!","bid":"S2Ss","count":12}
     ],
     "cafeUrl": "https://cafe.daum.net/redtraintour"
   },
-  "lastSync": "2026-05-23T14:30:00+09:00",
+  "lastSync": "2026-06-06T11:00:00+09:00",
   "posts": [
+    {"bid":"1fXs","pid":"1064","title":"7월 15(수) 당일 — 정선 로미지안 가든 수국","year":2026,"season":"여름","region":"강원","posted":"2026-05-27","views":262,"comments":3,"image":"https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/cafeattach/117eG/4d709fc2da46bf9da3084a9ede047ed678aa3f23"},
     {"bid":"1fXs","pid":"1063","title":"6월 23화~25목 / 바라던 바다 (sea of hope) — 당신의 바다를 꿈꾸는 7번 국도 바닷길","year":2026,"season":"여름","region":"강원","posted":"2026-04-22","views":837,"comments":15},
     {"bid":"1fXs","pid":"1061","title":"4월 24(금) / 문수사·개심사 왕벚꽃 & 아미미술관","year":2026,"season":"봄","region":"충청","posted":"2026-03-21","views":913,"comments":12},
     {"bid":"1fXs","pid":"1059","title":"5월 7(목)~8(금) / 산상화원 황매산 철쭉 & 작약꽃 축제","year":2026,"season":"봄","region":"경상","posted":"2026-03-17","views":1066,"comments":4},
