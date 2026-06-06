@@ -1,7 +1,7 @@
 // 명인방투어 — 서비스 워커
 // 오프라인 캐시 + "홈 화면에 추가" PWA 지원
 
-const CACHE_VERSION = 'mb-tour-v21';
+const CACHE_VERSION = 'mb-tour-v22';
 const CORE_ASSETS = [
   './',
   './index.html',

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- 명인방투어 아이콘 — 한지 크림 + 능파 와인 + 명(明) 한자 -->
+  <!-- 명인방투어 아이콘 — 한지 크림 + 능파 와인 + 名人 한자 -->
   <defs>
     <radialGradient id="bg" cx="0.35" cy="0.3" r="0.85">
       <stop offset="0" stop-color="#9a2b35"/>
@@ -16,8 +16,8 @@
   <rect width="512" height="512" rx="112" fill="url(#glow)"/>
   <!-- 가장자리 미세한 띠 (한지 느낌) -->
   <rect x="20" y="20" width="472" height="472" rx="96" fill="none" stroke="#fff8ec" stroke-opacity="0.18" stroke-width="3"/>
-  <!-- 明 한자 — 黄(황톳빛 금)으로 -->
-  <text x="256" y="356" font-family="Noto Serif KR, 'Apple SD Gothic Neo', serif" font-weight="700" font-size="280" fill="#fff8ec" text-anchor="middle" letter-spacing="-8">明</text>
+  <!-- 名人 한자 — 한지 크림색으로 -->
+  <text x="256" y="344" font-family="Noto Serif KR, 'Apple SD Gothic Neo', serif" font-weight="700" font-size="224" fill="#fff8ec" text-anchor="middle" letter-spacing="-6">名人</text>
   <!-- 하단 작은 표식 -->
   <circle cx="256" cy="438" r="6" fill="#c7a25a"/>
 </svg>
