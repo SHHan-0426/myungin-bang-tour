@@ -471,7 +471,7 @@
   <!-- 상단 띠 -->
   <div class="topbar">
     <span>🚉</span>
-    <span><b>다음 여행</b> · 6/15~18 제주 수국 · 6/23~25 7번 국도 · 9/27~ 베네룩스</span>
+    <span id="topbar-next"><b>다음 여행</b> · 7/15 정선 로미지안 수국 · 8/11 문경 새재 · 9/1 홋카이도 토마무</span>
   </div>
 
   <!-- 이전 안내 배너 — 다음 카페 1,927명 회원 이전 유도 -->
@@ -840,7 +840,25 @@
         }
       });
     } catch(e) {}
-    return candidates.sort((a,b) => a.startDate.localeCompare(b.startDate))[0];
+    return candidates.sort((a,b) => a.startDate.localeCompare(b.startDate));
+  }
+
+  // 상단 띠 자동 갱신 — 히어로와 동일한 병합 데이터에서 가까운 3건
+  function renderTopbar(list){
+    const el = document.getElementById('topbar-next');
+    if (!el || !list || !list.length) return;
+    const shortName = (title) => {
+      // 날짜가 없는 조각(지명/여행명)을 고른 뒤 앞 2어절만
+      const segs = String(title).split(' — ');
+      let name = (segs.find(s => !/월|20\d\d|~/.test(s)) || segs[0]).trim();
+      name = name.split(/[&/·]/)[0].trim();       // 구분자 앞부분
+      return name.split(/\s+/).slice(0, 2).join(' ').slice(0, 12);
+    };
+    const bits = list.slice(0, 3).map(t => {
+      const s = new Date(t.startDate);
+      return `${s.getMonth()+1}/${s.getDate()} ${shortName(t.title)}`;
+    });
+    el.innerHTML = '<b>다음 여행</b> · ' + bits.join(' · ');
   }
 
   function formatRange(start, end){
@@ -892,11 +910,13 @@
     // 1) TOURS 만으로 즉시 1차 렌더 (즉각 반응)
     const initial = pickNearestTour();
     if (initial) renderHero(initial);
-    // 2) 박물관 데이터 fetch 후 더 가까운 항목이 있으면 교체
-    pickNearestTourMerged().then(merged => {
+    // 2) 박물관 데이터 fetch 후 더 가까운 항목이 있으면 교체 + 상단 띠 갱신
+    pickNearestTourMerged().then(list => {
+      const merged = (list || [])[0];
       if (merged && (!initial || merged.startDate < initial.startDate)) {
         renderHero(merged);
       }
+      renderTopbar(list);
     });
   }
   console.log('[명인방투어] 1차 후보:', pickNearestTour());
