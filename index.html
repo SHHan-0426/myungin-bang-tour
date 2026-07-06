@@ -408,6 +408,47 @@
   @media (min-width:1100px){
     .design-notes{display:block}
   }
+
+  /* 명인방 게시판 (카페 새 글 — data/*.json 자동 연동) */
+  .board{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .board-tabs{display:flex;gap:6px;padding:12px 12px 2px;overflow-x:auto;scrollbar-width:none}
+  .board-tabs::-webkit-scrollbar{display:none}
+  .board-tabs .bt{flex:0 0 auto;background:var(--bg);border:1px solid var(--line);color:var(--ink-2);font:inherit;font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .board-tabs .bt.is-on{background:var(--wine);border-color:var(--wine);color:#fff8ec}
+  .board-list{padding:4px 0}
+  .board-row{display:flex;align-items:center;gap:11px;padding:12px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+  .board-row:active{background:var(--bg)}
+  .board-row:last-child{border-bottom:0}
+  .board-row .dot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+  .board-row .rt{flex:1 1 auto;min-width:0}
+  .board-row .rt .tt{display:block;font-size:14px;color:var(--ink);line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .board-row .rt .mt{display:block;font-size:11.5px;color:var(--ink-3);margin-top:3px}
+  .board-row .rt .mt b{color:var(--wine);font-weight:700}
+  .board-row .ar{flex:0 0 auto;color:var(--ink-3);font-size:16px}
+  .board-empty{padding:24px 12px;text-align:center;color:var(--ink-3);font-size:13px}
+  .board-more{display:block;text-align:center;padding:13px;font-size:13px;font-weight:600;color:var(--wine);text-decoration:none;border-top:1px solid var(--line)}
+
+  /* 개선 제안 게시판 (Supabase 공개 읽기/쓰기) */
+  .suggest{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .sg-form{padding:16px 16px 14px;border-bottom:1px solid var(--line)}
+  .sg-row{margin-bottom:11px}
+  .sg-form label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-bottom:6px}
+  .sg-form label small{color:var(--ink-3);font-weight:500}
+  .sg-form input,.sg-form select,.sg-form textarea{width:100%;box-sizing:border-box;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:12px;padding:11px 12px}
+  .sg-form textarea{resize:vertical;min-height:80px;line-height:1.5}
+  .sg-form input:focus,.sg-form select:focus,.sg-form textarea:focus{outline:none;border-color:var(--wine)}
+  .sg-submit{width:100%;margin-top:12px;background:var(--wine);color:#fff8ec;border:0;border-radius:12px;padding:13px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .sg-submit:disabled{opacity:.55;cursor:default}
+  .sg-list{padding:4px 0}
+  .sg-item{padding:13px 16px;border-bottom:1px solid var(--line)}
+  .sg-item:last-child{border-bottom:0}
+  .sg-item .sg-top{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+  .sg-item .sg-cat{font-size:10.5px;font-weight:700;color:var(--wine);background:var(--tag-bg);padding:2px 8px;border-radius:999px}
+  .sg-item .sg-badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px}
+  .sg-item .sg-nick{font-size:11.5px;color:var(--ink-3);margin-left:auto}
+  .sg-item .sg-msg{font-size:14px;color:var(--ink);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+  .sg-item .sg-date{font-size:10.5px;color:var(--ink-3);margin-top:5px}
+  .sg-empty{padding:22px 12px;text-align:center;color:var(--ink-3);font-size:13px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -486,7 +527,7 @@
 
   <!-- 헤더 -->
   <header class="header">
-    <a class="brand" href="#">
+    <a class="brand" href="./index.html">
       <div class="brand-mark" style="font-size:12.5px;letter-spacing:-.5px">名人</div>
       <div>
         <div class="brand-name">명인방<span style="font-weight:500;font-size:13.5px;color:var(--ink-3);margin-left:2px">투어</span></div>
@@ -591,6 +632,30 @@
           <div class="seats-txt">벨기에 · 네덜란드 · 룩셈부르크</div>
         </div>
       </a>
+    </div>
+  </section>
+
+  <!-- 명인방 게시판 (카페 새 글 — data/*.json 자동 연동) -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title">명인방 게시판<span class="arrow">›</span></h2>
+        <div class="sec-sub">다음 카페의 새 글을 한자리에서</div>
+      </div>
+      <a class="sec-link" href="https://cafe.daum.net/redtraintour" target="_blank" rel="noopener">카페 ›</a>
+    </div>
+
+    <div class="board">
+      <div class="board-tabs" id="board-tabs">
+        <button class="bt is-on" data-g="all">전체</button>
+        <button class="bt" data-g="tour">여행</button>
+        <button class="bt" data-g="sketch">여행스케치</button>
+        <button class="bt" data-g="place">명인소</button>
+        <button class="bt" data-g="review">후기</button>
+      </div>
+      <div class="board-list" id="board-list">
+        <div class="board-empty">불러오는 중…</div>
+      </div>
     </div>
   </section>
 
@@ -728,8 +793,45 @@
     </a>
   </section>
 
+  <!-- 홈페이지 개선 제안 게시판 (Supabase 공개 읽기/쓰기) -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title">홈페이지 개선 제안<span class="arrow">›</span></h2>
+        <div class="sec-sub">불편한 점·바라는 점을 남겨주세요 — 다른 분들 제안도 함께 보여요</div>
+      </div>
+    </div>
+
+    <div class="suggest">
+      <form class="sg-form" id="sg-form">
+        <div class="sg-row">
+          <label>닉네임 <small>(선택)</small></label>
+          <input type="text" id="sg-nick" maxlength="20" placeholder="안 적으시면 '익명'으로 올라가요" />
+        </div>
+        <div class="sg-row">
+          <label>유형</label>
+          <select id="sg-cat">
+            <option>불편·오류</option>
+            <option>새 기능 제안</option>
+            <option>디자인·보기 편함</option>
+            <option>콘텐츠·글</option>
+            <option>기타</option>
+          </select>
+        </div>
+        <div class="sg-row">
+          <label>제안 내용</label>
+          <textarea id="sg-msg" maxlength="500" required placeholder="예: 글씨가 더 컸으면 좋겠어요 / OO 버튼이 안 눌려요 / OO 게시판도 있으면 좋겠어요"></textarea>
+        </div>
+        <button type="submit" class="sg-submit" id="sg-submit">제안 올리기 →</button>
+      </form>
+      <div class="sg-list" id="sg-list">
+        <div class="sg-empty">제안을 불러오는 중…</div>
+      </div>
+    </div>
+  </section>
+
   <!-- 카톡 CTA -->
-  <a class="kakao-cta" href="#">
+  <a class="kakao-cta" href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener">
     <div class="k-ico">k</div>
     <div>
       <b>카톡으로 편하게 물어보세요</b>
@@ -744,7 +846,7 @@
     <div>대표 임상수 · 서울 강남구 논현로 114길 8, 2층 현현동</div>
     <div>since 2009 · 회원 1,927명과 함께 걷는 길</div>
     <div style="margin-top:10px">
-      <a href="#">이용약관</a> · <a href="#">개인정보처리방침</a> · <a href="#">사업자정보</a>
+      <span>이용약관</span> · <span>개인정보처리방침</span> · <span>사업자정보</span>
     </div>
     <div style="margin-top:14px;color:var(--ink-3)">
       © 2026 명인방투어. 다음 카페에서 독립 플랫폼으로 이전 중 (v0.1 시안).
@@ -922,8 +1024,153 @@
   console.log('[명인방투어] 1차 후보:', pickNearestTour());
 </script>
 
-<a class="fab" href="#" aria-label="카카오 채널">TALK</a>
+<a class="fab" href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener" aria-label="다음 카페 바로가기">TALK</a>
 
+<script>
+/* 명인방 게시판 — data/*.json에서 카페 새 글을 모아 대문에 자동 표시 */
+(function(){
+  const CAFE = 'https://cafe.daum.net/redtraintour';
+  const LABEL = {
+    '1fXs':'여행 가는날','RfFv':'해외문화탐방','S2Ss':'일본 여행','4b2T':'여행후기',
+    'RfFr':'길위의 인문학','1fY7':'여행 편지','S2Se':'음악 동영상','Gz1K':'산책',
+    'RrBS':'명인 추천','1fXL':'명품 맛집','S6Ar':'칼국수로드'
+  };
+  const DOT  = {tour:'var(--wine)', sketch:'var(--moss)', place:'var(--gold)', review:'var(--sky)'};
+  const MORE = {tour:'./tour.html', sketch:'./story.html', place:'./place.html', review:'./story.html'};
+  const NAME = {tour:'여행', sketch:'여행스케치', place:'명인소', review:'후기'};
+  const esc = s => String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  async function load(){
+    const g = {tour:[], sketch:[], place:[], review:[]};
+    try{
+      const [pt, rv, st, pl] = await Promise.all([
+        fetch('./data/past-travels.json').then(r=>r.json()),
+        fetch('./data/reviews.json').then(r=>r.json()),
+        fetch('./data/stories.json').then(r=>r.json()),
+        fetch('./data/places.json').then(r=>r.json())
+      ]);
+      (pt.posts||[]).forEach(p => g.tour.push({title:p.title, bid:p.bid, url:`${CAFE}/${p.bid}/${p.pid}`, date:p.posted||''}));
+      (rv.posts||[]).forEach(p => g.review.push({title:p.title, bid:'4b2T', url:`${CAFE}/4b2T/${p.pid}`, date:''}));
+      // 스케치·명인소는 하위 게시판을 라운드로빈으로 섞어 각 방의 최신 글이 골고루 앞에 오도록
+      const interleave = (sections, grp) => {
+        const qs = Object.values(sections||{}).map(sec => (sec.posts||[]).map(p => ({title:p.title, bid:sec.bid, url:`${sec.cafeUrl}/${p.pid}`, date:''})));
+        for(let i=0, on=true; on; i++){ on=false; for(const q of qs){ if(q[i]){ g[grp].push(q[i]); on=true; } } }
+      };
+      interleave(st.sections, 'sketch');
+      interleave(pl.sections, 'place');
+    }catch(e){ return null; }
+    return g;
+  }
+
+  function row(it, grp){
+    const meta = it.date ? `<b>${esc(LABEL[it.bid]||'')}</b> · ${esc(it.date)}` : `<b>${esc(LABEL[it.bid]||'')}</b>`;
+    return `<a class="board-row" href="${esc(it.url)}" target="_blank" rel="noopener">`
+      + `<span class="dot" style="background:${DOT[grp]||'var(--gold)'}"></span>`
+      + `<span class="rt"><span class="tt">${esc(it.title)}</span><span class="mt">${meta}</span></span>`
+      + `<span class="ar">›</span></a>`;
+  }
+
+  function allFeed(g){
+    const q = {tour:[...g.tour], review:[...g.review], sketch:[...g.sketch], place:[...g.place]};
+    const order = ['tour','review','sketch','place'], out = [];
+    while(out.length < 14){
+      let any = false;
+      for(const k of order){ if(q[k].length){ out.push([q[k].shift(), k]); any = true; } if(out.length>=14) break; }
+      if(!any) break;
+    }
+    return out;
+  }
+
+  function render(g, grp){
+    const list = document.getElementById('board-list');
+    if(!list) return;
+    let rows;
+    if(grp === 'all') rows = allFeed(g).map(x => row(x[0], x[1])).join('');
+    else rows = (g[grp]||[]).slice(0,12).map(it => row(it, grp)).join('');
+    if(!rows){ list.innerHTML = '<div class="board-empty">표시할 글이 없습니다.</div>'; return; }
+    const more = (grp!=='all' && MORE[grp]) ? `<a class="board-more" href="${MORE[grp]}">${NAME[grp]} 전체 보기 ›</a>` : '';
+    list.innerHTML = rows + more;
+  }
+
+  load().then(g => {
+    const tabs = document.getElementById('board-tabs');
+    if(!g){ const s = tabs && tabs.closest('section'); if(s) s.style.display='none'; return; }
+    render(g, 'all');
+    tabs.addEventListener('click', e => {
+      const b = e.target.closest('.bt'); if(!b) return;
+      tabs.querySelectorAll('.bt').forEach(x => x.classList.toggle('is-on', x===b));
+      render(g, b.dataset.g);
+    });
+  });
+})();
+</script>
+<!-- 개선 제안 게시판 — Supabase (RLS로 익명 읽기/쓰기만 허용) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  // Supabase 프로젝트 (anon 공개 키 — RLS로 보호되어 노출돼도 안전)
+  const SUPABASE_URL = 'https://dmxotyhlbbvqntyqkzlc.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRteG90eWhsYmJ2cW50eXFremxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjExMDMsImV4cCI6MjA5NDQ5NzEwM30.qBmKjw4UGrcohgf40cVdrtnOdctEkty8ZNhHCq97E_Y';
+
+  const form = document.getElementById('sg-form');
+  const listEl = document.getElementById('sg-list');
+  const submitBtn = document.getElementById('sg-submit');
+  if(!form || !listEl) return;
+
+  const configured = /^https:\/\/[a-z0-9]+\.supabase\.co$/.test(SUPABASE_URL) && SUPABASE_ANON_KEY.length > 20;
+  if(!configured || !window.supabase){
+    listEl.innerHTML = '<div class="sg-empty">제안 게시판을 준비 중입니다. 곧 열려요 🙏</div>';
+    if(submitBtn) submitBtn.disabled = true;
+    return;
+  }
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const esc = s => String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const BADGE = {'접수':['#eef1fb','#3a4a86'],'검토중':['#fff1d6','#8a5a14'],'반영':['#e7f3e7','#2f6b2f'],'보류':['#f0e7e7','#7a4b4b']};
+  const fmtDate = iso => { const d = new Date(iso); return `${d.getMonth()+1}/${d.getDate()}`; };
+
+  async function refresh(){
+    const { data, error } = await sb.from('mb_suggestions')
+      .select('nickname,category,message,status,created_at')
+      .order('created_at', { ascending:false }).limit(30);
+    if(error){ listEl.innerHTML = '<div class="sg-empty">불러오기에 실패했어요. 잠시 후 다시 시도해 주세요.</div>'; return; }
+    if(!data || !data.length){ listEl.innerHTML = '<div class="sg-empty">아직 제안이 없어요.<br/>첫 제안을 남겨주세요!</div>'; return; }
+    listEl.innerHTML = data.map(x => {
+      const st = x.status || '접수';
+      const [bg,fg] = BADGE[st] || BADGE['접수'];
+      return `<div class="sg-item">
+        <div class="sg-top">
+          <span class="sg-cat">${esc(x.category||'제안')}</span>
+          <span class="sg-badge" style="background:${bg};color:${fg}">${esc(st)}</span>
+          <span class="sg-nick">${esc(x.nickname||'익명')}</span>
+        </div>
+        <div class="sg-msg">${esc(x.message)}</div>
+        <div class="sg-date">${fmtDate(x.created_at)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('sg-msg').value.trim();
+    if(!msg) return;
+    submitBtn.disabled = true; submitBtn.textContent = '올리는 중…';
+    const row = {
+      nickname: (document.getElementById('sg-nick').value.trim() || '익명').slice(0,20),
+      category: document.getElementById('sg-cat').value,
+      message: msg.slice(0,500),
+    };
+    const { error } = await sb.from('mb_suggestions').insert(row);
+    submitBtn.disabled = false; submitBtn.textContent = '제안 올리기 →';
+    if(error){ alert('올리지 못했어요. 잠시 후 다시 시도해 주세요.'); return; }
+    document.getElementById('sg-msg').value = '';
+    document.getElementById('sg-nick').value = '';
+    await refresh();
+  });
+
+  refresh();
+})();
+</script>
 <script src="./pwa.js"></script>
 </body>
 </html>
