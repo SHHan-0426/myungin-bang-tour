@@ -1,0 +1,53 @@
+name: 다음 카페 자동 동기화
+
+on:
+  schedule:
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js 설치
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Playwright 의존성 설치
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install chromium --with-deps
+
+      - name: 카페 데이터 스크래핑
+        run: node scripts/sync-cafe.js
+        env:
+          TZ: Asia/Seoul
+
+      - name: 변경 확인
+        id: check
+        run: |
+          if [[ -n $(git status --porcelain data/) ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 변경 사항 커밋·푸시
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "myungin-bang-bot"
+          git config user.email "bot@myungin-bang-tour.local"
+          git add data/
+          git commit -m "🤖 auto: 다음 카페 동기화 $(date +'%Y-%m-%d %H:%M KST')"
+          git push
+
+      - name: 변경 없음 안내
+        if: steps.check.outputs.changed == 'false'
+        run: echo "오늘은 새 글이 없습니다."
