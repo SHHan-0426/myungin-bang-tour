@@ -1,9 +1,9 @@
 name: 다음 카페 자동 동기화
 
-# 매주 일요일 22:00 KST (= UTC 13:00) 자동 실행 + 수동 실행 가능
+# 매일 22:00 KST (= UTC 13:00) 자동 실행 + 수동 실행 가능
 on:
   schedule:
-    - cron: '0 13 * * 0'
+    - cron: '0 13 * * *'
   workflow_dispatch:  # 수동 트리거 (GitHub Actions 페이지에서 "Run workflow")
 
 jobs:
@@ -48,9 +48,9 @@ jobs:
           git config user.email "bot@myungin-bang-tour.local"
           git add data/
           STAMP=$(date +"%Y-%m-%d %H:%M KST")
-          git commit -m "auto: 다음 카페 동기화 ($STAMP)"
+          git commit -m "🤖 auto: 다음 카페 동기화 ($STAMP)"
           git push
 
       - name: 변경 없음 안내
         if: steps.check.outputs.changed == 'false'
-        run: echo "이번 주는 카페에 새 글이 없어 데이터 변경이 없습니다."
+        run: echo "오늘은 카페에 새 글이 없어 데이터 변경이 없습니다."

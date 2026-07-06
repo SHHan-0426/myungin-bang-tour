@@ -1,12 +1,20 @@
 # 다음 카페 자동 동기화 설정 — 능파님이 한 번만 하실 작업
 
-매주 일요일 22시 KST에 다음 카페 11개 게시판을 자동으로 스크래핑해 사이트 데이터를 갱신하는 GitHub Actions 워크플로우입니다.
+매일 22시 KST에 다음 카페 11개 게시판을 자동으로 스크래핑해 사이트 데이터를 갱신하는 GitHub Actions 워크플로우입니다. (정치·선거 글 자동 제외 · 작성일까지 저장 → 대문 게시판에 매일 반영)
 
-## 왜 능파님이 직접 설정해야 하나요
+## 가장 쉬운 경로 — 워크플로 파일이 이미 저장소에 있으면
 
-GitHub의 보안 정책상 **Actions 워크플로우 파일은 사용자가 직접 등록**해야 합니다 (OAuth 앱이 자동으로 만들 수 없음). 한 번만 하시면 영구 동작.
+`.github/workflows/sync-cafe.yml` 이 저장소에 포함돼 있으면 **붙여넣기 없이** 아래만 하면 끝입니다:
 
-## 설정 방법 (3분 소요)
+1. <https://github.com/SHHan-0426/myungin-bang-tour> → **Settings → Actions → General**
+2. 맨 아래 **Workflow permissions** → **"Read and write permissions"** 선택 → **Save**
+3. **Actions** 탭 → 좌측 "다음 카페 자동 동기화" → 우측 **Run workflow**로 즉시 테스트
+
+이후 매일 22시 자동 실행됩니다. 아래 "직접 등록"은 파일이 저장소에 없을 때만 필요합니다.
+
+## (파일이 없을 때만) 직접 등록 — 3분 소요
+
+GitHub 보안 정책상 일부 토큰·OAuth 앱은 워크플로 파일을 자동 생성하지 못합니다. 그럴 땐 아래처럼 한 번만 등록하면 영구 동작.
 
 ### 1단계: GitHub 저장소 열기
 브라우저에서 <https://github.com/SHHan-0426/myungin-bang-tour> 접속.
@@ -31,7 +39,7 @@ GitHub의 보안 정책상 **Actions 워크플로우 파일은 사용자가 직�
 
 ## 자동 실행 일정
 
-- **매주 일요일 22:00 KST** 자동 실행 (cron: `0 13 * * 0` UTC)
+- **매일 22:00 KST** 자동 실행 (cron: `0 13 * * *` UTC)
 - 새 게시물이 있으면 자동으로 `data/*.json` 갱신 + commit + push
 - Netlify가 받아서 1~2분 내 자동 배포
 
