@@ -515,12 +515,12 @@
     <span id="topbar-next"><b>다음 여행</b> · 7/15 정선 로미지안 수국 · 8/11 문경 새재 · 9/1 홋카이도 토마무</span>
   </div>
 
-  <!-- 이전 안내 배너 — 다음 카페 1,927명 회원 이전 유도 -->
-  <a class="migration-banner" href="./my.html#cafe-verify">
+  <!-- 이전 안내 배너 — 다음 카페 로그인/가입 유도 -->
+  <a class="migration-banner" href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener">
     <div class="mb-ico">⇒</div>
     <div class="mb-body">
       <b>다음 카페 1,927명의 새 집</b>
-      <span>카페 회원이세요? 인증하시면 카페 전용 혜택을 받으실 수 있어요</span>
+      <span>한 번만 카페에 로그인하시면 됩니다. 여기 있는 글을 보려면 먼저 카페 회원으로 가입해 주세요 →</span>
     </div>
     <div class="mb-chev">›</div>
   </a>
@@ -736,28 +736,10 @@
     </div>
 
     <div class="playlist">
-      <h3>6월 — 비 오는 정선행</h3>
-      <div class="desc">덜컹이는 차창과 산문을 닮은 11곡. 능파가 직접 골랐습니다.</div>
-
-      <div class="track">
-        <div class="num">01</div>
-        <div class="ti"><b>북한강에서</b><span>정태춘</span></div>
-        <div class="pl">▶</div>
-      </div>
-      <div class="track">
-        <div class="num">02</div>
-        <div class="ti"><b>한계령</b><span>양희은</span></div>
-        <div class="pl">▶</div>
-      </div>
-      <div class="track">
-        <div class="num">03</div>
-        <div class="ti"><b>Adagio in G minor</b><span>Albinoni · I Musici</span></div>
-        <div class="pl">▶</div>
-      </div>
-      <div class="track">
-        <div class="num">04</div>
-        <div class="ti"><b>가을 우체국 앞에서</b><span>윤도현</span></div>
-        <div class="pl">▶</div>
+      <h3>능파가 고른 노래</h3>
+      <div class="desc">카페 음악방에서 능파가 띄운 곡들 — 탭하면 유튜브로 들어요</div>
+      <div id="playlist-tracks">
+        <div style="padding:14px 2px;font-size:12.5px;opacity:.7">불러오는 중…</div>
       </div>
     </div>
   </section>
@@ -1169,6 +1151,27 @@
   });
 
   refresh();
+})();
+</script>
+<script>
+/* 능파 플레이리스트 — 카페 음악방(stories.json music)에서 곡을 읽어 유튜브로 연결 (카페 로그인 벽 없이 재생) */
+(function(){
+  const wrap = document.getElementById('playlist-tracks');
+  if(!wrap) return;
+  const esc = s => String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  fetch('./data/stories.json').then(r=>r.json()).then(d=>{
+    const posts = (d.sections && d.sections.music && d.sections.music.posts) || [];
+    if(!posts.length){ wrap.innerHTML = '<div style="padding:14px 2px;font-size:12.5px;opacity:.7">아직 등록된 곡이 없어요.</div>'; return; }
+    wrap.innerHTML = posts.slice(0,8).map((p,i)=>{
+      const title = p.title || '';
+      const yt = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(title);
+      return `<a class="track" href="${yt}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+        <div class="num">${String(i+1).padStart(2,'0')}</div>
+        <div class="ti"><b>${esc(title)}</b><span>유튜브에서 듣기</span></div>
+        <div class="pl">▶</div>
+      </a>`;
+    }).join('');
+  }).catch(()=>{ wrap.innerHTML = '<div style="padding:14px 2px;font-size:12.5px;opacity:.7">불러오지 못했어요.</div>'; });
 })();
 </script>
 <script src="./pwa.js"></script>
