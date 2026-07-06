@@ -64,6 +64,9 @@
     -webkit-font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
     letter-spacing:-0.01em;
+    /* 줄바꿈 시 한글 어절·단어가 잘리지 않게 */
+    word-break:keep-all;
+    overflow-wrap:break-word;
     /* 데스크탑에서는 모바일 프레임을 가운데에 표시 */
     background:
       radial-gradient(1200px 600px at 50% -100px, rgba(199,162,90,.18), transparent 60%),
@@ -449,6 +452,31 @@
   .sg-item .sg-msg{font-size:14px;color:var(--ink);line-height:1.5;white-space:pre-wrap;word-break:break-word}
   .sg-item .sg-date{font-size:10.5px;color:var(--ink-3);margin-top:5px}
   .sg-empty{padding:22px 12px;text-align:center;color:var(--ink-3);font-size:13px;line-height:1.5}
+
+  /* 헤더 검색·알림 오버레이 + 메뉴 */
+  .ov{position:fixed;inset:0;z-index:200;background:rgba(43,31,26,.45);display:none}
+  .ov.open{display:block}
+  .ov-panel{position:absolute;left:0;right:0;top:0;background:var(--paper);max-height:84vh;display:flex;flex-direction:column;border-radius:0 0 18px 18px;box-shadow:var(--shadow)}
+  .ov-head{display:flex;align-items:center;gap:8px;padding:14px 14px 12px;border-bottom:1px solid var(--line)}
+  .ov-head input{flex:1;font:inherit;font-size:15px;border:0;outline:none;background:transparent;color:var(--ink)}
+  .ov-head .ov-x{background:none;border:0;font-size:19px;color:var(--ink-3);cursor:pointer;padding:2px 4px}
+  .ov-title{font-size:12px;font-weight:700;color:var(--ink-3);padding:11px 16px 4px}
+  .ov-list{overflow-y:auto;padding:0 0 10px}
+  .ov-row{display:flex;align-items:center;gap:10px;padding:11px 16px;text-decoration:none;color:inherit;border-bottom:1px solid var(--line)}
+  .ov-row:last-child{border-bottom:0}
+  .ov-row .ov-b{flex:0 0 auto;font-size:10.5px;font-weight:700;color:var(--wine);background:var(--tag-bg);padding:2px 7px;border-radius:999px}
+  .ov-row .ov-t{flex:1;min-width:0;font-size:14px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ov-empty{padding:22px 16px;text-align:center;color:var(--ink-3);font-size:13px}
+  .menu-pop{position:fixed;z-index:200;top:58px;right:14px;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);min-width:190px;padding:6px;display:none}
+  .menu-pop.open{display:block}
+  .menu-pop a{display:block;padding:11px 12px;text-decoration:none;color:var(--ink);font-size:14px;border-radius:9px}
+  .menu-pop a:active{background:var(--bg)}
+  .menu-pop .mp-sep{height:1px;background:var(--line);margin:5px 4px}
+  .menu-pop a.mp-cafe{color:var(--wine);font-weight:700}
+
+  /* 개선의견 바로가기 작은 표시 */
+  .suggest-pill{display:inline-flex;align-items:center;gap:5px;margin:2px 16px 6px;padding:6px 12px;background:var(--tag-bg);color:var(--tag-ink);border:1px solid var(--line-2);border-radius:999px;font-size:11.5px;font-weight:700;text-decoration:none;line-height:1}
+  .suggest-pill:active{background:#ffe9bf}
 </style>
 </head>
 <body>
@@ -530,18 +558,18 @@
     <a class="brand" href="./index.html">
       <div class="brand-mark" style="font-size:12.5px;letter-spacing:-.5px">名人</div>
       <div>
-        <div class="brand-name">명인방<span style="font-weight:500;font-size:13.5px;color:var(--ink-3);margin-left:2px">투어</span></div>
-        <div class="brand-sub">능파의 길 위 인문학 · since 2009</div>
+        <div class="brand-name">명인방<span style="font-weight:500;font-size:13.5px;color:var(--ink-3);margin-left:2px">투어</span><span style="font-size:9.5px;font-weight:700;color:var(--wine);background:var(--tag-bg);border:1px solid var(--line-2);padding:1px 6px;border-radius:999px;margin-left:6px;vertical-align:middle;letter-spacing:0">구축중</span></div>
+        <div class="brand-sub">능파의 길 위 인문학 · since 2009 · v0.1 시안</div>
       </div>
     </a>
     <div class="nav-icons">
-      <button aria-label="검색">
+      <button id="nav-search" aria-label="검색">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
-      <button aria-label="알림">
+      <button id="nav-bell" aria-label="알림">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
       </button>
-      <button aria-label="메뉴">
+      <button id="nav-menu" aria-label="메뉴">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
     </div>
@@ -555,6 +583,9 @@
     <a class="chip" href="./place.html">명인소</a>
     <a class="chip" href="./my.html">마이</a>
   </div>
+
+  <!-- 개선의견 바로가기 (아래 개선 제안 게시판으로 스크롤) -->
+  <a class="suggest-pill" href="#suggest">💬 홈페이지 개선의견 남기기 →</a>
 
   <!-- 히어로 (AUTO_HERO=true 시 JS가 자동으로 가장 가까운 미래 여행 데이터로 교체) -->
   <div class="hero">
@@ -776,7 +807,7 @@
   </section>
 
   <!-- 홈페이지 개선 제안 게시판 (Supabase 공개 읽기/쓰기) -->
-  <section>
+  <section id="suggest" style="scroll-margin-top:14px">
     <div class="sec-head">
       <div>
         <h2 class="sec-title">홈페이지 개선 제안<span class="arrow">›</span></h2>
@@ -1006,6 +1037,28 @@
   console.log('[명인방투어] 1차 후보:', pickNearestTour());
 </script>
 
+<!-- 검색·알림 오버레이 -->
+<div class="ov" id="ov">
+  <div class="ov-panel">
+    <div class="ov-head">
+      <input id="ov-input" type="search" placeholder="여행·후기·명소·음악 검색…" />
+      <button class="ov-x" id="ov-x" aria-label="닫기">✕</button>
+    </div>
+    <div class="ov-title" id="ov-title">최근 새 글</div>
+    <div class="ov-list" id="ov-list"></div>
+  </div>
+</div>
+<!-- 헤더 메뉴 -->
+<div class="menu-pop" id="menu-pop">
+  <a href="./index.html">홈</a>
+  <a href="./tour.html">여행</a>
+  <a href="./story.html">여행스케치</a>
+  <a href="./place.html">명인소</a>
+  <a href="./my.html">마이</a>
+  <div class="mp-sep"></div>
+  <a class="mp-cafe" href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener">다음 카페 로그인·바로가기 →</a>
+</div>
+
 <a class="fab" href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener" aria-label="다음 카페 바로가기">TALK</a>
 
 <script>
@@ -1172,6 +1225,66 @@
       </a>`;
     }).join('');
   }).catch(()=>{ wrap.innerHTML = '<div style="padding:14px 2px;font-size:12.5px;opacity:.7">불러오지 못했어요.</div>'; });
+})();
+</script>
+<script>
+/* 헤더 검색·알림·메뉴 — data/*.json에서 카페 글을 모아 검색/최근글 오버레이 + 메뉴 드롭다운 */
+(function(){
+  const CAFE='https://cafe.daum.net/redtraintour';
+  const LABEL={'1fXs':'여행 가는날','RfFv':'해외문화탐방','S2Ss':'일본 여행','4b2T':'여행후기','RfFr':'길위의 인문학','1fY7':'여행 편지','S2Se':'음악 동영상','Gz1K':'산책','RrBS':'명인 추천','1fXL':'명품 맛집','S6Ar':'칼국수로드'};
+  const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const $=id=>document.getElementById(id);
+  const btnSearch=$('nav-search'), btnBell=$('nav-bell'), btnMenu=$('nav-menu');
+  const ov=$('ov'), ovInput=$('ov-input'), ovList=$('ov-list'), ovTitle=$('ov-title'), menu=$('menu-pop');
+  if(!ov||!btnSearch) return;
+
+  let ITEMS=[], RECENT=[];
+  Promise.all([
+    fetch('./data/past-travels.json').then(r=>r.json()).catch(()=>null),
+    fetch('./data/reviews.json').then(r=>r.json()).catch(()=>null),
+    fetch('./data/stories.json').then(r=>r.json()).catch(()=>null),
+    fetch('./data/places.json').then(r=>r.json()).catch(()=>null)
+  ]).then(([pt,rv,st,pl])=>{
+    const G={tour:[],review:[],sketch:[],place:[]};
+    (pt&&pt.posts||[]).forEach(p=>G.tour.push({title:p.title,bid:p.bid,url:`${CAFE}/${p.bid}/${p.pid}`}));
+    (rv&&rv.posts||[]).forEach(p=>G.review.push({title:p.title,bid:'4b2T',url:`${CAFE}/4b2T/${p.pid}`}));
+    const interleave=(sections,g)=>{ const qs=Object.values(sections||{}).map(sec=>(sec.posts||[]).map(p=>({title:p.title,bid:sec.bid,url:`${sec.cafeUrl}/${p.pid}`}))); for(let i=0,on=true;on;i++){on=false;for(const q of qs){if(q[i]){G[g].push(q[i]);on=true;}}} };
+    interleave(st&&st.sections,'sketch'); interleave(pl&&pl.sections,'place');
+    ITEMS=[...G.tour,...G.review,...G.sketch,...G.place];
+    // 최근: 그룹 라운드로빈
+    const q={...G}; const order=['tour','review','sketch','place']; RECENT=[];
+    for(let n=0;RECENT.length<24 && n<400;n++){ let any=false; for(const k of order){ if(q[k].length){RECENT.push(q[k].shift());any=true;} } if(!any)break; }
+  });
+
+  const rowHtml=it=>`<a class="ov-row" href="${esc(it.url)}" target="_blank" rel="noopener"><span class="ov-b">${esc(LABEL[it.bid]||'')}</span><span class="ov-t">${esc(it.title)}</span></a>`;
+  const renderList=(items,empty)=>{ ovList.innerHTML = items.length ? items.slice(0,40).map(rowHtml).join('') : `<div class="ov-empty">${empty}</div>`; };
+
+  function openOv(searchMode){
+    menu.classList.remove('open');
+    ov.classList.add('open');
+    if(searchMode){ ovTitle.textContent='검색'; ovInput.value=''; renderList(RECENT,'불러오는 중…'); setTimeout(()=>ovInput.focus(),60); }
+    else { ovTitle.textContent='최근 새 글'; renderList(RECENT,'표시할 글이 없어요'); }
+  }
+  const closeOv=()=>ov.classList.remove('open');
+
+  ovInput.addEventListener('input',()=>{
+    const qq=ovInput.value.trim().toLowerCase();
+    if(!qq){ ovTitle.textContent='최근 새 글'; renderList(RECENT,''); return; }
+    ovTitle.textContent='검색 결과';
+    renderList(ITEMS.filter(it=>String(it.title).toLowerCase().includes(qq)), `'${esc(ovInput.value.trim())}' 결과가 없어요`);
+  });
+  $('ov-x').addEventListener('click',closeOv);
+  ov.addEventListener('click',e=>{ if(e.target===ov) closeOv(); });
+
+  btnSearch.addEventListener('click',()=>openOv(true));
+  btnBell.addEventListener('click',()=>openOv(false));
+  btnMenu.addEventListener('click',e=>{ e.stopPropagation(); menu.classList.toggle('open'); });
+  document.addEventListener('click',e=>{ if(!menu.contains(e.target) && !btnMenu.contains(e.target)) menu.classList.remove('open'); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeOv(); menu.classList.remove('open'); } });
+
+  // 개선의견 표시 → 아래 개선 제안 게시판으로 스크롤
+  const pill=document.querySelector('.suggest-pill');
+  if(pill) pill.addEventListener('click',e=>{ e.preventDefault(); const t=document.getElementById('suggest'); if(t) t.scrollIntoView({block:'start'}); });
 })();
 </script>
 <script src="./pwa.js"></script>
