@@ -1,6 +1,6 @@
 {
   "_doc": "여행스케치 — 다음 카페에서 자동 수집. 섹션별로 묶음. 마지막 수집: 2026-05-23",
-  "lastSync": "2026-07-08T15:15:19+09:00",
+  "lastSync": "2026-07-09T15:54:53+09:00",
   "sections": {
     "humanities": {
       "name": "길 위의 인문학",
@@ -9,6 +9,11 @@
       "cafeUrl": "https://cafe.daum.net/redtraintour/RfFr",
       "icon": "📖",
       "posts": [
+        {
+          "pid": "115",
+          "title": "\"거대한 파도 같은 축하\"...한강 신드롬, 대한민국이 행복했다",
+          "posted": "2024-10-12"
+        },
         {
           "pid": "114",
           "title": "\"거대한 파도 같은 축하\"...한강 신드롬, 대한민국이 행복했다",
@@ -99,6 +104,11 @@
       "cafeUrl": "https://cafe.daum.net/redtraintour/1fY7",
       "icon": "💌",
       "posts": [
+        {
+          "pid": "1776",
+          "title": "단지 15분",
+          "posted": "2026-07-09"
+        },
         {
           "pid": "1775",
           "title": "기 왜 타? 1만원이면 돼 — 전철 타고 떠나는 여름휴가"
@@ -315,6 +325,11 @@
       "cafeUrl": "https://cafe.daum.net/redtraintour/Gz1K",
       "icon": "🌿",
       "posts": [
+        {
+          "pid": "1485",
+          "title": "서글픈 고백",
+          "posted": "2026-07-09"
+        },
         {
           "pid": "1484",
           "title": "서울대 앞 '영정' 전문 사진관, 청춘들이 찾는다"
