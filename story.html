@@ -237,7 +237,13 @@
       list.innerHTML = '<div class="loading">아직 글이 없습니다</div>';
       return;
     }
-    list.innerHTML = sec.posts.map((p, idx) => `
+    // 최근 시간순 정렬 — 작성일(posted) 우선, 없으면 pid(카페 글번호는 시간순 증가) 내림차순
+    const posts = [...sec.posts].sort((a, b) => {
+      const da = a.posted || '', db = b.posted || '';
+      if (da && db && da !== db) return db.localeCompare(da);
+      return (parseInt(b.pid) || 0) - (parseInt(a.pid) || 0);
+    });
+    list.innerHTML = posts.map((p, idx) => `
       <a class="post-card ${key}" href="https://cafe.daum.net/redtraintour/${sec.bid}/${p.pid}" target="_blank" rel="noopener">
         <div class="body">
           <h4>${p.title}</h4>

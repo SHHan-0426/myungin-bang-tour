@@ -408,8 +408,9 @@
   .design-notes h4:first-child{margin-top:0}
   .design-notes code{background:#fff;border:1px solid var(--line);padding:1px 6px;border-radius:6px;font-size:11.5px}
   .design-notes ul{margin:0 0 4px;padding-left:18px}
+  /* 개발용 설계 메모 — 라이브에서는 숨김 (필요 시 아래 display:none을 block으로) */
   @media (min-width:1100px){
-    .design-notes{display:block}
+    .design-notes{display:none}
   }
 
   /* 명인방 게시판 (카페 새 글 — data/*.json 자동 연동) */
@@ -700,18 +701,9 @@
       <a class="sec-link" href="./story.html">매거진 ›</a>
     </div>
 
-    <a class="story" href="https://cafe.daum.net/redtraintour/RfFr/128" target="_blank" rel="noopener">
-      <div class="cover" style="background-image:url('./assets/story-01.jpg')">
-        <div class="ink">
-          <div class="kicker">ESSAY · 길위의 인문학</div>
-          <h3>해안 따라 가득한 카페의 유혹</h3>
-        </div>
-      </div>
-      <div class="body">
-        <p>"수평선 보며 한 모금, 바닷바람 쐬며 두 모금…" 박경일 기자가 안내하는 한국 해안 카페 기행. 능파가 길위의 인문학 코너에 큐레이션한 글.</p>
-        <div class="by">큐레이션 · 능파 / 원글 · 박경일 기자의 여행</div>
-      </div>
-    </a>
+    <div id="humanities-feature">
+      <div style="padding:14px 2px;color:var(--ink-3);font-size:12.5px">불러오는 중…</div>
+    </div>
   </section>
 
   <!-- 추천 명인소 -->
@@ -785,25 +777,9 @@
       <a class="sec-link" href="./story.html">모두 보기 ›</a>
     </div>
 
-    <a class="review" href="https://cafe.daum.net/redtraintour/1fXs/1063" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit">
-      <div class="who">
-        <div class="av" style="background-image:url('./assets/avatar-01.jpg')"></div>
-        <b>조지아 여행후기</b>
-        <span>코카서스 다녀온 길</span>
-      </div>
-      <div class="stars">여행후기</div>
-      <p>코카서스의 조지아를 능파와 함께 다녀온 멤버의 여행후기 — 카페 원문에서 전문 읽기.</p>
-    </a>
-
-    <a class="review" href="https://cafe.daum.net/redtraintour/1fY7/1483" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit">
-      <div class="who">
-        <div class="av" style="background-image:url('./assets/avatar-02.jpg')"></div>
-        <b>물머리와 정약용 유적 탐방기</b>
-        <span>여행! 편지!!</span>
-      </div>
-      <div class="stars">여행 편지</div>
-      <p>물머리에서 만난 다산의 자취 — 한 멤버가 보내온 답사 편지.</p>
-    </a>
+    <div id="reviews-list">
+      <div style="padding:14px 2px;font-size:12.5px;color:var(--ink-3)">불러오는 중…</div>
+    </div>
   </section>
 
   <!-- 홈페이지 개선 제안 게시판 (Supabase 공개 읽기/쓰기) -->
@@ -1285,6 +1261,55 @@
   // 개선의견 표시 → 아래 개선 제안 게시판으로 스크롤
   const pill=document.querySelector('.suggest-pill');
   if(pill) pill.addEventListener('click',e=>{ e.preventDefault(); const t=document.getElementById('suggest'); if(t) t.scrollIntoView({block:'start'}); });
+})();
+</script>
+<script>
+/* 멤버의 여행 편지 — reviews.json 최신 후기 자동 표시 (카페 후기는 정회원 전용이라 '로그인 후 전문' 안내) */
+(function(){
+  const wrap=document.getElementById('reviews-list');
+  if(!wrap) return;
+  const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  fetch('./data/reviews.json').then(r=>r.json()).then(d=>{
+    const posts=(d.posts||[]).slice(0,4);
+    if(!posts.length){ wrap.innerHTML='<div style="padding:14px 2px;font-size:12.5px;color:var(--ink-3)">후기를 불러오지 못했어요.</div>'; return; }
+    wrap.innerHTML=posts.map(p=>`<a class="review" href="https://cafe.daum.net/redtraintour/4b2T/${esc(p.pid)}" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit">
+      <div class="who">
+        <div class="av" style="background:linear-gradient(135deg,var(--gold),var(--wine))"></div>
+        <b>${esc(p.title)}</b>
+        <span>${esc(p.trip&&p.trip!=='기타'?p.trip:'여행후기')}</span>
+      </div>
+      <div class="stars">여행후기</div>
+      <p style="color:var(--ink-3);font-size:12px">🔒 카페 정회원만 전문 열람 →</p>
+    </a>`).join('');
+  }).catch(()=>{ wrap.innerHTML='<div style="padding:14px 2px;font-size:12.5px;color:var(--ink-3)">후기를 불러오지 못했어요.</div>'; });
+})();
+</script>
+<script>
+/* 대문 '길 위의 인문학' — 카페 인문학방(stories.json humanities)에서 매번 임의로 한 편 셔플 표시 */
+(function(){
+  const box=document.getElementById('humanities-feature');
+  if(!box) return;
+  const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const GRADS=[
+    'linear-gradient(135deg,#5b6b3a,#7a1b25)',
+    'linear-gradient(135deg,#3f6b86,#5a121a)',
+    'linear-gradient(135deg,#c7a25a,#7a1b25)',
+    'linear-gradient(135deg,#7a1b25,#2b1f1a)'
+  ];
+  fetch('./data/stories.json').then(r=>r.json()).then(d=>{
+    const sec=(d.sections&&d.sections.humanities)||{};
+    const posts=sec.posts||[];
+    const bid=sec.bid||'RfFr';
+    if(!posts.length){ box.innerHTML='<div style="padding:14px 2px;color:var(--ink-3);font-size:12.5px">아직 글이 없어요.</div>'; return; }
+    const p=posts[Math.floor(Math.random()*posts.length)];
+    const g=GRADS[Math.floor(Math.random()*GRADS.length)];
+    box.innerHTML=`<a class="story" href="https://cafe.daum.net/redtraintour/${bid}/${esc(p.pid)}" target="_blank" rel="noopener">
+      <div class="cover" style="background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.5)), ${g}">
+        <div class="ink"><div class="kicker">ESSAY · 길위의 인문학</div><h3>${esc(p.title)}</h3></div>
+      </div>
+      <div class="body"><p>능파가 '길위의 인문학'에 큐레이션한 글 — 카페에서 전문 읽기.</p><div class="by">큐레이션 · 능파</div></div>
+    </a>`;
+  }).catch(()=>{ box.innerHTML='<div style="padding:14px 2px;color:var(--ink-3);font-size:12.5px">불러오지 못했어요.</div>'; });
 })();
 </script>
 <script src="./pwa.js"></script>
