@@ -1,9 +1,10 @@
 name: 다음 카페 자동 동기화
 
-# 매일 22:00 KST (= UTC 13:00) 자동 실행 + 수동 실행 가능
+# 매주 일요일 22:00 KST (= UTC 13:00) 자동 실행 + 수동 실행 가능
+# (매일로 바꾸려면 아래 cron을 '0 13 * * *' 로)
 on:
   schedule:
-    - cron: '0 13 * * *'
+    - cron: '0 13 * * 0'
   workflow_dispatch:  # 수동 트리거 (GitHub Actions 페이지에서 "Run workflow")
 
 jobs:
