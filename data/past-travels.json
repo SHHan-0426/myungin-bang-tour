@@ -20,8 +20,19 @@
     ],
     "cafeUrl": "https://cafe.daum.net/redtraintour"
   },
-  "lastSync": "2026-07-12T14:24:30+09:00",
+  "lastSync": "2026-07-19T14:22:07+09:00",
   "posts": [
+    {
+      "bid": "1fXs",
+      "pid": "1069",
+      "title": "'신총무와 밥차여행'",
+      "year": 2026,
+      "season": "봄",
+      "region": "전국",
+      "posted": "2026-07-19",
+      "views": 21,
+      "comments": 0
+    },
     {
       "bid": "S2Ss",
       "pid": "19",
