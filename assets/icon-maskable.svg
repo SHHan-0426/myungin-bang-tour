@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 명인방투어 마스커블 아이콘 — 안전영역(중앙 80%) 안에 名人 배치 -->
+  <defs>
+    <radialGradient id="bg" cx="0.35" cy="0.3" r="0.85">
+      <stop offset="0" stop-color="#9a2b35"/>
+      <stop offset="0.6" stop-color="#7a1b25"/>
+      <stop offset="1" stop-color="#5a121a"/>
+    </radialGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff8ec" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#fff8ec" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect width="512" height="512" fill="url(#glow)"/>
+  <text x="256" y="322" font-family="Noto Serif KR, 'Apple SD Gothic Neo', serif" font-weight="700" font-size="160" fill="#fff8ec" text-anchor="middle" letter-spacing="-4">名人</text>
+  <circle cx="256" cy="390" r="5" fill="#c7a25a"/>
+</svg>
