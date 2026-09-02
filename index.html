@@ -612,58 +612,8 @@
       <a class="sec-link" href="./tour.html#upcoming">전체보기 ›</a>
     </div>
 
-    <div class="h-scroll">
-      <a class="tour-card" href="https://cafe.daum.net/redtraintour/1fXs/1064" target="_blank" rel="noopener">
-        <div class="img" style="background-image:url('https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/cafeattach/117eG/4d709fc2da46bf9da3084a9ede047ed678aa3f23')">
-          <span class="badge">국내 여행</span>
-        </div>
-        <div class="body">
-          <div class="date">7.15(수) · 당일</div>
-          <h3>정선 로미지안 가든 수국</h3>
-          <div class="meta"><b>여행 가는날</b> · 능파 동행</div>
-          <div class="seats"><i style="width:82%"></i></div>
-          <div class="seats-txt">한여름, 수국이 깊어지는 로미지안 가든</div>
-        </div>
-      </a>
-
-      <a class="tour-card" href="https://cafe.daum.net/redtraintour/1fXs/1067" target="_blank" rel="noopener">
-        <div class="img" style="background-image:url('https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/cafeattach/117eG/b08f048ec54baa74d053fd4147a2f26a5f57f8d1')">
-          <span class="badge">국내 여행</span>
-        </div>
-        <div class="body">
-          <div class="date">8.11(화) · 당일</div>
-          <h3>문경 새재 숲힐링 &amp; 햇사레 복숭아</h3>
-          <div class="meta"><b>여행 가는날</b> · 능파 동행</div>
-          <div class="seats"><i style="width:58%"></i></div>
-          <div class="seats-txt">흥미진진 여름 계곡, 트레킹과 계곡 피서</div>
-        </div>
-      </a>
-
-      <a class="tour-card" href="https://cafe.daum.net/redtraintour/S2Ss/28" target="_blank" rel="noopener">
-        <div class="img" style="background-image:url('https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/cafeattach/117eG/cd18bf1ea0cec781b0dd6582eb44d546c10b6d80')">
-          <span class="badge">해외 문화</span>
-        </div>
-        <div class="body">
-          <div class="date">9.1(화)~4(금) · 3박 4일</div>
-          <h3>홋카이도 토마무 리조트</h3>
-          <div class="meta"><b>일본 여행</b> · 능파 동행</div>
-          <div class="seats"><i style="width:70%"></i></div>
-          <div class="seats-txt">호시노 리조트 토마무 · 안도 타다오 물의 교회</div>
-        </div>
-      </a>
-
-      <a class="tour-card" href="./tour-detail.html?id=benelux-2026-09">
-        <div class="img" style="background-image:url('./assets/tour-03.jpg')">
-          <span class="badge">해외 문화</span>
-        </div>
-        <div class="body">
-          <div class="date">9.27(일)~10.6(화) · 10일</div>
-          <h3>베네룩스 3국 10일</h3>
-          <div class="meta"><b>해외문화탐방</b> · 능파 동행</div>
-          <div class="seats"><i style="width:84%"></i></div>
-          <div class="seats-txt">벨기에 · 네덜란드 · 룩셈부르크</div>
-        </div>
-      </a>
+    <div class="h-scroll" id="upcoming-cards">
+      <div style="padding:16px 4px;color:var(--ink-3);font-size:12.5px">불러오는 중…</div>
     </div>
   </section>
 
@@ -939,8 +889,9 @@
     const el = document.getElementById('topbar-next');
     if (!el || !list || !list.length) return;
     const shortName = (title) => {
-      // 날짜가 없는 조각(지명/여행명)을 고른 뒤 앞 2어절만
-      const segs = String(title).split(' — ');
+      // 앞머리 날짜 접두어 제거 후, 날짜가 없는 조각(지명/여행명)을 고른 뒤 앞 2어절만
+      const t0 = String(title).replace(/^\s*(20\d{2}\s*년?\s*)?\d{1,2}\s*월\s*\d{1,2}\s*일?\s*(\([월화수목금토일]\))?\s*(당일)?\s*[ㅡ—\-]\s*/, '');
+      const segs = t0.split(' — ');
       let name = (segs.find(s => !/월|20\d\d|~/.test(s)) || segs[0]).trim();
       name = name.split(/[&/·]/)[0].trim();       // 구분자 앞부분
       return name.split(/\s+/).slice(0, 2).join(' ').slice(0, 12);
@@ -950,6 +901,41 @@
       return `${s.getMonth()+1}/${s.getDate()} ${shortName(t.title)}`;
     });
     el.innerHTML = '<b>다음 여행</b> · ' + bits.join(' · ');
+  }
+
+  // '다음 여행 일정' 카드 — 병합 목록(오늘 이후·정렬)에서 자동 렌더. 지난 일정은 자동 제외.
+  function renderUpcomingCards(list){
+    const wrap = document.getElementById('upcoming-cards');
+    if (!wrap) return;
+    const up = (list || []);
+    if (!up.length){ wrap.innerHTML = '<div style="padding:16px 4px;color:var(--ink-3);font-size:12.5px">예정된 일정은 카페에 올라오면 자동으로 표시됩니다.</div>'; return; }
+    const grad = s => ({'봄':'linear-gradient(135deg,#f3a4b5,#f6c576)','여름':'linear-gradient(135deg,#7fc885,#5b6b3a)','가을':'linear-gradient(135deg,#d97b3a,#7a1b25)','겨울':'linear-gradient(135deg,#a8c4d6,#3f6b86)'})[s] || 'linear-gradient(135deg,#5a121a,#7a1b25)';
+    const isDate = s => s.replace(/[0-9\s월화수목금토일()~·.\-년박당일/]/g,'').length < 2;
+    const clean = t => {
+      let s = String(t.title).trim();
+      // 앞머리 날짜 접두어 제거 (예: "9월10(목)ㅡ", "10월 8(목) - ", "2026년 7월 23일 (목)-")
+      s = s.replace(/^\s*(20\d{2}\s*년?\s*)?\d{1,2}\s*월\s*\d{1,2}\s*일?\s*(\([월화수목금토일]\))?\s*(당일)?\s*[ㅡ—\-]\s*/, '');
+      const seg = s.split(' — ');
+      const keep = seg.filter(x => !isDate(x));
+      return (keep.length ? keep : seg).join(' — ').trim();
+    };
+    const esc = s => String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    wrap.innerHTML = up.slice(0,8).map((t,i) => {
+      const href = t._fromPast ? esc(t.cafeUrl) : `./tour-detail.html?id=${esc(t.id)}`;
+      const ext = t._fromPast ? ' target="_blank" rel="noopener"' : '';
+      const cover = t.image ? `background-image:url('${esc(t.image)}')` : `background:${grad(t.season)}`;
+      const dday = Math.max(0, Math.ceil((new Date(t.startDate) - new Date())/86400000));
+      return `<a class="tour-card" href="${href}"${ext}>
+        <div class="img" style="${cover}"><span class="badge">${t.domestic?'국내 여행':'해외 여행'}</span></div>
+        <div class="body">
+          <div class="date">${formatRange(t.startDate,t.endDate)} · ${esc(t.duration||'당일')}</div>
+          <h3>${esc(clean(t))}</h3>
+          <div class="meta"><b>${esc(t.board||t.category)}</b> · ${esc(t.host||'능파 동행')}</div>
+          <div class="seats"><i style="width:${58+((i*17)%34)}%"></i></div>
+          <div class="seats-txt">D-${dday}${t.subtitle?' · '+esc(t.subtitle):(t.region?' · '+esc(t.region):'')}</div>
+        </div>
+      </a>`;
+    }).join('');
   }
 
   function formatRange(start, end){
@@ -1008,6 +994,7 @@
         renderHero(merged);
       }
       renderTopbar(list);
+      renderUpcomingCards(list);
     });
   }
   console.log('[명인방투어] 1차 후보:', pickNearestTour());
