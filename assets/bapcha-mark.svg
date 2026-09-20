@@ -1,0 +1,16 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="밥차 로고">
+  <defs>
+    <linearGradient id="bc-badge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8a2230"/>
+      <stop offset="1" stop-color="#5a121a"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#bc-badge)"/>
+  <!-- 김(steam) = 사람을 잇는 두 곡선 -->
+  <path d="M26 19 q-4 4.5 0 9.5" fill="none" stroke="#c7a25a" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M38 19 q4 4.5 0 9.5" fill="none" stroke="#c7a25a" stroke-width="2.6" stroke-linecap="round"/>
+  <circle cx="32" cy="16.5" r="2.5" fill="#e8c883"/>
+  <!-- 밥그릇 -->
+  <rect x="15" y="33" width="34" height="3.6" rx="1.8" fill="#fff8ec"/>
+  <path d="M18 37 Q32 53 46 37 Z" fill="#fff8ec"/>
+</svg>

@@ -43,6 +43,11 @@
   status = 200
 
 [[redirects]]
+  from = "/bapcha"
+  to = "/bapcha.html"
+  status = 200
+
+[[redirects]]
   from = "/tour/:id"
   to = "/tour-detail.html?id=:id"
   status = 200

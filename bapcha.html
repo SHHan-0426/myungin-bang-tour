@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>명인방투어 · 밥차</title>
+<meta name="description" content="밥 먹고·차 마시고·사람을 잇다 — 은퇴 세대의 인생 2막 공동체 밥차(BC). 명인방 여행 부문 공동운영 파트너." />
+<meta name="theme-color" content="#7a1b25" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="apple-touch-icon" href="./assets/icon-192.png?v2" />
+<link rel="icon" type="image/svg+xml" href="./assets/icon.svg?v2" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="명인방투어" />
+<meta property="og:title" content="밥차 — 은퇴 세대의 인생 2막 공동체" />
+<meta property="og:description" content="밥 먹고·차 마시고·사람을 잇다. 여행·문화·학습·네트워킹을 하나로." />
+<meta property="og:url" content="https://myungin-bang-tour.netlify.app/bapcha.html" />
+<meta property="og:locale" content="ko_KR" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="./shared.css" />
+<style>
+  section{margin:0}
+  /* 히어로 */
+  .bc-hero{margin:0;padding:34px 22px 30px;color:#fff8ec;background:linear-gradient(150deg,#7a1b25 0%,#5a121a 60%,#2b1f1a 100%);position:relative;overflow:hidden}
+  .bc-hero .bc-badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.14em;background:rgba(255,248,236,.15);border:1px solid rgba(255,248,236,.3);padding:4px 11px;border-radius:999px;margin-bottom:14px}
+  .bc-hero h1{font-family:"Noto Serif KR",serif;font-size:26px;line-height:1.32;margin:0 0 10px;font-weight:700}
+  .bc-hero .sub{font-size:13.5px;line-height:1.6;color:rgba(255,248,236,.82)}
+  .bc-hero .hr{margin-top:16px;font-size:11.5px;color:rgba(255,248,236,.6)}
+
+  .wrap{padding:22px 18px 6px}
+  .kicker{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--wine)}
+  h2.t{font-family:"Noto Serif KR",serif;font-size:20px;margin:4px 0 10px;color:var(--ink)}
+  p.lead{font-size:13.5px;line-height:1.72;color:var(--ink-2);margin:0 0 8px}
+  .hl{color:var(--wine);font-weight:700}
+
+  /* 5대 활동 카드 */
+  .acts{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+  .act{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 15px;position:relative;overflow:hidden}
+  .act::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+  .act:nth-child(1)::before{background:var(--wine)}
+  .act:nth-child(2)::before{background:var(--gold)}
+  .act:nth-child(3)::before{background:var(--moss)}
+  .act:nth-child(4)::before{background:var(--sky)}
+  .act:nth-child(5)::before{background:#9a6a3a}
+  .act .n{font-size:11px;font-weight:800;color:var(--ink-3)}
+  .act h3{font-size:15px;margin:2px 0 5px;font-weight:700;color:var(--ink)}
+  .act p{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink-2)}
+
+  /* 명인방 x 밥차 */
+  .synergy{margin:16px 18px 0;background:linear-gradient(160deg,#fff3d6,#fde9c8);border:1px solid var(--line-2);border-radius:var(--radius);padding:18px 18px}
+  .synergy h2{font-family:"Noto Serif KR",serif;font-size:18px;margin:0 0 6px;color:var(--wine)}
+  .synergy p{margin:0;font-size:12.8px;line-height:1.68;color:var(--ink-2)}
+
+  /* 대표 프로그램 */
+  .prog{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:9px}
+  .prog h3{font-size:14.5px;margin:0 0 4px;font-weight:700}
+  .prog .tag{display:inline-block;font-size:10px;font-weight:700;color:var(--tag-ink);background:var(--tag-bg);padding:2px 8px;border-radius:999px;margin-bottom:6px}
+  .prog p{margin:0;font-size:12.3px;line-height:1.6;color:var(--ink-2)}
+
+  /* 함께하기 폼 */
+  .join{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 16px 18px;margin:6px 0}
+  .jr{margin-bottom:11px}
+  .join label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-bottom:6px}
+  .join label small{color:var(--ink-3);font-weight:500}
+  .join input,.join select,.join textarea{width:100%;box-sizing:border-box;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:12px;padding:11px 12px}
+  .join textarea{resize:vertical;min-height:74px;line-height:1.5}
+  .join input:focus,.join select:focus,.join textarea:focus{outline:none;border-color:var(--wine)}
+  .join .sbtn{width:100%;margin-top:6px;background:var(--wine);color:#fff8ec;border:0;border-radius:12px;padding:13px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .join .sbtn:disabled{opacity:.6}
+  .join .done{display:none;text-align:center;padding:20px 8px}
+  .join .done b{display:block;color:var(--wine);font-size:15px;margin-bottom:4px}
+  .join .done span{font-size:12.5px;color:var(--ink-3)}
+  .join .note{font-size:11px;color:var(--ink-3);text-align:center;margin-top:10px;line-height:1.5}
+
+  /* 인용 */
+  .quote{margin:18px 18px 4px;padding:18px 18px;border-left:3px solid var(--gold);background:#fffdf8}
+  .quote p{margin:0;font-size:13px;line-height:1.7;color:var(--ink-2);font-style:italic}
+  .quote .by{margin-top:8px;font-size:11px;color:var(--ink-3);font-style:normal}
+
+  /* 왜 지금 — 통계 */
+  .stats{display:flex;gap:10px;margin:8px 0 12px}
+  .stat{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:13px 10px;text-align:center}
+  .stat b{display:block;font-family:"Noto Serif KR",serif;font-size:21px;color:var(--wine);line-height:1.1}
+  .stat span{display:block;font-size:10.8px;color:var(--ink-3);margin-top:5px;line-height:1.4}
+  /* 비전 가치 */
+  .vals{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:6px}
+  .val{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+  .val b{display:block;font-size:12.5px;color:var(--wine);margin-bottom:3px}
+  .val span{font-size:11.2px;color:var(--ink-2);line-height:1.45}
+  /* 차별화 비교 */
+  .cmp{margin-top:6px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--paper)}
+  .cmp .row{padding:10px 13px;border-top:1px solid var(--line)}
+  .cmp .row:first-child{border-top:0}
+  .cmp .k{font-size:10.5px;font-weight:800;color:var(--ink-3);margin-bottom:5px}
+  .cmp .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .cmp .a{font-size:11.8px;color:var(--ink-3);line-height:1.4}
+  .cmp .b{font-size:11.8px;color:var(--wine);font-weight:600;line-height:1.4}
+  /* 여정 타임라인 */
+  .steps{margin-top:8px}
+  .steps .st{position:relative;padding:0 0 14px 16px;border-left:2px solid var(--line-2)}
+  .steps .st:last-child{padding-bottom:0}
+  .steps .st::before{content:"";position:absolute;left:-6px;top:2px;width:10px;height:10px;border-radius:50%;background:var(--wine)}
+  .steps .st b{display:block;font-size:13px;color:var(--wine);margin-bottom:1px}
+  .steps .st span{font-size:12px;color:var(--ink-2);line-height:1.5}
+  /* 기대 효과 */
+  .impact{display:grid;grid-template-columns:1fr;gap:9px;margin-top:6px}
+  .imp{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .imp b{color:var(--wine);font-size:13px}
+  .imp span{display:block;font-size:12px;color:var(--ink-2);line-height:1.5;margin-top:3px}
+</style>
+</head>
+<body>
+
+<main class="stage">
+
+  <div class="topbar">
+    <span>🍚</span>
+    <span><b>밥차</b> · 밥 먹고 · 차 마시고 · 사람을 잇다</span>
+  </div>
+
+  <header class="header">
+    <a class="brand" href="./index.html">
+      <div class="brand-mark" style="font-size:12.5px;letter-spacing:-.5px">名人</div>
+      <div>
+        <div class="brand-name">명인방<span style="font-weight:500;font-size:13.5px;color:var(--ink-3);margin-left:2px">투어</span></div>
+        <div class="brand-sub">밥차 · 인생 2막 공동체</div>
+      </div>
+    </a>
+    <div class="nav-icons">
+      <a href="./index.html" aria-label="홈" style="color:inherit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg></a>
+      <a href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener" aria-label="카페" style="color:inherit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13a3 3 0 0 1 0 6h-1"/><path d="M4 8v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2"/></svg></a>
+    </div>
+  </header>
+
+  <!-- 1. 히어로 -->
+  <section class="bc-hero">
+    <span class="bc-badge">밥차 · BC · bob-cha</span>
+    <h1>밥 먹고 · 차 마시고<br/>사람을 잇다</h1>
+    <div class="sub">은퇴 세대가 스스로 기획·운영하는 인생 2막 공동체.<br/>여행 · 문화 · 학습 · 네트워킹을 하나의 자리로 잇습니다.</div>
+    <div class="hr">Human Recycle — 경험과 재능의 사회적 재순환</div>
+  </section>
+
+  <!-- 2. 밥차란? -->
+  <section class="wrap">
+    <div class="kicker">ABOUT</div>
+    <h2 class="t">밥차란?</h2>
+    <p class="lead">100세 시대, 은퇴 전후의 중장년이 쌓아온 <span class="hl">경험과 전문성</span>을 재능 기부와 공동 사업으로 순환시켜, 인생 2막을 주체적이고 지속 가능하게 설계하도록 돕는 커뮤니티입니다.</p>
+    <p class="lead">친목 모임을 넘어 <span class="hl">여행 기획 · 도농 상생 · 문화 콘텐츠 · 인문학 아카데미 · 웰니스</span>를 유기적으로 결합한 ‘세컨드 플레이스(Second Place)’를 지향합니다. 가장 일상적인 ‘밥과 차’를 매개로 사람과 지역을 잇습니다.</p>
+  </section>
+
+  <!-- 왜 지금인가 -->
+  <section class="wrap">
+    <div class="kicker">WHY NOW</div>
+    <h2 class="t">왜 지금인가</h2>
+    <div class="stats">
+      <div class="stat"><b>1,600만</b><span>은퇴기 진입 베이비부머<br/>(1·2차 세대)</span></div>
+      <div class="stat"><b>2025</b><span>대한민국<br/>초고령사회 진입</span></div>
+    </div>
+    <p class="lead">경제력과 학력을 갖춘 은퇴 세대가 쏟아지고, 동시에 지방 소멸이 심화됩니다. <span class="hl">감성·체험·프리미엄 여행 수요</span>와 <span class="hl">도농 상생의 정책적 필요</span>가 함께 커지는 지금 — 은퇴자의 경험을 지역과 잇는 밥차의 자리가 열립니다.</p>
+  </section>
+
+  <!-- 비전·미션 -->
+  <section class="wrap">
+    <div class="kicker">VISION · MISSION</div>
+    <h2 class="t">은퇴 세대가 스스로 기획·운영하는<br/>‘한국형 Second Place’</h2>
+    <div class="vals">
+      <div class="val"><b>Human Recycle</b><span>중장년의 경험·재능을 사회적 자산으로 재순환</span></div>
+      <div class="val"><b>Connect</b><span>도시–농촌, 수도권–지방, 세대–세대를 잇는다</span></div>
+      <div class="val"><b>Lifelong Growth</b><span>100세 시대의 자기 개발과 삶의 질 향상</span></div>
+      <div class="val"><b>Sustainable Impact</b><span>지역과 상생하는 지속가능한 관광·문화 생태계</span></div>
+    </div>
+  </section>
+
+  <!-- 3. 5대 활동 -->
+  <section class="wrap">
+    <div class="kicker">WHAT WE DO</div>
+    <h2 class="t">밥차의 다섯 가지 활동</h2>
+    <div class="acts">
+      <div class="act"><div class="n">01</div><h3>여행·유람</h3><p>도농 상생 ‘행복꾸러미 여행’, 전남 감성식탁, 그리고 언어권별 지부장제로 넓혀가는 해외 여행.</p></div>
+      <div class="act"><div class="n">02</div><h3>문화·아카데미</h3><p>인문학 강연 시리즈, 인생 2막 외국어, 예술 오디세이(클래식·미술관), 웰니스와 대체의학.</p></div>
+      <div class="act"><div class="n">03</div><h3>미디어·유튜브</h3><p>“60세 이후, 좋은 방향 찾기” — 여행·예술·경제·등산·외국어·소통 주제별 정규 코너.</p></div>
+      <div class="act"><div class="n">04</div><h3>세컨드 플레이스</h3><p>대화·정보·음식·미팅·콘서트·축제가 모이는 통합 허브 — 중장년이 좋아할 놀이터.</p></div>
+      <div class="act"><div class="n">05</div><h3>지자체·기업 협력</h3><p>지역 여행객 유치 협력, 인생 2막 연수, 동문회·동호회 프라이빗 투어.</p></div>
+    </div>
+  </section>
+
+  <!-- 차별화 -->
+  <section class="wrap">
+    <div class="kicker">DIFFERENT</div>
+    <h2 class="t">일반 여행사·동호회와 다른 점</h2>
+    <div class="cmp">
+      <div class="row"><div class="k">주체</div><div class="pair"><div class="a">업체가 소비자에게 판매</div><div class="b">회원이 곧 기획자·큐레이터</div></div></div>
+      <div class="row"><div class="k">콘텐츠 공급</div><div class="pair"><div class="a">외주 가이드·패키지</div><div class="b">은퇴 전문가의 재능 기부(강의·해설·연주)</div></div></div>
+      <div class="row"><div class="k">지역 관계</div><div class="pair"><div class="a">소비형 방문</div><div class="b">지자체·농가·명인과 장기 파트너십</div></div></div>
+      <div class="row"><div class="k">수익 배분</div><div class="pair"><div class="a">회사 이익 중심</div><div class="b">지역·회원·플랫폼의 상생 분배</div></div></div>
+    </div>
+  </section>
+
+  <!-- 3대 자산 -->
+  <section class="wrap">
+    <div class="kicker">OUR FOUNDATION</div>
+    <h2 class="t">이미 가진 세 가지 기반</h2>
+    <div class="acts">
+      <div class="act"><div class="n">01 네트워크</div><h3>사람 자산</h3><p>동문·명인방·전문가 커뮤니티를 아우르는 실질 회원 풀. 처음부터 함께할 사람들이 있습니다.</p></div>
+      <div class="act"><div class="n">02 콘텐츠</div><h3>재능 자산</h3><p>여행·문화공간·기획·등산·재무·소통 — 발기인들의 전문 역량이 그대로 프로그램이 됩니다.</p></div>
+      <div class="act"><div class="n">03 지역</div><h3>지역 자산</h3><p>충남·전남·강원의 지자체·운영자와 이어진 직접 네트워크. 도농 상생을 바로 실행할 기반.</p></div>
+    </div>
+  </section>
+
+  <!-- 4. 명인방 × 밥차 -->
+  <section class="synergy">
+    <h2>명인방 × 밥차</h2>
+    <p>명인방투어는 밥차 <b>여행 부문의 공동운영 파트너</b>입니다. 능파(임상수)가 여행·유람을 이끌고, 명인방의 16년 문화·인문학 여행 자산이 밥차의 도농 상생·감성식탁 프로그램과 만납니다. 명인방 회원이라면 밥차 활동에도 자연스럽게 함께하실 수 있습니다.</p>
+  </section>
+
+  <!-- 5. 대표 프로그램 -->
+  <section class="wrap">
+    <div class="kicker">PROGRAMS</div>
+    <h2 class="t">대표 프로그램</h2>
+    <div class="prog">
+      <span class="tag">도농 상생</span>
+      <h3>행복꾸러미 여행</h3>
+      <p>충남(논산·공주)·전남(강진·담양·고흥)·강원(영월) 등 지역과 연계한 프리미엄 당일·1박2일 여행. 지역의 농가·식당·체험이 함께 살아나는 상생 여행입니다.</p>
+    </div>
+    <div class="prog">
+      <span class="tag">전남 감성식탁</span>
+      <h3>이동식 밥-차 (Food Truck)</h3>
+      <p>이동식 밥차로 전남 제철 식재료를 살린 프리미엄 팝업 다이닝. 강진 다산 밥상, 담양 죽통밥처럼 지역의 이야기를 한 상에 담습니다. <b>전남 지역과 협력을 준비 중</b>입니다.</p>
+    </div>
+    <div class="prog">
+      <span class="tag">문화·학습</span>
+      <h3>인문학 · 인생 2막 외국어 아카데미</h3>
+      <p>역사·예술·문학 저명 인사 초청 강연과, 여행에서 바로 쓰는 생활 외국어. 배우고 즐기고 기록하는 자리.</p>
+    </div>
+  </section>
+
+  <!-- 우리의 여정 -->
+  <section class="wrap">
+    <div class="kicker">JOURNEY</div>
+    <h2 class="t">한 걸음씩, 함께</h2>
+    <div class="steps">
+      <div class="st"><b>2026 · 원년</b><span>기반 구축 — 도농 상생 여행·전남 감성식탁 착수, 유튜브 정규 코너 시작</span></div>
+      <div class="st"><b>2027 · 확장</b><span>지역 거점과 해외 여정 정규화, 문화·아카데미 확대</span></div>
+      <div class="st"><b>2028~ · 자립</b><span>세컨드 플레이스 통합 허브, 언어권별 해외 지부로 확장</span></div>
+    </div>
+  </section>
+
+  <!-- 기대 효과 -->
+  <section class="wrap">
+    <div class="kicker">IMPACT</div>
+    <h2 class="t">밥차가 만드는 변화</h2>
+    <div class="impact">
+      <div class="imp"><b>개인</b><span>역할 상실을 넘어 주체적인 인생 2막 — 재능의 사회적 환원으로 되찾는 자기효능감</span></div>
+      <div class="imp"><b>공동체</b><span>수평적 시니어 커뮤니티 모델, 세대 간 지식 이전의 허브</span></div>
+      <div class="imp"><b>사회·지역</b><span>지방 소멸에 대응하는 도농 상생 — 복지 비용을 시니어 경제로 전환</span></div>
+    </div>
+  </section>
+
+  <!-- 6. 함께하기 -->
+  <section class="wrap">
+    <div class="kicker">JOIN</div>
+    <h2 class="t">밥차와 함께하기</h2>
+    <p class="lead">관심 있는 활동을 남겨주시면 밥차 준비위원회가 소식과 참여 방법을 안내드립니다.</p>
+    <div class="join">
+      <form id="bc-form">
+        <div class="jr">
+          <label>닉네임 <small>(선택)</small></label>
+          <input type="text" id="bc-nick" maxlength="20" placeholder="어떻게 불러드릴까요?" />
+        </div>
+        <div class="jr">
+          <label>연락 방법 <small>(선택 · 카톡ID·이메일 등)</small></label>
+          <input type="text" id="bc-contact" maxlength="60" placeholder="안내받을 연락처 (안 적으셔도 됩니다)" />
+        </div>
+        <div class="jr">
+          <label>관심 활동</label>
+          <select id="bc-interest">
+            <option>여행·유람</option>
+            <option>문화·아카데미</option>
+            <option>미디어·유튜브</option>
+            <option>세컨드 플레이스</option>
+            <option>지자체·기업 협력</option>
+            <option>아직 잘 모르겠어요</option>
+          </select>
+        </div>
+        <div class="jr">
+          <label>한마디 <small>(선택)</small></label>
+          <textarea id="bc-msg" maxlength="500" placeholder="하고 싶은 활동이나 궁금한 점을 자유롭게"></textarea>
+        </div>
+        <button type="submit" class="sbtn" id="bc-submit">관심 남기기 →</button>
+      </form>
+      <div class="done" id="bc-done">
+        <b>고맙습니다 🙏</b>
+        <span>밥차 준비위원회가 확인하고 소식을 전해드리겠습니다.</span>
+      </div>
+      <div class="note">남겨주신 정보는 안내 목적으로만 쓰이며 사이트에 공개되지 않습니다.<br/>바로 문의는 <a href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener">다음 카페</a>로도 가능합니다.</div>
+    </div>
+  </section>
+
+  <!-- 맺음 인용 -->
+  <section class="quote">
+    <p>“20년 뒤 당신은, 한 일보다 하지 않은 일을 더 후회할 것이다. 그러니 밧줄을 던져 버리고, 안전한 항구를 벗어나 멀리 항해하라.”</p>
+    <div class="by">— 「밥차 선언문」에서, 마크 트웨인</div>
+  </section>
+
+  <footer>
+    <div class="brand-name">밥차 · 명인방투어</div>
+    <div>밥 한 끼, 차 한 잔 — 그 소박한 자리에서 인생 2막이 시작됩니다.</div>
+    <div style="margin-top:14px;color:var(--ink-3)">© 2026 밥차 준비위원회 · 명인방투어 v0.6</div>
+  </footer>
+
+  <nav class="tabbar">
+    <a href="./index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+    <a href="./tour.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V6h16v11"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 11h16"/></svg>여행</a>
+    <a href="./story.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16"/><path d="M9 13h7"/></svg>여행스케치</a>
+    <a href="./place.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>명인소</a>
+    <a href="./my.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>마이</a>
+  </nav>
+</main>
+
+<a class="fab" href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener" aria-label="다음 카페 바로가기">TALK</a>
+
+<!-- 밥차 관심 신청 — Supabase (익명 등록만, 공개 조회 없음) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  const SUPABASE_URL = 'https://dmxotyhlbbvqntyqkzlc.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRteG90eWhsYmJ2cW50eXFremxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjExMDMsImV4cCI6MjA5NDQ5NzEwM30.qBmKjw4UGrcohgf40cVdrtnOdctEkty8ZNhHCq97E_Y';
+  const form = document.getElementById('bc-form');
+  const done = document.getElementById('bc-done');
+  const btn  = document.getElementById('bc-submit');
+  if (!form) return;
+  const sb = (window.supabase && SUPABASE_ANON_KEY.length > 20) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const row = {
+      nickname: (document.getElementById('bc-nick').value.trim() || '익명').slice(0,20),
+      contact:  document.getElementById('bc-contact').value.trim().slice(0,60),
+      interest: document.getElementById('bc-interest').value,
+      message:  document.getElementById('bc-msg').value.trim().slice(0,500),
+    };
+    btn.disabled = true; btn.textContent = '보내는 중…';
+    let ok = false;
+    if (sb) {
+      try { const { error } = await sb.from('mb_bapcha_signups').insert(row); ok = !error; } catch(e){}
+    }
+    btn.disabled = false; btn.textContent = '관심 남기기 →';
+    if (ok) {
+      form.style.display = 'none';
+      done.style.display = 'block';
+    } else {
+      alert('접수가 아직 준비 중입니다. 다음 카페로 문의해 주세요 🙏');
+    }
+  });
+})();
+</script>
+</body>
+</html>
