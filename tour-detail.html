@@ -313,7 +313,7 @@
   </div>
 
   <!-- 포함/불포함 -->
-  <div class="det-sec">
+  <div class="det-sec" id="include-sec">
     <h2>포함 사항</h2>
     <div class="include-grid">
       <div class="include-row in"><span class="ck">✓</span>차량 (전용 미니버스)</div>
@@ -493,10 +493,6 @@
       .sort((a,b) => TOURS[a].startDate.localeCompare(TOURS[b].startDate))[0]
       || ids[0];
   }
-  const params = new URLSearchParams(location.search);
-  const id = params.get('id') && TOURS[params.get('id')] ? params.get('id') : pickNearest();
-  const T = TOURS[id];
-
   function fmtRange(s, e){
     const ds = new Date(s), de = new Date(e);
     const dow = ['일','월','화','수','목','금','토'];
@@ -509,53 +505,134 @@
     return Math.round((t-today)/86400000);
   }
 
-  // 렌더링
-  document.title = `명인방투어 · ${T.title}`;
-  document.getElementById('hero').style.backgroundImage =
-    `linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.55) 100%), url('${T.image}')`;
-  document.getElementById('r-ribbon').textContent = T.category + " 여행";
-  const d = dDay(T.startDate);
-  document.getElementById('r-dday').textContent = d > 0 ? `D-${d}` : (d===0 ? "오늘" : "지남");
-  document.getElementById('r-kicker').textContent = T.kicker;
-  document.getElementById('r-title').textContent = T.title;
-  document.getElementById('r-date').textContent = fmtRange(T.startDate, T.endDate);
-  document.getElementById('r-duration').textContent = T.duration;
-  document.getElementById('r-host').textContent = "능파";
-  document.getElementById('r-cat').textContent = T.category;
-  document.getElementById('r-greet').textContent = T.greet;
-  document.getElementById('r-cafe').href = T.cafeUrl;
-  document.getElementById('r-price').textContent = T.price;
-  document.getElementById('r-timeline').innerHTML = T.itinerary.map(it =>
-    `<div class="day"><div class="day-h">${it.d}</div><div class="day-t">${it.t}</div></div>`
-  ).join('');
+  const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-  // FAQ 렌더 — 여행별 맞춤 가능 (T.faqs)이 있으면 그것, 없으면 기본 세트
-  const defaultFaqs = [
-    {q:"이번 여행은 어떤 분께 맞나요?", a:"인문학·예술·풍경을 좋아하시는 중장년 어른께 가장 잘 맞습니다. 빠른 패키지 관광이 아니라, 한 곳에 머무르며 사람과 이야기를 만나는 동행입니다."},
-    {q:"혼자 신청해도 괜찮나요?", a:"명인방투어 회원의 약 절반이 혼자 오십니다. 능파가 함께 동행하고, 멤버끼리 자연스럽게 어울리도록 자리를 살펴드립니다."},
-    {q:"정원과 신청 마감은?", a:"여행마다 다르지만 보통 12~20명 소규모로 진행됩니다. 마감은 출발 1주일 전 또는 정원 충족 시 자동 마감되며, 카톡 채널로 신청 가능합니다."},
-    {q:"환불 정책은 어떻게 되나요?", a:"출발 7일 전까지 전액 환불, 7일 이내~출발 3일 전 50% 환불, 출발 2일 이내 환불 불가입니다. 천재지변·운영자 사정으로 인한 취소는 전액 환불됩니다."},
-    {q:"출발지·교통편은?", a:"국내 여행은 서울에서 전용 미니버스로 출발이 기본이며, 일부 여행은 KTX 동행도 안내드립니다. 해외 여행은 인천공항에서 만납니다. 자세한 출발 시간·장소는 신청 확정 후 카톡으로 안내드립니다."}
-  ];
-  const faqs = T.faqs || defaultFaqs;
-  document.getElementById('faq-list').innerHTML = faqs.map(f => `
-    <div class="faq-item">
-      <div class="faq-q">${f.q}<span class="chev">⌄</span></div>
-      <div class="faq-a"><p>${f.a}</p></div>
-    </div>
-  `).join('');
-  // 펼치기/접기
-  document.querySelectorAll('.faq-q').forEach(q => {
-    q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
-  });
+  // 카페 수집 여행(제목만 아는 글) → 상세 페이지용 T 객체로 변환
+  function extractTravelDate(p){
+    const t = p.title || '';
+    let m = t.match(/(20\d{2})[\s\S]{0,3}?(\d{1,2})\s*월\s*(\d{1,2})/);
+    if (m) return {y:+m[1], mo:+m[2], d:+m[3]};
+    m = t.match(/(\d{1,2})\s*월\s*(\d{1,2})/);
+    if (m) return {y:p.year||new Date().getFullYear(), mo:+m[1], d:+m[2]};
+    m = t.match(/(\d{1,2})\s*월/);
+    if (m) return {y:p.year||new Date().getFullYear(), mo:+m[1], d:1};
+    return {y:p.year||new Date().getFullYear(), mo:1, d:1};
+  }
+  function cleanTitle(title){
+    let s = String(title||'').trim();
+    s = s.replace(/^\s*(20\d{2}\s*년?\s*)?\d{1,2}\s*월\s*\d{1,2}\s*일?\s*(\([월화수목금토일]\))?\s*(당일)?\s*[ㅡ—\-]\s*/, '');
+    return s.trim() || String(title||'').trim();
+  }
+  function buildLite(post){
+    const td = extractTravelDate(post);
+    const sd = `${td.y}-${String(td.mo).padStart(2,'0')}-${String(td.d).padStart(2,'0')}`;
+    const domestic = post.region !== '해외';
+    return {
+      title: cleanTitle(post.title),
+      kicker: (post.region || (domestic ? '국내' : '해외')) + ' · 능파 동행',
+      category: domestic ? '국내' : '해외',
+      duration: '카페 참조',
+      startDate: sd, endDate: sd,
+      host: '능파 임상수',
+      image: post.image || null,
+      season: post.season,
+      cafeUrl: `https://cafe.daum.net/redtraintour/${post.bid}/${post.pid}`,
+      price: '카페 문의',
+      greet: '이 여행의 자세한 일정과 참가 안내는 다음 카페 원문에 있습니다. 아래 ‘카페에서 신청·문의하기’로 이어집니다.',
+      itinerary: [],
+      _lite: true
+    };
+  }
 
-  // 탭 네비 클릭 시 active 표시
-  document.querySelectorAll('.tab-nav a').forEach(a => {
-    a.addEventListener('click', e => {
-      document.querySelectorAll('.tab-nav a').forEach(x => x.classList.remove('is-on'));
-      a.classList.add('is-on');
+  const seasonGrad = s => ({
+    '봄':'linear-gradient(135deg,#f3a4b5,#f6c576)','여름':'linear-gradient(135deg,#7fc885,#5b6b3a)',
+    '가을':'linear-gradient(135deg,#d97b3a,#7a1b25)','겨울':'linear-gradient(135deg,#a8c4d6,#3f6b86)'
+  })[s] || 'linear-gradient(135deg,#5a121a,#7a1b25)';
+
+  function render(T){
+    const lite = !!T._lite;
+    document.title = `명인방투어 · ${T.title}`;
+    document.getElementById('hero').style.backgroundImage = T.image
+      ? `linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.55) 100%), url('${T.image}')`
+      : `linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.55) 100%), ${seasonGrad(T.season)}`;
+    document.getElementById('r-ribbon').textContent = T.category + " 여행";
+    const d = dDay(T.startDate);
+    document.getElementById('r-dday').textContent = d > 0 ? `D-${d}` : (d===0 ? "오늘" : "지남");
+    document.getElementById('r-kicker').textContent = T.kicker;
+    document.getElementById('r-title').textContent = T.title;
+    document.getElementById('r-date').textContent = fmtRange(T.startDate, T.endDate);
+    document.getElementById('r-duration').textContent = T.duration;
+    document.getElementById('r-host').textContent = "능파";
+    document.getElementById('r-cat').textContent = T.category;
+    document.getElementById('r-greet').textContent = T.greet;
+    document.getElementById('r-cafe').href = T.cafeUrl;
+    document.getElementById('r-price').textContent = T.price;
+
+    if (lite) {
+      // 카페 수집 여행: 일정/코스/포함사항은 미검증이므로 안내로 대체·숨김
+      document.getElementById('r-timeline').innerHTML =
+        `<div class="day"><div class="day-t">자세한 일정·코스는 카페 원문에서 확인하실 수 있어요. 아래 ‘카페에서 신청·문의하기’로 이동하세요.</div></div>`;
+      const courseSec = document.getElementById('course'); if (courseSec) courseSec.style.display = 'none';
+      const incSec = document.getElementById('include-sec'); if (incSec) incSec.style.display = 'none';
+      // 참가 신청 → 카페 신청·문의로 통일
+      document.getElementById('book').innerHTML =
+        `<h2>참가 신청</h2>
+         <div class="sub">이 여행의 신청·문의는 다음 카페에서 진행됩니다. 정회원이시면 바로 신청하실 수 있어요.</div>
+         <a class="cafe-link" href="${esc(T.cafeUrl)}" target="_blank" rel="noopener" style="margin-top:12px">
+           <div class="ico" style="font-size:11px;letter-spacing:-.5px">名人</div>
+           <div style="flex:1"><b>카페에서 신청·문의하기</b><span>일정·비용 확인 후 댓글/신청으로 참여</span></div>
+           <div style="color:var(--ink-3)">›</div>
+         </a>`;
+    } else {
+      document.getElementById('r-timeline').innerHTML = (T.itinerary||[]).map(it =>
+        `<div class="day"><div class="day-h">${it.d}</div><div class="day-t">${it.t}</div></div>`
+      ).join('');
+    }
+
+    // FAQ 렌더 — 여행별 맞춤 가능 (T.faqs)이 있으면 그것, 없으면 기본 세트
+    const defaultFaqs = [
+      {q:"이번 여행은 어떤 분께 맞나요?", a:"인문학·예술·풍경을 좋아하시는 중장년 어른께 가장 잘 맞습니다. 빠른 패키지 관광이 아니라, 한 곳에 머무르며 사람과 이야기를 만나는 동행입니다."},
+      {q:"혼자 신청해도 괜찮나요?", a:"명인방투어 회원의 약 절반이 혼자 오십니다. 능파가 함께 동행하고, 멤버끼리 자연스럽게 어울리도록 자리를 살펴드립니다."},
+      {q:"정원과 신청 마감은?", a:"여행마다 다르지만 보통 12~20명 소규모로 진행됩니다. 마감은 출발 1주일 전 또는 정원 충족 시 자동 마감되며, 카페·카톡 채널로 신청 가능합니다."},
+      {q:"환불 정책은 어떻게 되나요?", a:"출발 7일 전까지 전액 환불, 7일 이내~출발 3일 전 50% 환불, 출발 2일 이내 환불 불가입니다. 천재지변·운영자 사정으로 인한 취소는 전액 환불됩니다."},
+      {q:"출발지·교통편은?", a:"국내 여행은 서울에서 전용 미니버스로 출발이 기본이며, 일부 여행은 KTX 동행도 안내드립니다. 해외 여행은 인천공항에서 만납니다. 자세한 출발 시간·장소는 신청 확정 후 카톡으로 안내드립니다."}
+    ];
+    const faqs = T.faqs || defaultFaqs;
+    document.getElementById('faq-list').innerHTML = faqs.map(f => `
+      <div class="faq-item">
+        <div class="faq-q">${f.q}<span class="chev">⌄</span></div>
+        <div class="faq-a"><p>${f.a}</p></div>
+      </div>
+    `).join('');
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
     });
-  });
+    document.querySelectorAll('.tab-nav a').forEach(a => {
+      a.addEventListener('click', e => {
+        document.querySelectorAll('.tab-nav a').forEach(x => x.classList.remove('is-on'));
+        a.classList.add('is-on');
+      });
+    });
+  }
+
+  // URL 파싱 → 큐레이션 여행(id) 또는 카페 수집 여행(bid+pid)
+  (async function(){
+    const params = new URLSearchParams(location.search);
+    const qid = params.get('id');
+    let bid = params.get('bid'), pid = params.get('pid');
+    if (!bid && qid && !TOURS[qid]) { const m = qid.match(/^(.*)-(\d+)$/); if (m) { bid = m[1]; pid = m[2]; } }
+
+    if (qid && TOURS[qid]) { render(TOURS[qid]); return; }
+    if (bid && pid) {
+      try {
+        const res = await fetch('./data/past-travels.json');
+        const j = await res.json();
+        const post = (j.posts||[]).find(p => String(p.bid)===String(bid) && String(p.pid)===String(pid));
+        if (post) { render(buildLite(post)); return; }
+      } catch(e){}
+    }
+    render(TOURS[pickNearest()]); // 폴백: 가장 가까운 큐레이션 여행
+  })();
 </script>
 
 <script src="./pwa.js"></script>

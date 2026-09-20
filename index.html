@@ -875,6 +875,7 @@
         if (sd >= today && !tourDates.has(sd)) {
           candidates.push({
             id: `${p.bid}-${p.pid}`,
+            bid: p.bid, pid: p.pid,
             title: p.title,
             subtitle: p.country || '',
             category: p.region === '해외' ? '해외' : '국내',
@@ -933,8 +934,10 @@
     };
     const esc = s => String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     wrap.innerHTML = up.slice(0,8).map((t,i) => {
-      const href = t._fromPast ? esc(t.cafeUrl) : `./tour-detail.html?id=${esc(t.id)}`;
-      const ext = t._fromPast ? ' target="_blank" rel="noopener"' : '';
+      const href = t._fromPast
+        ? `./tour-detail.html?bid=${esc(t.bid || String(t.id||'').split('-')[0])}&pid=${esc(t.pid || String(t.id||'').split('-')[1])}`
+        : `./tour-detail.html?id=${esc(t.id)}`;
+      const ext = ''; // 모두 내부 상세로 이동 (신청 절차 통일)
       const cover = t.image ? `background-image:url('${esc(t.image)}')` : `background:${grad(t.season)}`;
       const dday = Math.max(0, Math.ceil((new Date(t.startDate) - new Date())/86400000));
       return `<a class="tour-card" href="${href}"${ext}>
@@ -988,11 +991,13 @@
       `<span>${t.host}</span>`
     ].filter(Boolean).join('');
     hero.querySelector('.hero-meta').innerHTML = metaBits;
-    hero.querySelector('.hero-cta').href = t._fromPast ? t.cafeUrl : `./tour-detail.html?id=${t.id}`;
-    if (t._fromPast) {
-      hero.querySelector('.hero-cta').setAttribute('target','_blank');
-      hero.querySelector('.hero-cta').setAttribute('rel','noopener');
-    }
+    const cta = hero.querySelector('.hero-cta');
+    cta.href = t._fromPast
+      ? `./tour-detail.html?bid=${t.bid}&pid=${t.pid}`
+      : `./tour-detail.html?id=${t.id}`;
+    // 내부 상세로 이동하므로 새 창(target=_blank) 제거 — 앱에서 튕겨 나가는 문제 방지
+    cta.removeAttribute('target');
+    cta.removeAttribute('rel');
   }
 
   if (AUTO_HERO) {
