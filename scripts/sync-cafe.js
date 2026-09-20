@@ -91,6 +91,8 @@ async function scrapeBoard(page, bid) {
       title: a.title || '',
       views: a.viewCount || 0,
       comments: a.commentCount || 0,
+      // 본문 대표 사진(목록 공개 썸네일) → 카드 이미지용. 작은 C52x52를 큰 사이즈로 치환.
+      image: a.thumbnailImageUrl ? a.thumbnailImageUrl.replace('/thumb/C52x52/', '/thumb/R500x0/') : null,
     }));
     // 목록 행 텍스트(공지 제외) — 작성일 추출용. window.articles와 순서가 대체로 일치.
     const rows = [...document.querySelectorAll('.list_cafe>li')]
@@ -106,7 +108,7 @@ async function scrapeBoard(page, bid) {
     let posted = null;
     if (m) posted = `20${m[1]}-${m[2]}-${m[3]}`;
     else if (/작성시간\s*\d{1,2}:\d{2}|(^|\s)new(\s|$)/.test(row)) posted = today; // 오늘 글은 시간만 표기
-    return { pid: a.pid, title: decode(a.title), views: a.views, comments: a.comments, posted };
+    return { pid: a.pid, title: decode(a.title), views: a.views, comments: a.comments, posted, image: a.image };
   });
 }
 
@@ -160,6 +162,14 @@ async function syncPastTravels(page) {
   for (const board of BOARDS.past) {
     console.log(`[past] ${board.name} (${board.bid})…`);
     const posts = await scrapeBoard(page, board.bid);
+    // 기존 글이라도 대표 사진이 비어 있으면 목록 썸네일로 채움(1회성 백필)
+    const byPid = new Map(posts.map(p => [String(p.pid), p]));
+    file.posts.forEach(p => {
+      if (String(p.bid) === String(board.bid) && !p.image) {
+        const src = byPid.get(String(p.pid));
+        if (src && src.image) p.image = src.image;
+      }
+    });
     // 카페는 최신이 위 → 오래된 것부터 unshift 해야 최종 순서가 최신-우선 유지
     for (const post of [...posts].reverse()) {
       const key = `${board.bid}/${post.pid}`;
@@ -174,6 +184,7 @@ async function syncPastTravels(page) {
         ...(region === '해외' ? { country: '해외' } : {}),
         posted: post.posted,
         views: post.views, comments: post.comments,
+        ...(post.image ? { image: post.image } : {}),
       });
       existing.add(key); added++;
       console.log(`  ✚ ${post.pid}: ${post.title.slice(0, 50)}`);
