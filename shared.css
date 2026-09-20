@@ -151,3 +151,11 @@ footer a{color:var(--ink-2);text-decoration:none}
   font-weight:800;font-size:12px;text-decoration:none;
   border:0;cursor:pointer;
 }
+
+/* ===== 공용 헤더 메뉴 팝업 (하위 페이지 햄버거) — menu.js가 사용 ===== */
+.menu-pop{position:fixed;z-index:200;top:58px;right:14px;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);min-width:190px;padding:6px;display:none}
+.menu-pop.open{display:block}
+.menu-pop a{display:block;padding:11px 12px;text-decoration:none;color:var(--ink);font-size:14px;border-radius:9px}
+.menu-pop a:active{background:var(--bg)}
+.menu-pop .mp-sep{height:1px;background:var(--line);margin:5px 4px}
+.menu-pop a.mp-cafe{color:var(--wine);font-weight:700}
