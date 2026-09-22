@@ -478,6 +478,28 @@
   /* 개선의견 바로가기 작은 표시 */
   .suggest-pill{display:inline-flex;align-items:center;gap:5px;margin:2px 16px 6px;padding:6px 12px;background:var(--tag-bg);color:var(--tag-ink);border:1px solid var(--line-2);border-radius:999px;font-size:11.5px;font-weight:700;text-decoration:none;line-height:1}
   .suggest-pill:active{background:#ffe9bf}
+
+  /* 능파의 이번 주 한마디 */
+  .weekly-note{background:linear-gradient(135deg,#fff8ec,#f6e8d2);border:1px solid var(--line-2);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+  .weekly-note .wn-kicker{font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--wine);margin-bottom:8px}
+  .weekly-note .wn-body{margin:0;font-size:14.5px;line-height:1.65;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+  .weekly-note .wn-sign{margin-top:10px;text-align:right;font-family:"Noto Serif KR",serif;font-size:13px;color:var(--ink-2)}
+
+  /* 이번 주 질문 (참여형) */
+  .weekq{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .wq-question{padding:16px 18px;font-family:"Noto Serif KR",serif;font-size:16.5px;font-weight:700;color:var(--wine);background:linear-gradient(135deg,#fbeee0,#f5e2c9);line-height:1.45}
+  .wq-form{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+  .wq-form input,.wq-form textarea{width:100%;box-sizing:border-box;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:12px;padding:11px 12px}
+  .wq-form textarea{resize:vertical;min-height:60px;line-height:1.5}
+  .wq-form input:focus,.wq-form textarea:focus{outline:none;border-color:var(--wine)}
+  .wq-submit{background:var(--wine);color:#fff8ec;border:0;border-radius:12px;padding:12px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .wq-submit:disabled{opacity:.55;cursor:default}
+  .wq-count{padding:10px 16px;font-size:11.5px;color:var(--ink-3);border-bottom:1px solid var(--line)}
+  .wq-list{padding:4px 0}
+  .wq-item{padding:12px 16px;border-bottom:1px solid var(--line)}
+  .wq-item:last-child{border-bottom:0}
+  .wq-item .wq-a{font-size:14px;color:var(--ink);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+  .wq-item .wq-meta{font-size:10.5px;color:var(--ink-3);margin-top:5px}
 </style>
 </head>
 <body>
@@ -601,6 +623,14 @@
     </div>
   </div>
 
+  <!-- 능파의 이번 주 한마디 (data/weekly.json · 매주 갱신) -->
+  <section id="weekly-note-sec" hidden>
+    <div class="weekly-note">
+      <div class="wn-kicker">능파의 이번 주 한마디</div>
+      <p class="wn-body" id="wn-body">—</p>
+      <div class="wn-sign" id="wn-sign">— 능파 임상수</div>
+    </div>
+  </section>
 
   <!-- 다음 여행 일정 -->
   <section>
@@ -627,6 +657,25 @@
       </div>
       <span style="flex:0 0 auto;color:var(--wine);font-size:20px">›</span>
     </a>
+  </section>
+
+  <!-- 이번 주 질문 (참여형 · data/weekly.json + Supabase) -->
+  <section id="weekq-sec" hidden style="scroll-margin-top:14px">
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title">이번 주 질문<span class="arrow">›</span></h2>
+        <div class="sec-sub" id="wq-sub">한 줄이면 충분해요 — 다른 분들 이야기도 함께 봐요</div>
+      </div>
+    </div>
+    <div class="weekq">
+      <div class="wq-question" id="wq-question">—</div>
+      <form class="wq-form" id="wq-form">
+        <input type="text" id="wq-nick" maxlength="20" placeholder="닉네임 (선택 · 안 적으면 익명)" />
+        <textarea id="wq-answer" maxlength="300" required placeholder="한 줄 답을 남겨주세요"></textarea>
+        <button type="submit" class="wq-submit" id="wq-submit">답 남기기 →</button>
+      </form>
+      <div class="wq-list" id="wq-list"><div class="sg-empty">불러오는 중…</div></div>
+    </div>
   </section>
 
   <!-- 명인방 게시판 (카페 새 글 — data/*.json 자동 연동) -->
@@ -1184,6 +1233,74 @@
   });
 
   refresh();
+})();
+</script>
+<script>
+/* 능파의 이번 주 한마디 + 이번 주 질문(참여형) — data/weekly.json + Supabase(mb_weekly_answers) */
+(function(){
+  const SUPABASE_URL = 'https://dmxotyhlbbvqntyqkzlc.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRteG90eWhsYmJ2cW50eXFremxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjExMDMsImV4cCI6MjA5NDQ5NzEwM30.qBmKjw4UGrcohgf40cVdrtnOdctEkty8ZNhHCq97E_Y';
+  const esc = s => String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const fmtDate = iso => { const d=new Date(iso); return `${d.getMonth()+1}/${d.getDate()}`; };
+  let QID = null;
+
+  fetch('./data/weekly.json').then(r=>r.json()).then(w=>{
+    if(w.note && w.note.body){
+      document.getElementById('wn-body').textContent = w.note.body;
+      if(w.note.sign) document.getElementById('wn-sign').textContent = w.note.sign;
+      document.getElementById('weekly-note-sec').hidden = false;
+    }
+    if(w.question && w.question.text){
+      QID = String(w.question.id || w.week || 'q').slice(0,40);
+      document.getElementById('wq-question').textContent = w.question.text;
+      if(w.question.hint) document.getElementById('wq-sub').textContent = w.question.hint;
+      document.getElementById('weekq-sec').hidden = false;
+      initQuestion();
+    }
+  }).catch(()=>{});
+
+  function initQuestion(){
+    const listEl = document.getElementById('wq-list');
+    const form = document.getElementById('wq-form');
+    const submitBtn = document.getElementById('wq-submit');
+    const configured = /^https:\/\/[a-z0-9]+\.supabase\.co$/.test(SUPABASE_URL) && SUPABASE_ANON_KEY.length > 20;
+    if(!configured || !window.supabase){ listEl.innerHTML = '<div class="sg-empty">잠시 후 다시 열어주세요 🙏</div>'; if(submitBtn) submitBtn.disabled = true; return; }
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function refresh(){
+      const { data, error } = await sb.from('mb_weekly_answers')
+        .select('nickname,answer,created_at')
+        .eq('question_id', QID)
+        .order('created_at', { ascending:false }).limit(50);
+      if(error){ listEl.innerHTML = '<div class="sg-empty">불러오기에 실패했어요. 잠시 후 다시 시도해 주세요.</div>'; return; }
+      if(!data || !data.length){ listEl.innerHTML = '<div class="sg-empty">아직 답이 없어요.<br/>첫 한 줄을 남겨주세요!</div>'; return; }
+      listEl.innerHTML = `<div class="wq-count">${data.length}명이 이야기를 남겼어요</div>` + data.map(x => `
+        <div class="wq-item">
+          <div class="wq-a">${esc(x.answer)}</div>
+          <div class="wq-meta">${esc(x.nickname||'익명')} · ${fmtDate(x.created_at)}</div>
+        </div>`).join('');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const ans = document.getElementById('wq-answer').value.trim();
+      if(!ans) return;
+      submitBtn.disabled = true; submitBtn.textContent = '남기는 중…';
+      const row = {
+        question_id: QID,
+        nickname: (document.getElementById('wq-nick').value.trim() || '익명').slice(0,20),
+        answer: ans.slice(0,300),
+      };
+      const { error } = await sb.from('mb_weekly_answers').insert(row);
+      submitBtn.disabled = false; submitBtn.textContent = '답 남기기 →';
+      if(error){ alert('남기지 못했어요. 잠시 후 다시 시도해 주세요.'); return; }
+      document.getElementById('wq-answer').value = '';
+      document.getElementById('wq-nick').value = '';
+      await refresh();
+    });
+
+    refresh();
+  }
 })();
 </script>
 <script>
