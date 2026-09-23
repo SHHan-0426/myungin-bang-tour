@@ -78,6 +78,8 @@
   .post-card.letters::before{background:var(--gold)}
   .post-card.music::before{background:var(--moss)}
   .post-card.walks::before{background:var(--sky)}
+  .post-card.artmuseum::before{background:#9A6A3A}
+  .post-card.nampa::before{background:#5A121A}
   .post-card .body{flex:1;min-width:0}
   .post-card h4{
     font-size:13.5px;margin:0;font-weight:600;line-height:1.45;
@@ -146,6 +148,8 @@
     <button data-sec="letters">💌 편지 <span class="ct" id="ct-letters">—</span></button>
     <button data-sec="music">🎵 음악 <span class="ct" id="ct-music">—</span></button>
     <button data-sec="walks">🌿 산책 <span class="ct" id="ct-walks">—</span></button>
+    <button data-sec="artmuseum">🖼 숲미술관 <span class="ct" id="ct-artmuseum">—</span></button>
+    <button data-sec="nampa">✒ 능파 <span class="ct" id="ct-nampa">—</span></button>
   </div>
 
   <!-- 섹션 인트로 (현재 섹션) -->
@@ -267,7 +271,7 @@
 
   // URL hash로 초기 섹션
   const hashSec = (location.hash || '').replace('#', '');
-  if (['humanities','letters','music','walks'].includes(hashSec)) {
+  if (['humanities','letters','music','walks','artmuseum','nampa'].includes(hashSec)) {
     currentSec = hashSec;
     document.querySelectorAll('.seg button').forEach(x => x.classList.toggle('is-on', x.dataset.sec === hashSec));
   }

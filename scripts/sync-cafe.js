@@ -35,6 +35,7 @@ const BOARDS = {
     { bid: '1fXs', name: '여행 가는날 (행복파도타기)' },
     { bid: 'RfFv', name: '해외문화탐방!!' },
     { bid: 'S2Ss', name: '일본 여행 !!' },
+    { bid: 'S7cl', name: '명인방과 함께' },
   ],
   reviews: [
     { bid: '4b2T', name: '여행후기' },
@@ -44,6 +45,8 @@ const BOARDS = {
     { bid: '1fY7', name: '여행! 편지!!', key: 'letters' },
     { bid: 'S2Se', name: '음악 동영상', key: 'music' },
     { bid: 'Gz1K', name: '산책!!', key: 'walks' },
+    { bid: 'RAah', name: '숲으로간 미술관', key: 'artmuseum' },
+    { bid: '1YGQ', name: '임상수(능파)', key: 'nampa', travelOnly: true },
   ],
   places: [
     { bid: 'RrBS', name: '명인 추천 명인,명소', key: 'recommended' },
@@ -51,6 +54,10 @@ const BOARDS = {
     { bid: 'S6Ar', name: '2026 칼국수로드', key: 'kalguksu' },
   ],
 };
+
+// 여행 관련 여부(제목 기준) — travelOnly 게시판(예: 임상수(능파))에서 여행 글만 수집
+const TRAVEL = /(여행|기행|투어|답사|순례|둘레길|트레킹|나들이|여정|당일|\d\s*박|국내|해외|섬|바다|산행|산행기|축제|명소|기차|공항|여행기|가는날|캠프|캠핑|일본|유럽|중국|대만|베트남|제주|경주|강원|전라|경상|충청|서울|부산|안동|여수|순천|군산)/;
+function isTravel(title) { return TRAVEL.test(title || ''); }
 
 /**
  * 정치·선거·시사 제외 키워드.
@@ -232,6 +239,7 @@ async function syncSectioned(page, fileName, boards) {
     for (const post of [...posts].reverse()) {
       if (existing.has(post.pid)) continue;
       if (isPolitical(post.title)) { skipped++; console.log(`  ⊘ 정치 제외 ${post.pid}: ${post.title.slice(0,40)}`); continue; }
+      if (board.travelOnly && !isTravel(post.title)) { console.log(`  ⊘ 비여행 제외 ${post.pid}: ${post.title.slice(0,40)}`); continue; }
       const entry = { pid: post.pid, title: post.title, posted: post.posted };
       if (fileName === 'places.json') entry.tag = '';
       section.posts.unshift(entry);
