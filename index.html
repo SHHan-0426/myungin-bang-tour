@@ -487,6 +487,11 @@
 
   /* 이번 주 질문 (참여형) */
   .weekq{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .wq-toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;box-sizing:border-box;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px 16px;font:inherit;font-size:14px;font-weight:700;color:var(--wine);cursor:pointer;text-align:left}
+  .wq-toggle:active{background:var(--bg)}
+  .wq-toggle .wq-chev{color:var(--ink-3);font-size:16px;transition:transform .2s}
+  .wq-toggle[aria-expanded="true"] .wq-chev{transform:rotate(180deg)}
+  #weekq-card{margin-top:10px}
   .wq-question{padding:16px 18px;font-family:"Noto Serif KR",serif;font-size:16.5px;font-weight:700;color:var(--wine);background:linear-gradient(135deg,#fbeee0,#f5e2c9);line-height:1.45}
   .wq-form{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
   .wq-form input,.wq-form textarea{width:100%;box-sizing:border-box;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:12px;padding:11px 12px}
@@ -623,15 +628,6 @@
     </div>
   </div>
 
-  <!-- 능파의 이번 주 한마디 (data/weekly.json · 매주 갱신) -->
-  <section id="weekly-note-sec" hidden>
-    <div class="weekly-note">
-      <div class="wn-kicker">능파의 이번 주 한마디</div>
-      <p class="wn-body" id="wn-body">—</p>
-      <div class="wn-sign" id="wn-sign">— 능파 임상수</div>
-    </div>
-  </section>
-
   <!-- 다음 여행 일정 -->
   <section>
     <div class="sec-head">
@@ -647,27 +643,31 @@
     </div>
   </section>
 
-  <!-- 밥차 (명인방 여행부문 공동운영 · 인생 2막 공동체) 진입 배너 -->
-  <section>
-    <a href="./bapcha.html" aria-label="밥차 소개 보기" style="display:flex;align-items:center;gap:13px;padding:14px 16px;background:linear-gradient(135deg,#fff3d6,#f7e6c8);border:1px solid var(--line-2);border-radius:var(--radius);box-shadow:var(--shadow);text-decoration:none;color:inherit">
-      <img src="./assets/bapcha-mark.svg" alt="밥차 로고" width="52" height="52" style="flex:0 0 52px;border-radius:14px" />
-      <div style="flex:1;min-width:0">
-        <div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:700;color:var(--wine)">밥차<span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--gold);margin-left:6px">· BC</span></div>
-        <div style="font-size:12px;color:var(--ink-2);margin-top:3px;line-height:1.45">밥 먹고·차 마시고·사람을 잇다 — 은퇴 세대 인생 2막 공동체</div>
-      </div>
-      <span style="flex:0 0 auto;color:var(--wine);font-size:20px">›</span>
-    </a>
+  <!-- 능파의 이번 주 한마디 (data/weekly.json · 매주 갱신) -->
+  <section id="weekly-note-sec" hidden>
+    <div class="weekly-note">
+      <div class="wn-kicker">능파의 이번 주 한마디</div>
+      <p class="wn-body" id="wn-body">—</p>
+      <div class="wn-sign" id="wn-sign">— 능파 임상수</div>
+    </div>
   </section>
 
-  <!-- 이번 주 질문 (참여형 · data/weekly.json + Supabase) -->
-  <section id="weekq-sec" hidden style="scroll-margin-top:14px">
-    <div class="sec-head">
-      <div>
-        <h2 class="sec-title">이번 주 질문<span class="arrow">›</span></h2>
-        <div class="sec-sub" id="wq-sub">한 줄이면 충분해요 — 다른 분들 이야기도 함께 봐요</div>
-      </div>
+  <!-- 밥차 배너 + 이번 주 질문(접이식) — 한 줄 병행 -->
+  <section style="scroll-margin-top:14px">
+    <div style="display:flex;gap:10px;align-items:stretch">
+      <a href="./bapcha.html" aria-label="밥차 소개 보기" style="flex:1 1 0;min-width:0;display:flex;align-items:center;gap:11px;padding:13px 14px;background:linear-gradient(135deg,#fff3d6,#f7e6c8);border:1px solid var(--line-2);border-radius:var(--radius);box-shadow:var(--shadow);text-decoration:none;color:inherit">
+        <img src="./assets/bapcha-mark.svg" alt="밥차 로고" width="44" height="44" style="flex:0 0 44px;border-radius:12px" />
+        <div style="flex:1;min-width:0">
+          <div style="font-family:'Noto Serif KR',serif;font-size:16px;font-weight:700;color:var(--wine)">밥차<span style="font-size:10.5px;font-weight:800;letter-spacing:.08em;color:var(--gold);margin-left:5px">· BC</span></div>
+          <div style="font-size:11.5px;color:var(--ink-2);margin-top:2px;line-height:1.4">밥·차·사람을 잇는 인생 2막 공동체</div>
+        </div>
+      </a>
+      <button class="wq-toggle" id="wq-toggle" type="button" hidden aria-expanded="false" aria-controls="weekq-card" style="flex:0 0 40%">
+        <span class="wq-toggle-t">🙋 이번 주 질문</span>
+        <span class="wq-chev" id="wq-chev">⌄</span>
+      </button>
     </div>
-    <div class="weekq">
+    <div class="weekq" id="weekq-card" hidden>
       <div class="wq-question" id="wq-question">—</div>
       <form class="wq-form" id="wq-form">
         <input type="text" id="wq-nick" maxlength="20" placeholder="닉네임 (선택 · 안 적으면 익명)" />
@@ -1263,21 +1263,31 @@
     if(w.question && w.question.text){
       QID = String(w.question.id || w.week || 'q').slice(0,40);
       document.getElementById('wq-question').textContent = w.question.text;
-      if(w.question.hint) document.getElementById('wq-sub').textContent = w.question.hint;
-      document.getElementById('weekq-sec').hidden = false;
+      document.getElementById('wq-toggle').hidden = false;
       initQuestion();
     }
   }).catch(()=>{});
 
   function initQuestion(){
+    const toggle = document.getElementById('wq-toggle');
+    const card = document.getElementById('weekq-card');
     const listEl = document.getElementById('wq-list');
     const form = document.getElementById('wq-form');
     const submitBtn = document.getElementById('wq-submit');
     const configured = /^https:\/\/[a-z0-9]+\.supabase\.co$/.test(SUPABASE_URL) && SUPABASE_ANON_KEY.length > 20;
-    if(!configured || !window.supabase){ listEl.innerHTML = '<div class="sg-empty">잠시 후 다시 열어주세요 🙏</div>'; if(submitBtn) submitBtn.disabled = true; return; }
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sb = (configured && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    let loaded = false;
+
+    // 접이식: 버튼 클릭 시 펼치기(첫 펼침에 답변 로드)
+    toggle.addEventListener('click', () => {
+      const willOpen = card.hidden;
+      card.hidden = !willOpen;
+      toggle.setAttribute('aria-expanded', String(willOpen));
+      if(willOpen && !loaded){ loaded = true; refresh(); }
+    });
 
     async function refresh(){
+      if(!sb){ listEl.innerHTML = '<div class="sg-empty">이번 주 질문 답변 기능을 준비 중입니다. 곧 열려요 🙏</div>'; if(submitBtn) submitBtn.disabled = true; return; }
       const { data, error } = await sb.from('mb_weekly_answers')
         .select('nickname,answer,created_at')
         .eq('question_id', QID)
@@ -1293,6 +1303,7 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if(!sb) return;
       const ans = document.getElementById('wq-answer').value.trim();
       if(!ans) return;
       submitBtn.disabled = true; submitBtn.textContent = '남기는 중…';
@@ -1308,8 +1319,7 @@
       document.getElementById('wq-nick').value = '';
       await refresh();
     });
-
-    refresh();
+    // 답변 로드는 버튼을 처음 펼칠 때(위 toggle) 수행 — 초기엔 접힌 상태
   }
 })();
 </script>
