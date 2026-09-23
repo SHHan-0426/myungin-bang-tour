@@ -824,6 +824,14 @@
       "icon": "✒",
       "subtitle": "능파의 여행 이야기",
       "posts": []
+    },
+    "happier": {
+      "bid": "Ri9S",
+      "name": "당신은 숲보다 행복한가",
+      "cafeUrl": "https://cafe.daum.net/redtraintour/Ri9S",
+      "icon": "🌲",
+      "subtitle": "능파의 사색 칼럼",
+      "posts": []
     }
   }
 }
