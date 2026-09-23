@@ -1272,7 +1272,7 @@
         .select('nickname,answer,created_at')
         .eq('question_id', QID)
         .order('created_at', { ascending:false }).limit(50);
-      if(error){ listEl.innerHTML = '<div class="sg-empty">불러오기에 실패했어요. 잠시 후 다시 시도해 주세요.</div>'; return; }
+      if(error){ listEl.innerHTML = '<div class="sg-empty">이번 주 질문 답변 기능을 준비 중입니다. 곧 열려요 🙏</div>'; if(submitBtn) submitBtn.disabled = true; return; }
       if(!data || !data.length){ listEl.innerHTML = '<div class="sg-empty">아직 답이 없어요.<br/>첫 한 줄을 남겨주세요!</div>'; return; }
       listEl.innerHTML = `<div class="wq-count">${data.length}명이 이야기를 남겼어요</div>` + data.map(x => `
         <div class="wq-item">
