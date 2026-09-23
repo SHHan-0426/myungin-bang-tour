@@ -59,6 +59,44 @@ const BOARDS = {
 const TRAVEL = /(여행|기행|투어|답사|순례|둘레길|트레킹|나들이|여정|당일|\d\s*박|국내|해외|섬|바다|산행|산행기|축제|명소|기차|공항|여행기|가는날|캠프|캠핑|일본|유럽|중국|대만|베트남|제주|경주|강원|전라|경상|충청|서울|부산|안동|여수|순천|군산)/;
 function isTravel(title) { return TRAVEL.test(title || ''); }
 
+// 한줄메모(능파의 한마디)용 — 정치+시사 확장 필터. 공개 대문에 올라가므로 넓게 배제.
+const CURRENT_AFFAIRS = /(기자회견|대통령|장관|정부|여당|야당|국회|의원|선거|정권|정치|정책|청문회|특검|검찰|재판|판결|구속|기소|시위|집회|파업|규탄|성명|논평|여론|지지율|좌파|우파|보수|진보|여의도|남북|한미|외교안보|국방|계엄)/;
+function isSensitive(t) { return isPolitical(t) || CURRENT_AFFAIRS.test(t || ''); }
+
+// 한줄메모장(_memo 위젯) 수집 — 인용/한 줄. window.articles가 없어 DOM에서 파싱.
+async function scrapeMemo(page) {
+  await page.goto('https://m.cafe.daum.net/redtraintour/_memo?boardType=C', { waitUntil: 'domcontentloaded', timeout: 25000 });
+  await page.waitForTimeout(1500);
+  return await page.evaluate(() => {
+    const out = [];
+    document.querySelectorAll('ul li').forEach(li => {
+      const raw = (li.innerText || '').replace(/\s+/g, ' ').trim();
+      if (!/작성자/.test(raw)) return;
+      const dm = raw.match(/작성시간\s*(\d\d)\.(\d\d)\.(\d\d)/);
+      const body = raw.split('작성자')[0].trim();
+      if (body.length < 10) return;
+      out.push({ text: body, date: dm ? `20${dm[1]}-${dm[2]}-${dm[3]}` : '' });
+    });
+    return out; // 최신이 위
+  });
+}
+
+async function syncMemos(page) {
+  const file = loadJson('memos.json');
+  const memos = await scrapeMemo(page);
+  const clean = [];
+  for (const m of memos) {
+    if (isSensitive(m.text)) { skipped++; console.log(`  ⊘ 시사 제외(메모): ${m.text.slice(0,30)}`); continue; }
+    if (m.text.length > 230) { console.log(`  ⊘ 길이 제외(메모): ${m.text.slice(0,30)}…`); continue; }
+    clean.push(m);
+  }
+  file.posts = clean.slice(0, 20); // 최신 클린 메모만 유지
+  file.lastSync = nowKST();
+  saveJson('memos.json', file);
+  console.log(`✓ memos.json — ${file.posts.length}건(클린)`);
+  return 0;
+}
+
 /**
  * 정치·선거·시사 제외 키워드.
  * 여행 글 오탐을 피하려 '대통령'·'교육감' 같은 여행 문맥에도 쓰이는 단어는 제외하고
@@ -269,6 +307,7 @@ async function syncSectioned(page, fileName, boards) {
     total += await syncReviews(page);
     total += await syncSectioned(page, 'stories.json', BOARDS.stories);
     total += await syncSectioned(page, 'places.json', BOARDS.places);
+    await syncMemos(page);
   } catch (err) {
     console.error('❌ 스크래핑 오류:', err.message);
   } finally {

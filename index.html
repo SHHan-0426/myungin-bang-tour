@@ -1245,11 +1245,20 @@
   const fmtDate = iso => { const d=new Date(iso); return `${d.getMonth()+1}/${d.getDate()}`; };
   let QID = null;
 
+  function showNote(body, sign){
+    document.getElementById('wn-body').textContent = body;
+    document.getElementById('wn-sign').textContent = sign || '— 능파 임상수';
+    document.getElementById('weekly-note-sec').hidden = false;
+  }
+  // 능파의 한마디: weekly.json 수동 문구 우선, 없으면 한줄메모(memos.json 최신·정치 제외)
   fetch('./data/weekly.json').then(r=>r.json()).then(w=>{
     if(w.note && w.note.body){
-      document.getElementById('wn-body').textContent = w.note.body;
-      if(w.note.sign) document.getElementById('wn-sign').textContent = w.note.sign;
-      document.getElementById('weekly-note-sec').hidden = false;
+      showNote(w.note.body, w.note.sign);
+    } else {
+      fetch('./data/memos.json').then(r=>r.json()).then(m=>{
+        const it = (m.posts||[])[0];
+        if(it && it.text) showNote(it.text, '— 능파가 고른 한 줄');
+      }).catch(()=>{});
     }
     if(w.question && w.question.text){
       QID = String(w.question.id || w.week || 'q').slice(0,40);
