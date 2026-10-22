@@ -381,7 +381,7 @@
       <b id="r-price">문의</b>
       <span>1인 기준 · 능파 동행</span>
     </div>
-    <button onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">신청하기 →</button>
+    <button id="book-go" type="button">카페에서 신청 →</button>
   </div>
 
   <!-- 하단 탭바 (여행 활성) -->
@@ -540,6 +540,7 @@
     document.getElementById('r-greet').textContent = T.greet;
     document.getElementById('r-cafe').href = T.cafeUrl;
     document.getElementById('book-cafe').href = T.cafeUrl;
+    document.getElementById('book-go').onclick = () => window.open(T.cafeUrl, '_blank', 'noopener');
     document.getElementById('r-price').textContent = T.price;
 
     if (lite) {
