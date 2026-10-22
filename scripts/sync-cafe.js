@@ -291,6 +291,50 @@ async function syncSectioned(page, fileName, boards) {
   return added;
 }
 
+// ── 명인소 지오코딩 (카카오 로컬) — KAKAO_REST 환경변수 있을 때만, 좌표 없는 추천명소·맛집만 ──
+const KAKAO_REST = process.env.KAKAO_REST;
+const GEO_CITY = /(서울|부산|대구|인천|광주|대전|울산|세종|제주|서귀포|수원|성남|고양|용인|창원|청주|천안|전주|포항|김해|진주|여수|순천|군산|목포|안동|경주|강릉|춘천|원주|속초|양양|평창|정선|태안|서산|당진|보령|의성|영덕|영양|봉화|청송|문경|상주|예천|금산|논산|공주|부여|계룡|하동|남해|통영|거제|사천|합천|함양|산청|고창|부안|정읍|남원|나주|강진|해남|진도|완도|보성|곡성|구례|담양|영광|함평|무안|신안|울진|영주|김천|구미|칠곡|괴산|증평|진천|음성|단양|제천|충주|횡성|홍천|인제|고성|화천|양구|철원|가평|양평|여주|이천|안성|파주|포천|연천|강화|옹진)/;
+function geoClean(t) {
+  let s = String(t || '');
+  s = s.replace(/20\d{2}\s*년?/g,' ').replace(/\d{1,2}\s*월\s*\d{0,2}\s*일?/g,' ').replace(/\([월화수목금토일]\)/g,' ');
+  s = s.replace(/칼국수\s*로드|칼국수로드|명인방\s*추천\s*여행지|명인방|추천\s*여행지|개인적으로\s*가는|봄\s*마중|가는날/g,' ');
+  s = s.split(/[—/·]|\s-\s/)[0];
+  return s.replace(/[!^~]+/g,' ').replace(/\s+/g,' ').trim();
+}
+async function kakaoKeyword(q) {
+  if (!q) return null;
+  const url = 'https://dapi.kakao.com/v2/local/search/keyword.json?size=1&query=' + encodeURIComponent(q);
+  try {
+    const r = await fetch(url, { headers: { Authorization: 'KakaoAK ' + KAKAO_REST } });
+    if (!r.ok) return null;
+    const j = await r.json();
+    return (j.documents && j.documents[0]) || null;
+  } catch (e) { return null; }
+}
+async function geocodePlaces() {
+  if (!KAKAO_REST) { console.log('ⓘ KAKAO_REST 미설정 — 지오코딩 생략(좌표 수동/기존 유지)'); return; }
+  const file = loadJson('places.json');
+  let done = 0;
+  for (const key of ['recommended', 'restaurants']) {
+    const sec = file.sections[key];
+    if (!sec) continue;
+    for (const p of sec.posts) {
+      if (p.lat) continue; // 이미 좌표 있으면 통과
+      const q = geoClean(p.title);
+      let r = await kakaoKeyword(q);
+      if (r) { // 주소 검증: 제목 도시가 매칭 주소에 있어야 채택
+        const m = GEO_CITY.exec(p.title);
+        const addr = r.road_address_name || r.address_name || '';
+        if (m && !addr.includes(m[1])) r = null;
+      }
+      if (r) { p.lat = +r.y; p.lng = +r.x; p.place = r.place_name; p.addr = r.road_address_name || r.address_name; p.geovia = 'clean'; done++; }
+      await new Promise(res => setTimeout(res, 90));
+    }
+  }
+  if (done) saveJson('places.json', file);
+  console.log(`✓ 명인소 지오코딩 — 신규 ${done}곳`);
+}
+
 (async () => {
   console.log('🔄 다음 카페 동기화 시작:', new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }));
   const browser = await chromium.launch({ headless: true });
@@ -308,6 +352,7 @@ async function syncSectioned(page, fileName, boards) {
     total += await syncSectioned(page, 'stories.json', BOARDS.stories);
     total += await syncSectioned(page, 'places.json', BOARDS.places);
     await syncMemos(page);
+    await geocodePlaces();
   } catch (err) {
     console.error('❌ 스크래핑 오류:', err.message);
   } finally {
