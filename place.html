@@ -98,6 +98,13 @@
   .place-card.t-국내::before{background:var(--moss)}
   .place-card.t-해외::before{background:var(--wine)}
 
+  /* 리스트 ↔ 지도 토글 */
+  .view-toggle{display:flex;gap:6px;margin:12px 18px 0}
+  .view-toggle button{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--ink-2);font:inherit;font-size:13px;font-weight:600;padding:9px 0;border-radius:10px;cursor:pointer}
+  .view-toggle button.is-on{background:var(--wine);border-color:var(--wine);color:#fff8ec}
+  #place-map{height:66vh;min-height:360px;margin:12px 18px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .map-note{margin:8px 18px 0;font-size:11.5px;color:var(--ink-3);line-height:1.5}
+
   .place-card .body{flex:1;min-width:0}
   .place-card h4{
     font-size:14px;margin:0;font-weight:600;line-height:1.4;
@@ -165,6 +172,14 @@
     <h1>명인소</h1>
     <p>사람 한 명을 보러 가는 여행</p>
   </div>
+
+  <!-- 리스트 ↔ 지도 토글 -->
+  <div class="view-toggle">
+    <button id="v-list" class="is-on" type="button">📋 리스트</button>
+    <button id="v-map" type="button">🗺 지도</button>
+  </div>
+  <div id="place-map"></div>
+  <div class="map-note" id="map-note" style="display:none">추천 명소·맛집 위치를 지도에 표시합니다. 핀을 누르면 카페 원문으로 이동해요. (칼국수로드·해외·칼럼은 지도에 표시되지 않습니다)</div>
 
   <!-- 섹션 세그먼트 -->
   <div class="seg">
@@ -313,6 +328,58 @@
   });
 
   loadPlaces();
+</script>
+
+<!-- 명인소 지도 (카카오맵) — JS 키는 도메인 제한으로 보호됨 -->
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=26e1879f69050aac1d888ab29c7422a3&autoload=false"></script>
+<script>
+(function(){
+  const vList = document.getElementById('v-list');
+  const vMap  = document.getElementById('v-map');
+  const mapEl = document.getElementById('place-map');
+  const note  = document.getElementById('map-note');
+  if(!vList || !vMap || !mapEl) return;
+  const listEls = [...document.querySelectorAll('.seg, .sec-intro, #tag-chips, .section-bar, #place-list, .full-link')];
+  mapEl.style.display = 'none';
+  const CAFE = 'https://cafe.daum.net/redtraintour';
+  const esc = s => String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let map = null, inited = false, bounds = null;
+
+  function showList(){ listEls.forEach(e=>e.style.display=''); mapEl.style.display='none'; note.style.display='none'; vList.classList.add('is-on'); vMap.classList.remove('is-on'); }
+  function showMap(){ listEls.forEach(e=>e.style.display='none'); mapEl.style.display='block'; note.style.display='block'; vMap.classList.add('is-on'); vList.classList.remove('is-on'); initMap(); }
+  vList.addEventListener('click', showList);
+  vMap.addEventListener('click', showMap);
+
+  function initMap(){
+    if(inited){ if(map){ setTimeout(()=>{ map.relayout(); if(bounds) map.setBounds(bounds); },60); } return; }
+    if(typeof kakao === 'undefined' || !kakao.maps){ mapEl.innerHTML = '<div style="padding:28px 16px;text-align:center;color:var(--ink-3);font-size:13px">지도를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.</div>'; return; }
+    inited = true;
+    kakao.maps.load(async function(){
+      map = new kakao.maps.Map(mapEl, { center: new kakao.maps.LatLng(36.5, 127.8), level: 13 });
+      const iw = new kakao.maps.InfoWindow({ removable: true });
+      bounds = new kakao.maps.LatLngBounds();
+      let n = 0;
+      let data;
+      try { data = await fetch('./data/places.json').then(r=>r.json()); } catch(e){ return; }
+      ['recommended','restaurants'].forEach(key => {
+        const sec = data.sections[key]; if(!sec) return;
+        sec.posts.forEach(p => {
+          if(!p.lat || !p.lng) return;
+          const pos = new kakao.maps.LatLng(p.lat, p.lng);
+          const mk = new kakao.maps.Marker({ map, position: pos, title: p.place || p.title });
+          bounds.extend(pos); n++;
+          const cat = key === 'recommended' ? '📍 명인 추천' : '🍽 명품 맛집';
+          const html = `<div style="padding:9px 11px;max-width:220px;font-size:12.5px;line-height:1.55">`
+            + `<div style="font-weight:700;color:#7a1b25">${esc(p.place || p.title)}</div>`
+            + `<div style="color:#8a7c75;font-size:11px;margin:2px 0 5px">${cat}${p.addr ? ' · ' + esc(p.addr) : ''}</div>`
+            + `<a href="${CAFE}/${sec.bid}/${p.pid}" target="_blank" rel="noopener" style="color:#3f6b86;font-weight:700;text-decoration:none">카페에서 보기 →</a></div>`;
+          kakao.maps.event.addListener(mk, 'click', () => { iw.setContent(html); iw.open(map, mk); });
+        });
+      });
+      setTimeout(()=>{ map.relayout(); if(n) map.setBounds(bounds); }, 80);
+    });
+  }
+})();
 </script>
 
 <script src="./pwa.js"></script>
