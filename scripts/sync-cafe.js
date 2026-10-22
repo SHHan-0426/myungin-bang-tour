@@ -45,7 +45,6 @@ const BOARDS = {
     { bid: '1fY7', name: '여행! 편지!!', key: 'letters' },
     { bid: 'S2Se', name: '음악 동영상', key: 'music' },
     { bid: 'Gz1K', name: '산책!!', key: 'walks' },
-    { bid: 'RAah', name: '숲으로간 미술관', key: 'artmuseum' },
     { bid: '1YGQ', name: '임상수(능파)', key: 'nampa', travelOnly: true },
     { bid: 'Ri9S', name: '당신은 숲보다 행복한가', key: 'happier' },
   ],
