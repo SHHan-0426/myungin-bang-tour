@@ -1014,11 +1014,22 @@
     const initial = pickNearestTour();
     if (initial) renderHero(initial);
     // 2) 박물관 데이터 fetch 후 더 가까운 항목이 있으면 교체 + 상단 띠 갱신
-    pickNearestTourMerged().then(list => {
+    const imgLoads = (url) => new Promise(res => {
+      if (!url) { res(false); return; }
+      const im = new Image();
+      im.onload = () => res(im.naturalWidth > 1);
+      im.onerror = () => res(false);
+      im.src = url;
+      setTimeout(() => res(false), 4000);
+    });
+    pickNearestTourMerged().then(async list => {
       const list2 = list || [];
       const todayStr = new Date().toISOString().slice(0, 10);
-      // 히어로는 '오늘 출발(D-0)'은 건너뛰고 다음 여행을 노출(없으면 가장 가까운 것)
-      const hero = list2.find(t => t.startDate > todayStr) || list2[0];
+      const futures = list2.filter(t => t.startDate > todayStr); // 오늘 출발(D-0) 제외
+      // 히어로: 대표사진이 실제로 뜨는 가장 가까운 다음 여행(만료·깨진 사진 자동 건너뜀)
+      let hero = null;
+      for (const t of futures) { if (t.image && await imgLoads(t.image)) { hero = t; break; } }
+      if (!hero) hero = futures[0] || list2[0]; // 사진 있는 게 없으면 가장 가까운 미래(계절 그라데이션)
       if (hero) renderHero(hero);
       renderTopbar(list);
       renderUpcomingCards(list);

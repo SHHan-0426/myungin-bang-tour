@@ -207,12 +207,12 @@ async function syncPastTravels(page) {
   for (const board of BOARDS.past) {
     console.log(`[past] ${board.name} (${board.bid})…`);
     const posts = await scrapeBoard(page, board.bid);
-    // 기존 글이라도 대표 사진이 비어 있으면 목록 썸네일로 채움(1회성 백필)
+    // 기존 글의 대표 사진을 목록 최신 썸네일로 갱신(만료된 CDN URL 치유). 목록에 없는 글은 유지.
     const byPid = new Map(posts.map(p => [String(p.pid), p]));
     file.posts.forEach(p => {
-      if (String(p.bid) === String(board.bid) && !p.image) {
+      if (String(p.bid) === String(board.bid)) {
         const src = byPid.get(String(p.pid));
-        if (src && src.image) p.image = src.image;
+        if (src && src.image && src.image !== p.image) p.image = src.image;
       }
     });
     // 카페는 최신이 위 → 오래된 것부터 unshift 해야 최종 순서가 최신-우선 유지
