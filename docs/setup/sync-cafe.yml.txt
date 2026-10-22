@@ -32,6 +32,7 @@ jobs:
         run: node scripts/sync-cafe.js
         env:
           TZ: Asia/Seoul
+          KAKAO_REST: ${{ secrets.KAKAO_REST }}   # 명인소 자동 지오코딩용(없으면 지오코딩만 생략)
 
       - name: 변경 확인
         id: check
