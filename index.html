@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>명인방투어 — 길 위의 인문학</title>
-<meta name="description" content="능파의 명인방투어. 인문학·여행·음악·맛이 흐르는 어른의 큐레이션 커뮤니티. 16년차 1,927명 회원." />
+<meta name="description" content="능파의 명인방투어. 인문학·여행·음악·맛이 흐르는 어른의 큐레이션 커뮤니티. 16년차 1,951명 회원." />
 <meta name="theme-color" content="#7a1b25" />
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="apple-touch-icon" href="./assets/icon-192.png?v2" />
@@ -12,7 +12,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="명인방투어" />
 <meta property="og:title" content="명인방투어 — 길 위의 인문학" />
-<meta property="og:description" content="능파와 함께 걷는 문화 큐레이션 여행. 16년차, 1,927명." />
+<meta property="og:description" content="능파와 함께 걷는 문화 큐레이션 여행. 16년차, 1,951명." />
 <meta property="og:image" content="https://myungin-bang-tour.netlify.app/assets/tour-01.jpg" />
 <meta property="og:url" content="https://myungin-bang-tour.netlify.app/" />
 <meta property="og:locale" content="ko_KR" />
@@ -516,53 +516,6 @@
   <textarea name="hello"></textarea>
 </form>
 
-<aside class="design-notes">
-  <h4>시안 v0.2 — IA 재설계</h4>
-  <p>다음 카페 22개 게시판 → 모바일 5탭으로 흡수. 빈 카테고리 없이 모든 글에 갈 자리가 있도록.</p>
-
-  <h4>🏠 홈</h4>
-  <p>자동 히어로 + 다음 여행 + 명인소 + 여행스케치 + 플레이리스트 큐레이션</p>
-
-  <h4>🚆 여행</h4>
-  <ul>
-    <li>다가오는 / 박물관 / 후기 — 3 서브탭</li>
-    <li>← 여행 가는날, 해외문화탐방, 일본 여행, 집밥 아카데미, 여행후기</li>
-  </ul>
-
-  <h4>📖 여행스케치</h4>
-  <ul>
-    <li>길 위의 인문학 / 능파의 글 / 여행 편지 / 한줄 / 음악·영상 / 사진 / 도랑가제</li>
-    <li>← 길위의 인문학, 임상수(능파), 당신은 술보다, 여행! 편지!, 한줄메모, 음악 동영상, 사진, 도랑가제, 숲으로간 미술관</li>
-  </ul>
-
-  <h4>📍 명인소</h4>
-  <ul>
-    <li>명인 추천 / 명품 맛집 / 칼국수로드 / 산책 / 지도</li>
-    <li>← 명인 추천, 명품 맛집!, 칼국수로드, 산책!!</li>
-  </ul>
-
-  <h4>👤 마이</h4>
-  <ul>
-    <li>프로필 / 신청 / 카톡 / 검색 / 공지 / 가입</li>
-    <li>← 명인방공지, 회원가입, 일반 게시판</li>
-  </ul>
-
-  <h4>⚙️ 자동 히어로 (구현 완료)</h4>
-  <ul>
-    <li><code>data/tours.json</code>만 편집 = 자동 갱신</li>
-    <li>오늘 이후 가장 빠른 일정 자동 픽</li>
-    <li>토글 <code>AUTO_HERO = true</code>로 활성화</li>
-    <li>현재: <b>OFF</b> (정선 단풍 곤도라 수동 고정)</li>
-  </ul>
-
-  <h4>다음 단계</h4>
-  <ul>
-    <li>여행 / 여행스케치 / 명인소 / 마이 각 탭 페이지 시안</li>
-    <li>여행 상세 + 예약 폼 와이어</li>
-    <li>tours.json → posts.json 도 추가하면 여행스케치·명인소도 자동 큐레이션</li>
-  </ul>
-</aside>
-
 <main class="stage">
 
   <!-- 상단 띠 -->
@@ -575,10 +528,17 @@
   <a class="migration-banner" href="https://m.cafe.daum.net/redtraintour" target="_blank" rel="noopener">
     <div class="mb-ico">⇒</div>
     <div class="mb-body">
-      <b>다음 카페 1,927명의 새 집</b>
+      <b>다음 카페 1,951명의 새 집</b>
       <span>한 번만 카페에 로그인하시면 됩니다. 여기 있는 글을 보려면 먼저 카페 회원으로 가입해 주세요 →</span>
     </div>
     <div class="mb-chev">›</div>
+  </a>
+
+  <!-- 시험 운영 안내 -->
+  <a class="trial-banner" href="#suggest" style="display:flex;align-items:center;gap:9px;margin:10px 14px 0;padding:10px 13px;background:linear-gradient(135deg,#fff3d6,#f7e6c8);border:1px solid var(--line-2);border-radius:14px;text-decoration:none;color:var(--ink)">
+    <span style="font-size:16px">🏗</span>
+    <span style="flex:1;font-size:12px;line-height:1.45"><b style="color:var(--wine)">시험 운영 중 (~11월 말)</b> · 둘러보시고 바라는 점은 '개선 제안'에 남겨주세요</span>
+    <span style="color:var(--wine);font-size:16px">›</span>
   </a>
 
   <!-- 헤더 -->
@@ -586,8 +546,8 @@
     <a class="brand" href="./index.html">
       <div class="brand-mark" style="font-size:12.5px;letter-spacing:-.5px">名人</div>
       <div>
-        <div class="brand-name">명인방<span style="font-weight:500;font-size:13.5px;color:var(--ink-3);margin-left:2px">투어</span><span style="font-size:9.5px;font-weight:700;color:var(--wine);background:var(--tag-bg);border:1px solid var(--line-2);padding:1px 6px;border-radius:999px;margin-left:6px;vertical-align:middle;letter-spacing:0">구축중</span></div>
-        <div class="brand-sub">능파의 길 위 인문학 · since 2009 · v0.1 시안</div>
+        <div class="brand-name">명인방<span style="font-weight:500;font-size:13.5px;color:var(--ink-3);margin-left:2px">투어</span><span style="font-size:9.5px;font-weight:700;color:var(--wine);background:var(--tag-bg);border:1px solid var(--line-2);padding:1px 6px;border-radius:999px;margin-left:6px;vertical-align:middle;letter-spacing:0">시험운영</span></div>
+        <div class="brand-sub">능파의 길 위 인문학 · since 2009</div>
       </div>
     </a>
     <div class="nav-icons">
@@ -844,12 +804,12 @@
   <footer>
     <div class="brand-name">명인방투어 · 능파</div>
     <div>대표 임상수 · 서울 강남구 논현로 114길 8, 2층 현현동</div>
-    <div>since 2009 · 회원 1,927명과 함께 걷는 길</div>
+    <div>since 2009 · 회원 1,951명과 함께 걷는 길</div>
     <div style="margin-top:10px">
       <span>이용약관</span> · <span>개인정보처리방침</span> · <span>사업자정보</span>
     </div>
     <div style="margin-top:14px;color:var(--ink-3)">
-      © 2026 명인방투어. 다음 카페에서 독립 플랫폼으로 이전 중 (v0.1 시안).
+      © 2026 명인방투어. 다음 카페에서 독립 플랫폼으로 이전 중 · 시험 운영 ~11월 말.
     </div>
   </footer>
 
