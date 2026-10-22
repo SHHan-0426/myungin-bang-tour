@@ -1015,10 +1015,11 @@
     if (initial) renderHero(initial);
     // 2) 박물관 데이터 fetch 후 더 가까운 항목이 있으면 교체 + 상단 띠 갱신
     pickNearestTourMerged().then(list => {
-      const merged = (list || [])[0];
-      if (merged && (!initial || merged.startDate < initial.startDate)) {
-        renderHero(merged);
-      }
+      const list2 = list || [];
+      const todayStr = new Date().toISOString().slice(0, 10);
+      // 히어로는 '오늘 출발(D-0)'은 건너뛰고 다음 여행을 노출(없으면 가장 가까운 것)
+      const hero = list2.find(t => t.startDate > todayStr) || list2[0];
+      if (hero) renderHero(hero);
       renderTopbar(list);
       renderUpcomingCards(list);
     });
